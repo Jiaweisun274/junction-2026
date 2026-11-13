@@ -7,3 +7,5 @@ __pycache__/
 spread/docs/
 # local handoff notes (personal context, kept private)
 CLAUDE.md
+# downloaded datasets (not redistributed)
+data/
