@@ -35,7 +35,7 @@ DAYS = ["Monday", "Wednesday", "Friday"]
 SYSTEM = ("You are playing a decision game through tools. Maximise your score. Use exactly one tool per turn and "
           "read its result before deciding the next action. Call `finish` when the 30 turns are used.\n\n" + RULES)
 
-K_SCHEMA = {"type": "integer", "minimum": 1, "maximum": 6, "description": "concept number 1..6"}
+K_SCHEMA = {"type": "integer", "enum": [1, 2, 3, 4, 5, 6], "description": "concept number 1..6"}
 TOOLS = [
     dict(name="explain", description="Teach concept K (1 turn).", params={"K": K_SCHEMA}),
     dict(name="quiz", description="Give one exercise on concept K and see the child's answer (1 turn).", params={"K": K_SCHEMA}),

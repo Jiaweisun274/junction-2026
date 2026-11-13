@@ -160,3 +160,14 @@ Reference = untuned literature policy (lit_ref.py), on the same seeds.
 Cost per game ~70k input tokens (~95% cached), ~600-1100 output tokens. Raising reasoning effort did not close the gap.
 Failure pattern: moves on after one quiz (often a lucky guess on a prerequisite), then re-explains a concept that cannot
 click; never backs off to the prerequisite. Earlier Claude subagent runs (heavy reasoning) averaged 0.65 on 2001-2008.
+| seed | claude-opus-5-5 effort medium (API, tools only) |
+|---|---|
+| 2001 | 0.95 |
+| 2002 | 0.18 |
+| 2003 | 0.30 |
+| 2004 | 0.13 |
+| 2005 | 0.44 |
+| mean | 0.40 (reference 0.78) |
+Note the harness effect: Claude as a Claude Code subagent (shell, own scripts, long thinking) averaged 0.65 on 2001-2008;
+the same family through plain tool calls at medium effort averages 0.40. OpenCode is a coding agent with a shell, so the
+judges' runs may look more like the subagent runs. Must test inside Harbor/OpenCode before claiming the gap.
