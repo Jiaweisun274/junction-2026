@@ -122,3 +122,27 @@ Recurring, decision-level failure: perseveration. When a concept does not click,
 the turns to spaced review. Agents did spaced review well and diagnosed the misconception whenever its signature appeared.
 Next: a stronger, principled reference (belief-state POMDP planner: particle filter over the hidden state + rollouts),
 which should beat both and make the gap consistent.
+
+# Probe 5: class of five (tutor3), 60 turns, lecture / classquiz added (Sat 14 Nov, ~00:30)
+References (no tuning): RTI tiered instruction (rti_class.py) 0.54 mean on seeds 2001-2010; per-child literature policy
+(lit_class.py) 0.45; naive "lecture twice + class quiz" 0.41. Oracle = best of full-info greedy and a rollout planner
+with a small candidate set — NOT a reliable upper bound here (one agent scored above it).
+| seed | agent | RTI | naive |
+|---|---|---|---|
+| 2001 | 0.54 | 0.42 | 0.34 |
+| 2002 | 0.69 | 0.48 | 0.37 |
+| 2003 | 1.02 | 0.62 | 0.33 |
+| 2004 | 0.73 | 0.48 | 0.56 |
+| 2005 | 0.91 | 0.50 | 0.26 |
+| mean | 0.78 | 0.50 | 0.37 |
+The agent beats every reference on every seed. It independently ran RTI-like teaching (lecture, class quiz, one-to-one
+remediation for those who failed, spaced class quizzes at session start, targeted misconception correction, and it
+inferred an add_across bug on concept 5 from a word-problem answer). Its own stated mistakes: pushing new material on
+Wednesday instead of spaced review; long one-to-one effort on one stubborn child.
+
+# Calibration check: Duolingo half-life regression (Settles & Meeder 2016 data, first 2M rows)
+fit_hlr.py: log2 h = 7.13 + 0.184 sqrt(1+correct) - 0.795 sqrt(1+wrong); MAE on recall 0.15.
+Implied half-life ~90 days, +3-5% per correct recall. Our simulator uses 1 day, x2.5 per correct recall.
+Caveats: vocabulary, adult self-selected learners, items mostly already practised (mean recall 0.90), our quick
+least-squares fit without the paper's regularisation. Still, it says our forgetting is far too fast and our
+testing-effect multiplier far too strong compared with this real data.
