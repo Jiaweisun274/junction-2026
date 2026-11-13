@@ -16,6 +16,20 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe"))
 import tutor2 as t2  # noqa: E402
 
+def load_env_file():
+    """Read KEY=VALUE lines from afterquery/.env into the environment (values never printed)."""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(p):
+        for line in open(p):
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                v = v.strip().strip('"').strip("'")
+                if v and not os.environ.get(k.strip()):
+                    os.environ[k.strip()] = v
+
+
+load_env_file()
 RULES = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe", "rules_tutor2.txt")).read()
 DAYS = ["Monday", "Wednesday", "Friday"]
 SYSTEM = ("You are playing a decision game through tools. Maximise your score. Use exactly one tool per turn and "
