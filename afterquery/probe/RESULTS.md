@@ -146,3 +146,17 @@ Implied half-life ~90 days, +3-5% per correct recall. Our simulator uses 1 day, 
 Caveats: vocabulary, adult self-selected learners, items mostly already practised (mean recall 0.90), our quick
 least-squares fit without the paper's regularisation. Still, it says our forgetting is far too fast and our
 testing-effect multiplier far too strong compared with this real data.
+
+# First API runs with run_agent.py (tutor2 fixed, one child, fresh game each)
+Reference = untuned literature policy (lit_ref.py), on the same seeds.
+| seed | gpt-6.1-sol reasoning medium | gpt-6.1-sol reasoning high | literature reference |
+|---|---|---|---|
+| 2001 | 0.97 | 0.95 | 0.89 |
+| 2002 | 0.23 | 0.51 | 0.85 |
+| 2003 | 0.00 | 0.08 | 0.74 |
+| 2004 | 0.21 | 0.21 | 0.73 |
+| 2005 | 0.49 | 0.35 | 0.71 |
+| mean | 0.38 | 0.42 | 0.78 |
+Cost per game ~70k input tokens (~95% cached), ~600-1100 output tokens. Raising reasoning effort did not close the gap.
+Failure pattern: moves on after one quiz (often a lucky guess on a prerequisite), then re-explains a concept that cannot
+click; never backs off to the prerequisite. Earlier Claude subagent runs (heavy reasoning) averaged 0.65 on 2001-2008.
