@@ -1,0 +1,64 @@
+# Probe 1 (Fri 13 Nov evening): two small daily-life games, blind Claude subagent
+
+Setup: subagent (Claude Opus-class, Python allowed, could not read the source) played 3 seeds per game from a rules text.
+
+## A. Sell a used bike (optimal stopping, unknown value, Normal prior given)
+| seed | agent | reference (Bayesian DP) | oracle (known value) | 37% rule |
+|---|---|---|---|---|
+| 1 | 351 | 351 | 351 | 50 |
+| 7 | 265* | 337 | 337 | 50 |
+| 10 | 165 | 165 | 247 | 50 |
+*execution slip: batched several `reject` calls and skipped an offer its own model said to accept.
+Agent recognised the problem and wrote the same Bayesian DP. No decision gap.
+
+## B. Shared apartment sauna (opponent modelling, 4 routine types listed in rules)
+| seed | agent | reference (fit routines, myopic) | oracle (true routines) | always 19 |
+|---|---|---|---|---|
+| 6 | 46.5 | 51.0 | 55.0 | 19.5 |
+| 9 | 54.0 | 54.0 | 55.0 | 19.5 |
+| 10 | 52.5 | 52.0 | 55.0 | 24.0 |
+Agent fitted every neighbour's routine within ~4 days and planned 7 evenings ahead. No gap.
+
+## Lesson
+When the rules hand over the full model class (prior, noise, list of routine types), a frontier agent with Python
+does "fit the model, then optimise" as well as our reference. Gap must come from something that is not a
+one-shot fit-then-solve: model class not enumerated, long horizon with many interacting parts,
+costly exploration in a large space, or the agent's own actions confounding its data.
+
+# Probe 2 (Fri 13 Nov late): ferry boarding gate, faster-is-slower, shape not given, unannounced degradation
+Throughput f(q) = c*q/(1+(q/qs)^2), unknown qs/peak per seed; at a random minute 20-35 qs halves, peak -20%. 50 steps.
+Rules only say throughput depends on gate crowding "in a way you have to find out" and "conditions may change".
+| seed | agent run 1 | agent run 2 | reference (sweep, hold best, re-sweep on drop) | oracle | call 10/min | flood 40/min |
+|---|---|---|---|---|---|---|
+| 1 | 402 | 389 | 402 | 444 | 283 | 55 |
+| 3 | 382 | 384 | 341 | 400 | 246 | 31 |
+| 4 | 394 | 396 | 328 | 373 | 199 | 26 |
+Both agents discovered the non-monotone curve (best crowd ~12-16), noticed the mid-game drop, and wrote adaptive
+scripts. They beat our quickly-written reference on seeds 3-4. Caveat: each agent played 3 seeds in a row and
+carried learning across games, which a fresh Harbor episode would not allow; on the first game (seed 1) they scored
+402 and 389 vs reference 402. Still no gap.
+
+## Lesson after 3 probes
+Small, low-dimensional problems with clear per-step feedback are solved: the agent explores, fits, adapts,
+even without being told the model. A gap probably needs what Vending-Bench has: many concurrent decisions competing
+for attention, long horizons (hundreds of steps, growing context), delayed or confounded consequences,
+or truly adaptive (learning) opponents. Trade-off: this conflicts with "keep it small".
+
+# Probe 3 (Fri 13 Nov, ~midnight): tutoring a simulated child (hidden mastery, prerequisite chain, over-confident self-reports)
+6 concepts in a prerequisite chain, 30 turns. explain (chance to learn, ~0 if prerequisite missing), quiz (slip 0.1 / guess 0.25, stated),
+ask (free, "yes" 95% if mastered / 75-90% if not, stated qualitatively). Reward = (exam - exam with no teaching) / (oracle exam - same).
+One fresh blind agent per seed (no carry-over between games).
+| seed | agent | first reference (hand-written) | tuned reference | oracle |
+|---|---|---|---|---|
+| 1 | 1.00 | 0.80 | 1.00 | 1 |
+| 4 | 0.33 | 0.50 | 0.83 | 1 |
+| 9 | 0.50 | 0.50 | 1.00 | 1 |
+| mean | 0.61 | 0.60 | 0.94 | 1 |
+Tuned reference = same Bayesian quiz/explain rule with thresholds picked on seeds 1-40 (start belief 0.3, explain while belief < 0.55,
+move on at > 0.9, assumed learn rate 0.3). Held-out seeds 41-140: tuned 0.83, first reference 0.55, naive "explain, ask, move on" 0.25.
+
+Agents were not fooled by "I get it": all three ignored `ask` and relied on quizzes. Their loss came from over-verification:
+too many confirmation quizzes (they wanted two correct in a row), which teach nothing, so they ran out of turns for later concepts.
+Two of three said so themselves afterwards (a knowing-doing gap). One also believed concept 3 was mastered when it was not.
+First sign of a real gap, but only 3 runs, and the reference was tuned on seeds that include the agent seeds
+(held-out result 0.83 says it is not just overfitting). Next: more agent runs on held-out seeds, other models.
