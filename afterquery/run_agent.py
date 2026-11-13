@@ -163,6 +163,49 @@ def openai_loop(game, args, log):
     return usage
 
 
+def responses_loop(game, args, log):
+    """OpenAI Responses API (needed for reasoning + function tools on newer OpenAI models)."""
+    from openai import OpenAI
+    client = OpenAI(base_url=args.base_url, api_key=os.environ.get("OPENAI_API_KEY", "none"))
+    tools = [{"type": "function", "name": t["name"], "description": t["description"],
+              "parameters": {"type": "object", "properties": t["params"], "required": list(t["params"]),
+                             "additionalProperties": False}, "strict": True} for t in TOOLS]
+    usage = {"input": 0, "output": 0, "cache_read": 0}
+    nxt, prev = [{"role": "user", "content": "Start the game. " + game.status()}], None
+    for step in range(args.max_steps):
+        kw = dict(model=args.model, instructions=SYSTEM, input=nxt, tools=tools)
+        if args.reasoning:
+            kw["reasoning"] = {"effort": args.reasoning}
+        if prev:
+            kw["previous_response_id"] = prev
+        resp = client.responses.create(**kw)
+        prev = resp.id
+        if resp.usage:
+            usage["input"] += resp.usage.input_tokens; usage["output"] += resp.usage.output_tokens
+            det = getattr(resp.usage, "input_tokens_details", None)
+            usage["cache_read"] += (getattr(det, "cached_tokens", 0) or 0) if det else 0
+        calls = [o for o in resp.output if o.type == "function_call"]
+        text = resp.output_text or ""
+        if not calls:
+            log({"event": "no_tool", "step": step, "text": text})
+            if game.done:
+                break
+            nxt = [{"role": "user", "content": "Please continue with a tool call. " + game.status()}]
+            continue
+        nxt = []
+        for c in calls:
+            try:
+                a = json.loads(c.arguments or "{}")
+            except json.JSONDecodeError:
+                a = {}
+            out = game.call(c.name, a)
+            log({"event": "tool", "step": step, "turn": game.s.turn, "name": c.name, "input": a, "result": out, "text": text})
+            nxt.append({"type": "function_call_output", "call_id": c.call_id, "output": out})
+        if game.done:
+            break
+    return usage
+
+
 # ---------------- scoring ----------------
 def normalise(seed, exam):
     import lit_ref, sweep_tutor2 as w
@@ -179,7 +222,8 @@ def play(seed, args):
     with open(path, "w") as fh:
         log = lambda d: fh.write(json.dumps(d) + "\n")
         log({"event": "start", "seed": seed, "model": args.model, "backend": args.backend})
-        usage = (anthropic_loop if args.backend == "anthropic" else openai_loop)(game, args, log)
+        loop = {"anthropic": anthropic_loop, "openai": openai_loop, "responses": responses_loop}[args.backend]
+        usage = loop(game, args, log)
         if not game.done:
             game.call("finish", {})
         norm, ref = normalise(seed, game.exam)
@@ -198,7 +242,8 @@ def parse_seeds(s):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--backend", choices=["anthropic", "openai"], default="anthropic")
+    ap.add_argument("--backend", choices=["anthropic", "openai", "responses"], default="anthropic")
+    ap.add_argument("--reasoning", default="medium", help="OpenAI reasoning effort for --backend responses ('' to omit)")
     ap.add_argument("--model", default="claude-opus-5-5")
     ap.add_argument("--base-url", default=None)
     ap.add_argument("--effort", default="medium", choices=["low", "medium", "high", "xhigh", "max"])
