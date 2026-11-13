@@ -124,7 +124,8 @@ def openai_loop(game, args, log):
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": "Start the game. " + game.status()}]
     usage = {"input": 0, "output": 0, "cache_read": 0}
     for step in range(args.max_steps):
-        resp = client.chat.completions.create(model=args.model, messages=messages, tools=tools, max_tokens=4096)
+        resp = client.chat.completions.create(model=args.model, messages=messages, tools=tools,
+                                              max_completion_tokens=16000)
         if resp.usage:
             usage["input"] += resp.usage.prompt_tokens; usage["output"] += resp.usage.completion_tokens
         m = resp.choices[0].message
