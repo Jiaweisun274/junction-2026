@@ -83,3 +83,23 @@ Findings:
 - Failure mode is the same in every losing run: a fixed "two correct in a row" confirmation rule and an up-front diagnosis phase that spend turns on quizzes, which teach nothing.
 - Warning ablation: even without the warning, agents tried `ask`, saw "yes" to everything and ignored it. They were not fooled by self-reports in this tool-based setting.
 - Design lever: remove the ceiling (lower learn rates, or a longer chain / fewer turns) so most seeds are budget-tight; that is where decisions matter.
+
+# Probe 4: tutor v2 (sessions Mon/Wed/Fri, exam next Mon; forgetting, testing effect, spacing, misconceptions)
+Model and parameters: see tutor2.py docstring and rules_tutor2.txt. Oracle = best of a full-information greedy rule and a
+full-information rollout planner (not guaranteed optimal). Reference tuned on seeds 1001-1060; test seeds 2001-2060: reference 0.71, naive 0.53.
+
+## 4a: first agent runs (design flaw, results contaminated)
+| seed | agent | reference | naive |
+|---|---|---|---|
+| 2001 | 0.63 | 0.67 | 0.12 |
+| 2002 | 0.25 | 0.85 | 0.70 |
+| 2003 | 0.73 | 0.35 | 0.09 |
+| 2004 | 0.28 | 0.75 | 0.37 |
+| 2005 | 0.72 | 0.76 | 0.96 |
+| mean | 0.52 | 0.68 | 0.45 |
+Flaw: two "generic" wrong answers looked like misconception signatures ("both" for 2/3 = 3/4 or 4/6 implies 2/3 = 3/4;
+"2/6" for 1/4 + 1/2 is adding across). In 3 of 5 runs the agent reasonably read them as misconceptions and wasted turns.
+That is designer-induced misleading, not a fair difficulty. Fixed: generic wrong answers are now neutral, and add_across on
+concept 5 shows in the word problem (6) the add-across way; the rules say so.
+Genuine failure seen anyway (seed 2004): raced ahead on Monday on single correct answers, so later concepts had no base.
+Agents consistently did spaced review at the start of each session; on seed 2003 the agent beat the reference by a lot.

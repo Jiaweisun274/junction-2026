@@ -38,13 +38,18 @@ BUG_DESC = {
     "add_across": "adds numerators and denominators separately (says 1/2 + 1/3 = 2/5)",
 }
 QUIZ = [
-    ("A cake is cut into 4 pieces and you take one. Is that 1/4 if the pieces are different sizes?", "No", None, ["Yes", "Yes, it's 1 out of 4"]),
+    ("A cake is cut into 4 pieces and you take one. Is that 1/4 if the pieces are different sizes?", "No", None, ["Yes", "I don't know"]),
     ("Which is bigger, 1/4 or 1/8?", "1/4", "1/8", ["they are the same", "I don't know"]),
-    ("Which fraction equals 2/3: 3/4 or 4/6?", "4/6", "3/4", ["neither", "both"]),
-    ("Write 1/2 and 1/3 with the same denominator.", "3/6 and 2/6", None, ["1/6 and 1/6", "2/4 and 3/4"]),
-    ("What is 1/2 + 1/3?", "5/6", "2/5", ["1/6", "2/6"]),
-    ("Mia eats 1/4 of a pizza and Leo eats 1/2. How much of the pizza is eaten?", "3/4", None, ["2/6", "1/8"]),
+    ("Which fraction equals 2/3: 3/4 or 4/6?", "4/6", "3/4", ["neither", "I'm not sure"]),
+    ("Write 1/2 and 1/3 with the same denominator.", "3/6 and 2/6", None, ["1/6 and 1/6", "I don't know"]),
+    ("What is 1/2 + 1/3?", "5/6", "2/5", ["1/6", "I don't know"]),
+    ("Mia eats 1/4 of a pizza and Leo eats 1/2. How much of the pizza is eaten?", "3/4", "2/6", ["1/8", "I don't know"]),
 ]
+# generic wrong answers never imply a listed misconception. A misconception also shows in the next concept that uses it:
+# add_across on concept 5 makes the child answer the word problem (6) the add-across way.
+CARRY = {5: 4}   # concept 6 shows the misconception of concept 5
+
+
 YES_T = ["Yeah, that makes sense!", "Oh okay, I get it now.", "Mm-hm, yes, I understand.", "Yep, got it.", "I'm sure, it's easy!"]
 NO_T = ["Hmm... not really.", "I'm a bit confused, sorry.", "Can you say it again?", "I don't get it."]
 DIR = os.environ.get("GAME_DIR", ".")
@@ -136,9 +141,12 @@ class Sim:
             ok = u[1] < 0.10
         else:
             ok = u[1] < GUESS
+        carried = k in CARRY and self.state[CARRY[k]] == "buggy" and st != "mastered"
+        if carried:
+            ok = u[1] < 0.10
         if ok:
             ans = right
-        elif st == "buggy":
+        elif st == "buggy" or carried:
             ans = bug_ans
         else:
             ans = wrong[int(u[2] * len(wrong))]
@@ -237,6 +245,9 @@ def reference_step(s, mem, last_obs):
             ok, ans = o
             if not ok and k in BUG_ANS and ans == BUG_ANS[k]:
                 mem["bug"][k] = BUGS[k]; b[k] = 0.0
+            elif not ok and k in CARRY and ans == QUIZ[k][2]:
+                j = CARRY[k]                      # misconception lives in the prerequisite
+                mem["bug"][j] = BUGS[j]; b[j] = 0.0; mem["k"] = min(mem["k"], j)
             else:
                 lm, ln = (1 - SLIP, GUESS) if ok else (SLIP, 1 - GUESS)
                 b[k] = b[k] * lm / (b[k] * lm + (1 - b[k]) * ln)
