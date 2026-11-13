@@ -103,3 +103,22 @@ That is designer-induced misleading, not a fair difficulty. Fixed: generic wrong
 concept 5 shows in the word problem (6) the add-across way; the rules say so.
 Genuine failure seen anyway (seed 2004): raced ahead on Monday on single correct answers, so later concepts had no base.
 Agents consistently did spaced review at the start of each session; on seed 2003 the agent beat the reference by a lot.
+
+## 4b: fixed version, 8 fresh agents (one game each)
+| seed | agent exam | agent (norm.) | reference | naive | agent's main loss |
+|---|---|---|---|---|---|
+| 2001 | 65% | 0.86 | 0.67 | 0.12 | never reached 5-6 |
+| 2002 | 41% | 0.23 | 0.85 | 0.70 | took a lucky-guess correct on prerequisite 2 as mastery, then explained 3 nine times (it could not click) |
+| 2003 | 57% | 0.56 | 0.35 | 0.09 | 3 faded, re-taught on the last turn |
+| 2004 | 40% | 0.30 | 0.75 | 0.37 | hidden misconception on 2 surfaced only on turn 18; then 4 explanations of 3 that never clicked |
+| 2005 | 58% | 0.82 | 0.76 | 0.96 | 7 turns on concept 4 that never clicked |
+| 2006 | 78% | 0.85 | 0.74 | 0.83 | 3 faded at the end |
+| 2007 | 67% | 0.61 | 0.80 | 0.87 | 13 turns on concept 5 with no return |
+| 2008 | 83% | 0.95 | 0.74 | 0.35 | - |
+| mean | | 0.65 | 0.71 | 0.54 | |
+Agent wins 5 of 8 seeds; the mean gap (0.06) is not consistent. But both are far from the full-information oracle (1.0).
+Recurring, decision-level failure: perseveration. When a concept does not click, the agent keeps re-explaining it
+(7-13 turns) instead of re-checking the prerequisite (which may be forgotten or was only guessed right) or moving
+the turns to spaced review. Agents did spaced review well and diagnosed the misconception whenever its signature appeared.
+Next: a stronger, principled reference (belief-state POMDP planner: particle filter over the hidden state + rollouts),
+which should beat both and make the gap consistent.
