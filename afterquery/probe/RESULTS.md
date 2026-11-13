@@ -62,3 +62,24 @@ too many confirmation quizzes (they wanted two correct in a row), which teach no
 Two of three said so themselves afterwards (a knowing-doing gap). One also believed concept 3 was mastered when it was not.
 First sign of a real gap, but only 3 runs, and the reference was tuned on seeds that include the agent seeds
 (held-out result 0.83 says it is not just overfitting). Next: more agent runs on held-out seeds, other models.
+
+## Probe 3b: held-out reference, more runs, warning ablation (Sat 14 Nov, ~01:00)
+Reference re-tuned only on training seeds 1001-1200 (start 0.3, explain while belief < 0.7, move on at > 0.9, learn rate 0.3).
+Test seeds 2001-2100: reference mean 0.86, naive 0.24. Reference hits the ceiling (1.0) on 65% of test seeds; on the other 35% it averages 0.60.
+One fresh blind agent per game. "warn" = rules say children often claim to understand when they don't; "no-warn" = that sentence removed.
+| seed | agent warn | agent no-warn | reference (held-out tuned) |
+|---|---|---|---|
+| 1 | 1.00 | | 1.00 |
+| 4 | 0.33 | | 1.00 |
+| 9 | 0.50 | | 1.00 |
+| 2001 | 1.00 | 1.00 | 1.00 |
+| 2002 | 1.00 | 1.00 | 1.00 |
+| 2003 | 1.00 | 0.60 | 1.00 |
+| 2004 | 1.00 | | 1.00 |
+| 2005 | 0.80 | | 1.00 |
+| mean | 0.83 (8 runs) | 0.87 (3 runs) | 1.00 |
+Findings:
+- The gap is real but only shows on hard seeds (slow learners, tight budget): 0.33 / 0.50 / 0.80 vs 1.00. On easy seeds both hit the ceiling.
+- Failure mode is the same in every losing run: a fixed "two correct in a row" confirmation rule and an up-front diagnosis phase that spend turns on quizzes, which teach nothing.
+- Warning ablation: even without the warning, agents tried `ask`, saw "yes" to everything and ignored it. They were not fooled by self-reports in this tool-based setting.
+- Design lever: remove the ceiling (lower learn rates, or a longer chain / fewer turns) so most seeds are budget-tight; that is where decisions matter.
