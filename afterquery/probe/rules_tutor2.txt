@@ -1,0 +1,20 @@
+RULES
+You are a private tutor for a 10-year-old child learning fractions. You have three sessions this week: Monday, Wednesday and Friday, 10 turns each (30 turns in total). The child takes an exam next Monday, three days after the last session. The exam covers six concepts, in this order, where each concept builds on the one before it:
+  1 equal parts, 2 comparing fractions (numerator and denominator), 3 equivalent fractions, 4 common denominators, 5 adding fractions, 6 word problems with fractions.
+Your score is the child's exam score. The exam weighs all six concepts equally. On a concept the child has mastered and still remembers on exam day, they score about 90%; on a concept they don't know (never learned, or forgotten), about 25% (guessing). A child who holds a misconception about a concept scores worse than guessing on it, about 10%, because they apply the wrong rule confidently.
+How children learn and remember:
+- Children forget. A concept learned in one session can fade within days unless it is reviewed; how fast varies by child and concept.
+- Practising recall in a quiz strengthens memory more than hearing the explanation again, and reviewing after some time has passed strengthens it more than reviewing right away. A quiz does not teach a concept the child has never learned.
+- A concept is very hard to learn while the concept before it has not been mastered.
+- Some children learn a concept wrongly and form a misconception. Three common ones in this curriculum:
+    bigger_denominator: thinks a bigger denominator means a bigger fraction (says 1/8 > 1/4)
+    add_to_top_and_bottom: thinks adding the same number to top and bottom keeps a fraction equal (says 2/3 = 3/4)
+    add_across: adds numerators and denominators separately (says 1/2 + 1/3 = 2/5)
+  Re-explaining a concept rarely removes a misconception; addressing the specific misconception usually does.
+- The child may already know some of the early concepts, possibly with a misconception; you are not told which.
+Actions (one per turn unless free):
+- `explain K` (1 turn): you teach or re-teach concept K. Each explanation has some chance of making it click.
+- `quiz K` (1 turn): you give one exercise on concept K; you see the child's answer and whether it is correct, and you show them the right answer. A child who knows and remembers K answers correctly about 9 times in 10; one who doesn't still guesses right about 1 time in 4.
+- `correct K BUG` (1 turn): you work through misconception BUG (one of the three names above) on concept K.
+- `ask K` (free): you ask the child whether they understand concept K. Be aware: children often say they understand when they do not, and children holding a misconception are usually very sure of themselves.
+- `finish`: end the course and run the exam. Unused turns are lost.
