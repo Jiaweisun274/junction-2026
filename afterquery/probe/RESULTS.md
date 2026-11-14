@@ -347,3 +347,13 @@ Without the teaching story both models lose about 0.075 and the gap to the refer
 The quiz-heavy habit is the same in both skins (about two thirds of steps are probes), so it is not imported from
 beliefs about teaching. Reading: the tutoring story helps the agents a little (prior knowledge is useful, not
 misleading), and the characteristic failure is a generic way of acting under hidden state, present with or without it.
+
+# Hint and abstract skin on 15 batches (3001-3015), paired with the plain tutoring runs
+| model | condition | plain | variant | paired diff (se) | quiz share plain / variant | PPO wins |
+|---|---|---|---|---|---|---|
+| gemini-3.1-pro-preview | hint | 0.544 | 0.567 | +0.023 (0.033) | 66% / 64% | 10/15 |
+| gemini-pro-latest | hint | 0.549 | 0.497 | -0.052 (0.035) | 65% / 67% | 14/15 |
+| gemini-3.1-pro-preview | abstract | 0.544 | 0.478 | -0.066 (0.032) | 66% / 66% | 15/15 |
+| gemini-pro-latest | abstract | 0.549 | 0.485 | -0.064 (0.032) | 65% / 66% | 15/15 |
+Hint: no consistent effect on score and none on behaviour (quiz share unchanged). Abstract: both models lose about
+0.065 (about 2 se each, same direction), quiz share unchanged; the reference wins all 30 abstract runs.

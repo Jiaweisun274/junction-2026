@@ -40,7 +40,7 @@ def main():
     rows = select(a.samples, a.top)
     ds = Dataset.from_list(rows).shuffle(seed=0)
     cfg = SFTConfig(output_dir=a.out, num_train_epochs=a.epochs, per_device_train_batch_size=8,
-                    gradient_accumulation_steps=2, learning_rate=1e-4, lr_scheduler_type="cosine", warmup_ratio=0.03,
+                    gradient_accumulation_steps=2, learning_rate=1e-4, lr_scheduler_type="cosine", warmup_steps=10,
                     bf16=True, logging_steps=20, save_strategy="no", report_to=[], max_length=6144,
                     completion_only_loss=True, gradient_checkpointing=True)
     lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.0, target_modules="all-linear", task_type="CAUSAL_LM")
