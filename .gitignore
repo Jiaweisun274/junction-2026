@@ -9,3 +9,5 @@ spread/docs/
 CLAUDE.md
 # downloaded datasets (not redistributed)
 data/
+# Harbor run output (re-create with harbor run)
+afterquery/jobs/

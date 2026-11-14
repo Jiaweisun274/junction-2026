@@ -11,6 +11,7 @@ Work in progress. Each folder will get its own README with a one-command evaluat
 
 ## Status
 - `afterquery/probe/`: early probes (small simulators played by blind agents). See `afterquery/probe/RESULTS.md`.
+- `afterquery/harbor/tutor2/`: Harbor task package for running the tutor through OpenCode + MCP.
 - `spread/dispatch.py`: the Spread starter, to be extended into our dispatcher.
 
 All code here was written during the event. MIT licensed.
