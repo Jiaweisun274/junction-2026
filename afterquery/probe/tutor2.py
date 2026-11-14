@@ -27,7 +27,11 @@ T = TURNS_PER * len(SESSIONS)
 EXAM_DAY = 7.0
 SLIP, GUESS = 0.10, 0.25
 LEAK = 0.05
-H0 = 1.0
+H0 = 1.0  # legacy; per-child half-lives now come from params(): see CALIBRATION below
+# CALIBRATION (Sat 14 Nov): FSRS-5 default first-review stabilities (days to 90% recall) are 0.40 (Again),
+# 1.18 (Hard), 3.17 (Good). As exponential half-lives (x ln2/ln(1/0.9) = x6.58): ~2.6, ~7.8, ~21 days.
+# Newly learned concept: half-life U(2.6, 7.8) days (Again..Hard). Known before the course: U(8, 20) (Hard..Good).
+# Correct recall multiplies the half-life by 2.5 = the SM-2 default ease factor.
 RETRIEVE, RESTUDY = 2.5, 1.5
 FIX_EXPLAIN, FIX_TARGETED = 0.10, 0.70
 BUG_EXAM = 0.10
@@ -61,10 +65,11 @@ def params(seed):
     m0 = int(r.choice([0, 1, 2, 3], p=[0.2, 0.35, 0.3, 0.15]))
     plearn = r.uniform(0.3, 0.6, K)
     suscept = {b: bool(r.random() < 0.4) for b in BUGS.values()}
-    h_init = r.uniform(2.0, 6.0, K)
+    h_init = r.uniform(8.0, 20.0, K)
     u = r.random((T + 2, 8))
     u_init = r.random(K)
-    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init)
+    h0 = r.uniform(2.6, 7.8, K)
+    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init, h0=h0)
 
 
 class Sim:
@@ -105,7 +110,7 @@ class Sim:
             self.state[k] = "buggy"
         else:
             self.state[k] = "mastered"
-            self.h[k], self.last[k] = H0, self.now()
+            self.h[k], self.last[k] = self.p["h0"][k], self.now()
 
     # --- actions ---
     def explain(self, k):
@@ -119,7 +124,7 @@ class Sim:
             self.h[k] *= RESTUDY * sp
             self.last[k] = self.now()
         elif st == "buggy" and u[0] < FIX_EXPLAIN:
-            self.state[k] = "mastered"; self.h[k], self.last[k] = H0, self.now()
+            self.state[k] = "mastered"; self.h[k], self.last[k] = self.p["h0"][k], self.now()
         self.turn += 1
         self.last_explained = k
 
@@ -157,7 +162,7 @@ class Sim:
     def correct(self, k, bug):
         u = self.p["u"][self.turn]
         if self.state[k] == "buggy" and BUGS.get(k) == bug and u[0] < FIX_TARGETED:
-            self.state[k] = "mastered"; self.h[k], self.last[k] = H0, self.now()
+            self.state[k] = "mastered"; self.h[k], self.last[k] = self.p["h0"][k], self.now()
         self.turn += 1
         self.last_explained = None
 

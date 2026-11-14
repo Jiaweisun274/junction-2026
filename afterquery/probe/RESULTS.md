@@ -184,3 +184,14 @@ judges' runs may look more like the subagent runs. Must test inside Harbor/OpenC
 Harness effect confirmed: inside OpenCode both frontier models rise from ~0.40 (plain tool calls) to ~0.52.
 The reference still leads on average but wins only 3 of 5 seeds per model; the gap is not yet "consistent".
 Results TSVs: afterquery/harbor/results/. Batch script: afterquery/harbor/run_seeds.sh.
+
+# Calibration of forgetting + POMDP planner attempt (Sat 14 Nov)
+tutor2.py now uses FSRS-5-derived half-lives (new concept U(2.6, 7.8) d, pre-known U(8, 20) d; x2.5 on correct recall
+= SM-2 ease). Harbor copies NOT yet synced (still old 1-day model).
+40 seeds (2001-2040), calibrated: literature 0.62, naive (2-in-a-row, no review) 0.58 (was 0.69 vs 0.53 with 1-day
+half-life). Most of the old reference advantage came from the unrealistically fast forgetting.
+pomdp_ref.py: particle filter (wide priors) + Monte Carlo one-step improvement over the literature policy, common
+random numbers, 48 rollouts/candidate: 0.62 (= literature). Diagnostic with the simulator's TRUE prior: 0.59.
+=> one-step policy improvement on this base adds nothing; simple observation-based policies plateau near 0.6 while
+the full-information policy defines 1.0. A stronger reference needs real search (e.g. POMCP) or the env needs a
+different source of difficulty.
