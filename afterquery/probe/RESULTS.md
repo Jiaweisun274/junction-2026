@@ -319,3 +319,20 @@ Planned minus PPO per batch: -0.054 (se 0.011); planned wins 73/200. The earlier
 planned one high. Corrected claim: a readable 5-rule teacher gets most of the way (0.67 vs PPO 0.73), clearly above
 the textbook rulebook (0.56); PPO still learns something beyond these rules. Agent-vs-reference comparisons must be
 paired on the same batches (agents have run only on 3001-3005 so far; 3006-3015 queued).
+
+# More seeds and the hint prompt (Sat 14 Nov evening, Harbor + OpenCode on Verda)
+New batches 3006-3015 (salt eval1), paired on the same children:
+| model | mean | PPO wins | gap vs PPO | planned wins | gap vs planned |
+|---|---|---|---|---|---|
+| gemini-3.1-pro-preview | 0.541 | 10/10 | +0.139 | 10/10 | +0.125 |
+| gemini-pro-latest | 0.563 | 9/10 | +0.118 | 8/10 | +0.103 |
+(PPO 0.680, planned 0.666 on these batches.) The gap on 3001-3005 was not a property of that hard batch set.
+
+Hint prompt (harbor/tutor2_hint: four lines of advice: turns are scarce, a quiz never teaches, one correct answer is
+weak evidence, re-quizzing rarely pays), batches 3001-3005, paired with the plain runs:
+| model | plain | with hint | quiz share plain -> hint | PPO wins (hint) |
+|---|---|---|---|---|
+| gemini-3.1-pro-preview | 0.549 | 0.604 | 68% -> 63% | 3/5 |
+| gemini-pro-latest | 0.522 | 0.441 | 65% -> 64% | 5/5 |
+Explicit advice barely changes behaviour: the quiz share stays above 60% (PPO 37%). One model gains a little, the
+other loses. Being told the right principle is not the same as acting on it.
