@@ -8,16 +8,17 @@
   --paper: #FAFAF6; --grid: #E9EDF4; --panel: #FFFFFF; --ink: #1E2A44; --muted: #5A6478; --line: #D5DCE7;
   --know: #2B59C3; --know-soft: #DCE6FA; --bug: #C9711E; --bug-soft: #FBE8D3; --none-soft: #ECEFF4;
   --pen: #C2362F; --pen-soft: #F8DEDB;
+  --teach: #0E7C70; --quiz: #6B46C1; --fix: #C2362F; --on-act: #FFFFFF;
   --display: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif; --body: 'Atkinson Hyperlegible', Verdana, sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --paper: #131926; --grid: #1A2131; --panel: #1A2232; --ink: #E7EBF3; --muted: #A3ADC2; --line: #2D384D;
   --know: #86A8F2; --know-soft: #22345A; --bug: #F0A35E; --bug-soft: #4A3420; --none-soft: #252E40;
-  --pen: #F07A6E; --pen-soft: #4A2523; color-scheme: dark; } }
+  --pen: #F07A6E; --pen-soft: #4A2523; --teach: #4FC7B8; --quiz: #A98BF0; --fix: #F07A6E; --on-act: #131926; color-scheme: dark; } }
 :root[data-theme="dark"] {
   --paper: #131926; --grid: #1A2131; --panel: #1A2232; --ink: #E7EBF3; --muted: #A3ADC2; --line: #2D384D;
   --know: #86A8F2; --know-soft: #22345A; --bug: #F0A35E; --bug-soft: #4A3420; --none-soft: #252E40;
-  --pen: #F07A6E; --pen-soft: #4A2523; color-scheme: dark; }
+  --pen: #F07A6E; --pen-soft: #4A2523; --teach: #4FC7B8; --quiz: #A98BF0; --fix: #F07A6E; --on-act: #131926; color-scheme: dark; }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { background-color: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.45;
@@ -62,6 +63,24 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .speech::before { content: ""; position: absolute; left: -11px; top: 22px; width: 18px; height: 18px; background: var(--paper); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg); }
 .said { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); font-weight: 800; line-height: 1.1; }
 .speech .q { font-size: 17px; }
+.badge { display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; color: var(--on-act); }
+.badge.explain { background: var(--teach); }
+.badge.quiz { background: var(--quiz); }
+.badge.correct { background: var(--fix); }
+.tile.hit-explain { box-shadow: 0 0 0 3px var(--teach); }
+.tile.hit-quiz { box-shadow: 0 0 0 3px var(--quiz); }
+.tile.hit-correct { box-shadow: 0 0 0 3px var(--fix); }
+.tile .b button.t { color: var(--teach); font-weight: 700; }
+.tile .b button.qz { color: var(--quiz); font-weight: 700; }
+.tile .b button.fix { border-color: var(--fix); color: var(--fix); font-weight: 700; }
+.strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.strip > div { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 2px; }
+.strip span { height: 16px; border-radius: 3px; background: var(--none-soft); }
+.strip span.explain { background: var(--teach); }
+.strip span.quiz { background: var(--quiz); }
+.strip span.correct { background: var(--fix); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 14px; color: var(--muted); align-items: center; }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
 .lastbox { border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; min-height: 92px; display: flex; flex-direction: column; gap: 4px; }
 .lastbox .said { font-size: 26px; }
 .said.ok { color: var(--know); }
@@ -125,6 +144,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
       <button class="btn ghost" id="reset">Restart</button>
       <span class="hint" id="t2"></span>
     </div>
+    <p class="legend"><span><i style="background:var(--teach)"></i>Teach</span><span><i style="background:var(--quiz)"></i>Quiz</span><span><i style="background:var(--fix)"></i>Fix misconception</span><span>· one square per turn: Monday, Wednesday, Friday</span></p>
     <div class="duo" id="duo"></div>
     <p class="hint">Same child, same luck. Colours show what is really in her head; neither teacher can see it.</p>
   </section>
@@ -194,18 +214,26 @@ function tilesHTML(g, buttons) {
     const st = s.state[k], show = xray || !buttons;
     const lab = !show ? "" : st === "mastered" ? "knows it" : st === "buggy" ? "misconception" : "doesn’t know";
     const mem = show && st === "mastered" ? `<div class="mem" title="memory on exam day"><i style="width:${s.recall(k, D.const.EXAM_DAY) * 100}%"></i></div>` : `<div class="mem" style="visibility:hidden"></div>`;
-    const btns = buttons ? `<div class="b"><button data-a="explain" data-k="${k}" ${done ? "disabled" : ""}>Explain</button><button data-a="quiz" data-k="${k}" ${done ? "disabled" : ""}>Quiz</button>${g.seen[k] ? `<button class="fix" data-a="correct" data-k="${k}" ${done ? "disabled" : ""}>Fix misconception</button>` : ""}</div>` : "";
-    return `<div class="tile ${show ? "x-" + st : ""}"><span class="n">${k + 1}</span><span class="nm">${SHORT[k]}</span><span class="st">${lab}</span>${mem}${btns}</div>`;
+    const btns = buttons ? `<div class="b"><button class="t" data-a="explain" data-k="${k}" ${done ? "disabled" : ""}>Teach</button><button class="qz" data-a="quiz" data-k="${k}" ${done ? "disabled" : ""}>Quiz</button>${g.seen[k] ? `<button class="fix" data-a="correct" data-k="${k}" ${done ? "disabled" : ""}>Fix</button>` : ""}</div>` : "";
+    const hit = g.last && g.last.k === k ? "hit-" + g.last.act : "";
+    return `<div class="tile ${show ? "x-" + st : ""} ${hit}"><span class="n">${k + 1}</span><span class="nm">${SHORT[k]}</span><span class="st">${lab}</span>${mem}${btns}</div>`;
   }).join("");
 }
 
+const ACTNAME = { explain: "Teach", quiz: "Quiz", correct: "Fix" };
+function actHead(L) {
+  const badge = `<span class="badge ${L.act}">${ACTNAME[L.act]} · idea ${L.k + 1}</span>`;
+  if (L.act === "quiz") return `${badge}<p class="q">${esc(L.q)}</p><p class="said ${L.ok ? "ok" : "bad"}">“${esc(L.ans)}” ${L.ok ? "✓" : "✗"}</p>`;
+  if (L.act === "explain") return `${badge}<p class="said">“Okay, I’m listening!”</p>`;
+  return `${badge}<p class="said">“Oh, I see!”</p>`;
+}
+function stripHTML(g) {
+  return `<div class="strip" aria-label="Actions by turn">${[0, 1, 2].map((s) => `<div>${Array.from({ length: 10 }, (_, j) => { const a = g.acts[s * 10 + j]; return `<span class="${a ? a[0] : ""}"></span>`; }).join("")}</div>`).join("")}</div>`;
+}
 function talkHTML(g, withInside) {
   const i = g.last;
   if (!i) return `<p class="said">Hi! I’m Aino.</p><p class="q">Pick an idea and explain it or quiz her.</p>`;
-  let head;
-  if (i.act === "quiz") head = `<p class="q">Quiz ${i.k + 1}: ${esc(i.q)}</p><p class="said ${i.ok ? "ok" : "bad"}">“${esc(i.ans)}” ${i.ok ? "✓" : "✗"}</p>`;
-  else if (i.act === "explain") head = `<p class="said">“Okay, I’m listening!”</p><p class="q">You explained idea ${i.k + 1}.</p>`;
-  else head = `<p class="said">“Oh, I see!”</p><p class="q">You worked on her misconception about idea ${i.k + 1}.</p>`;
+  const head = actHead(i);
   const [w, src] = why(i, g.sim);
   const ins = withInside ? `<p class="inside">Inside: ${esc(w)}${src ? `<span class="src">${esc(src)}</span>` : ""}</p>` : "";
   const pen = i.pen ? `<p class="pen">✎ You moved on after a lucky guess.</p>` : "";
@@ -235,14 +263,13 @@ function laneHTML(g, name, cls) {
   const L = g.last;
   const last = L ? (() => {
     const [w] = why(L, s);
-    const top = L.act === "quiz" ? `<p class="q">Quiz ${L.k + 1}: ${esc(L.q)}</p><p class="said ${L.ok ? "ok" : "bad"}">“${esc(L.ans)}” ${L.ok ? "✓" : "✗"}</p>`
-      : L.act === "explain" ? `<p class="q">Explains idea ${L.k + 1}</p><p class="said">“Okay, I’m listening!”</p>`
-      : `<p class="q">Fixes the misconception on idea ${L.k + 1}</p><p class="said">“Oh, I see!”</p>`;
+    const top = actHead(L);
     return `${top}<p class="hint">${esc(w)}</p>${L.pen ? `<p class="pen">✎ moved on after a lucky guess</p>` : ""}`;
   })() : `<p class="hint">Press Play.</p>`;
   return `<div class="card" style="gap:12px;">
     <div class="who"><h2 class="${cls}">${esc(name)}</h2>${done ? `<span>exam <span class="big">${pct(s.exam())}</span></span>` : ""}</div>
     <div class="tally"><span>quizzes <b>${g.quiz}</b> of ${g.acts.length}</span><span>moved on after a lucky guess <b>${g.lucky}</b></span></div>
+    ${stripHTML(g)}
     <div class="lastbox">${last}</div>
     <div class="tiles">${tilesHTML(g, false)}</div></div>`;
 }
