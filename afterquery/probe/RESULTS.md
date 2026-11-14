@@ -258,3 +258,18 @@ Gemini runs executed on a Verda CPU server (8 vCPU, 32 GB) in tmux; Claude/GPT r
 | gemini-3.5-flash | 5 | 0.515 | +0.186 | 3.1 | 5/5 |
 All frontier runs pooled: 23 runs, mean gap +0.138, PPO wins 20 of 23. The only run-level losses are on seed 3005
 (a hard batch for PPO) and gpt-6.1-sol on 3001/3005.
+
+# Training-free rule reference on the same six-child instances (Sat 14 Nov)
+rule_ref.py (from the Fable review): explain, quiz, move on after 2 correct in a row, correct a misconception on its
+signature; no training, no tuned numbers. Same pooled scoring, same salted children (seeds 3001-3005).
+| policy | 3001 | 3002 | 3003 | 3004 | 3005 | mean |
+|---|---|---|---|---|---|---|
+| PPO (trained) | 0.675 | 0.776 | 0.848 | 0.765 | 0.441 | **0.701** |
+| rule (no training) | 0.512 | 0.623 | 0.622 | 0.535 | 0.490 | 0.556 |
+| literature (no training) | 0.593 | 0.609 | 0.575 | 0.524 | 0.480 | 0.556 |
+Rule vs frontier agents, pooled over 23 runs: gap -0.003, rule wins 12/23 (Opus and GPT slightly ahead of it, the
+Gemini models slightly behind). => Training-free policies built from the rules alone are level with frontier agents;
+the consistent gap exists only against the trained PPO policy. PPO's edge therefore comes from experience with the
+environment (it has, in effect, learned the unstated parameters and how to use them). Next: give agents every numeric
+parameter and re-measure, so the "withheld information" objection is answered directly.
+(PPO numbers recomputed locally match the Harbor reference runs exactly.)
