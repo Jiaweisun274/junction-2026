@@ -75,7 +75,7 @@ def explain(K: int) -> dict:
         if GAME.turn >= sim.T:
             return {"message": "All turns are used. Call finish.", **_status()}
         GAME.explain(k)
-        return {"message": f"You explain concept {K}. The child listens.", **_status()}
+        return _after_turn({"message": f"You explain concept {K}. The child listens.", **_status()})
 
 
 @mcp.tool()
@@ -88,14 +88,14 @@ def quiz(K: int) -> dict:
         if GAME.turn >= sim.T:
             return {"message": "No turns left. Call finish.", **_status()}
         ok, question, answer, right = GAME.quiz(k)
-        return {
+        return _after_turn({
             "question": question,
             "answer": answer,
             "correct": bool(ok),
             "right_answer": right,
             "message": f'Quiz {K}: "{question}" Child answers "{answer}" ({"correct" if ok else "wrong; the right answer is " + right}).',
             **_status(),
-        }
+        })
 
 
 @mcp.tool()
@@ -110,7 +110,7 @@ def correct(K: int, BUG: Literal["bigger_denominator", "add_to_top_and_bottom", 
         if GAME.turn >= sim.T:
             return {"message": "No turns left. Call finish.", **_status()}
         GAME.correct(k, BUG)
-        return {"message": f"You work through {BUG} on concept {K}.", **_status()}
+        return _after_turn({"message": f"You work through {BUG} on concept {K}.", **_status()})
 
 
 @mcp.tool()
@@ -124,15 +124,30 @@ def ask(K: int) -> dict:
         return {"answer": answer, "message": f'Child: "{answer}" (free).', **_status()}
 
 
+def _finalize():
+    """Run the exam once and persist the result (called by finish, and automatically after the 30th turn)."""
+    global FINISHED, EXAM
+    if not FINISHED:
+        EXAM = GAME.exam()
+        FINISHED = True
+        _persist_result(_result())
+
+
+def _after_turn(payload):
+    """The course ends by itself when the last turn is used, so forgetting to call finish costs nothing."""
+    if GAME.turn >= sim.T and not FINISHED:
+        _finalize()
+        payload["message"] += f" That was the last turn: the course is over. Exam score: {round(EXAM * 100)}%."
+        payload["exam_score"] = EXAM
+        payload.update(_status())
+    return payload
+
+
 @mcp.tool()
 def finish() -> dict:
     """End the course and run the exam. Unused turns are lost."""
-    global FINISHED, EXAM
     with LOCK:
-        if not FINISHED:
-            EXAM = GAME.exam()
-            FINISHED = True
-            _persist_result(_result())
+        _finalize()
         return {
             "message": f"FINISHED after {GAME.turn} turns. Exam score: {round(EXAM * 100)}%.",
             "exam_score": EXAM,

@@ -43,7 +43,7 @@ A child who knows and remembers concept K answers a quiz on it correctly about 9
 - `quiz(K)`: quiz concept K, see the child's answer, and provide the right answer (uses one turn).
 - `correct(K, BUG)`: work through a named misconception on concept K (uses one turn).
 - `ask(K)`: ask whether the child understands concept K (free).
-- `finish`: end the course and run the exam. Unused turns are lost.
+- `finish`: end the course and run the exam. Unused turns are lost. After the 30th turn the course ends and the exam runs automatically.
 
 Use one turn-taking action at a time and read its result before choosing the next action. You may call `ask` freely. Finish when you have used the turns you intend to use or decide that further teaching will not help.
 

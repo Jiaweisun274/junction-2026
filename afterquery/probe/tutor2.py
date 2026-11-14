@@ -70,7 +70,8 @@ def params(seed):
     u = r.random((T + 2, 8))
     u_init = r.random(K)
     h0 = r.uniform(2.6, 7.8, K)
-    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init, h0=h0)
+    u_ask = r.random((T + 2, K, 3))   # independent draws per (turn, concept) for the free self-report
+    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init, h0=h0, u_ask=u_ask)
 
 
 class Sim:
@@ -175,7 +176,9 @@ class Sim:
         self.last_explained = None
 
     def ask(self, k):
-        u = self.p["u"][self.turn]
+        # Each concept gets its own random draws (fixed per turn, so asking again in the same turn gives the
+        # same answer). Sharing one draw across concepts leaked the true state by comparing the six answers.
+        u = np.concatenate([[0, 0, 0], self.p["u_ask"][self.turn][k]])
         st = self.state[k]
         if st == "buggy":
             py = 0.97

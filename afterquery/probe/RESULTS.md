@@ -235,3 +235,12 @@ for the literature policy) and reaches concept 5.7 on average (literature 4.0).
 | mean | **0.72** | 0.60 | 0.50 | 0.45 |
 PPO run through MCP (`-a oracle`, solve.sh -> ppo_agent.py) reproduces the sidecar's internal reference score exactly.
 PPO beats each frontier model on 4 of 5 seeds; both frontier models beat the literature policy on average.
+
+# Integrity fixes after the Fable review (Sat 14 Nov)
+- `ask` side channel: all six concepts used the same random draw within a turn, so comparing the free answers leaked
+  the true state (a weak heuristic went 0.46 -> 0.63 per the review). Now each (turn, concept) has its own draws
+  (`u_ask`, appended to params so all other draws are unchanged). Re-check: the ask-based heuristic now gains +0.05
+  (0.46 -> 0.51), which is the intended weak signal of a free but unreliable self-report.
+- Auto-finish: the MCP server now runs the exam after the 30th turn; forgetting `finish` no longer scores 0.
+- Reference scores unchanged (held-out 2041-2140: PPO 0.699, literature 0.593; Harbor reference on 2001 = 0.957).
+- Fable review files copied to afterquery/fable_review/ (PHASE1_DESIGN.md, PHASE2_CRITIQUE.md, prototype, analysis).
