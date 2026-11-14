@@ -31,10 +31,14 @@ async def main():
     async with streamablehttp_client(url) as (read_stream, write_stream, _):
         async with ClientSession(read_stream, write_stream) as client:
             await client.initialize()
+            child = None
             while True:
-                turn = int(decode(await client.call_tool("status", {}))["turn"])
-                if turn >= sim.T:
+                st = decode(await client.call_tool("status", {}))
+                if st.get("finished"):
                     break
+                if st.get("child") != child:            # a new child: start a fresh observation record
+                    child, tracker = st.get("child"), P.Tracker()
+                turn = int(st["turn"])
                 kind, k, bug = a = P.decode(policy.act(tracker.obs(turn)))
                 if kind == "explain":
                     await client.call_tool("explain", {"K": k + 1}); tracker.update(turn, a)
@@ -43,7 +47,7 @@ async def main():
                 else:
                     r = decode(await client.call_tool("quiz", {"K": k + 1}))
                     tracker.update(turn, a, (bool(r["correct"]), r["answer"]))
-            print(json.dumps(decode(await client.call_tool("finish", {})), sort_keys=True))
+            print(json.dumps(decode(await client.call_tool("status", {})), sort_keys=True))
 
 
 if __name__ == "__main__":

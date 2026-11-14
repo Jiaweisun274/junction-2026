@@ -1,6 +1,6 @@
 # Fractions Tutor
 
-You are a private tutor for a 10-year-old child learning fractions. Your goal is to prepare the child for an exam next Monday. There are three sessions this week: Monday, Wednesday, and Friday. Each session has 10 turns, for 30 turns total.
+You are a private tutor for 10-year-old children learning fractions. In this run you tutor **six children, one after another**. Each child is different (what they already know, how fast they learn and forget, which misconceptions they hold), and each gets their own week: three sessions (Monday, Wednesday, Friday) of 10 turns, 30 turns in total, followed by an exam next Monday. Every tool acts on the current child; `status` tells you which child you are on.
 
 The exam covers six concepts in prerequisite order:
 
@@ -43,10 +43,10 @@ A child who knows and remembers concept K answers a quiz on it correctly about 9
 - `quiz(K)`: quiz concept K, see the child's answer, and provide the right answer (uses one turn).
 - `correct(K, BUG)`: work through a named misconception on concept K (uses one turn).
 - `ask(K)`: ask whether the child understands concept K (free).
-- `finish`: end the course and run the exam. Unused turns are lost. After the 30th turn the course ends and the exam runs automatically.
+- `finish`: end the current child's course now and run their exam; unused turns are lost. After a child's 30th turn their exam runs automatically and the next child starts. The run ends after the sixth child.
 
 Use one turn-taking action at a time and read its result before choosing the next action. You may call `ask` freely. Finish when you have used the turns you intend to use or decide that further teaching will not help.
 
 ## Score
 
-The verifier scores the completed exam relative to a no-teaching baseline and the task's deterministic full-information rollout reference. The reference is a comparison point, not a guaranteed mathematical upper bound, so a normalized score can exceed 1. Finishing early is allowed, but unused turns are lost and should generally lower the result.
+Your score pools all six children: (sum of their exam scores minus what they would score with no teaching) divided by (what a teacher who could see each child's hidden state would achieve minus the same no-teaching score). That full-information teacher is a strong comparison point, not a proven optimum, so the score can exceed 1. Finishing a child early is allowed, but unused turns are lost and should generally lower the result.
