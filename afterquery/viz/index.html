@@ -1,0 +1,290 @@
+<meta charset="utf-8">
+<title>Hidden-State Classroom</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a replay desk. Scoreboard on top, then one child taught by several teachers side by side,
+   hidden state revealed to the audience, then the mistake profile across all runs. */
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#1b2230; --muted:#5d6676; --line:#dfe3ea;
+  --accent:#3b4cca; --accent-soft:#e6e9fb;
+  --mastered:#1f9d6a; --bug:#e2553f; --unlearned:#c9ced8; --warn:#c98a12;
+  --ref:#3b4cca; --rule:#7a8496; --agent:#b2477a;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12151c; --panel:#1a1f29; --ink:#e7eaf1; --muted:#9aa3b4; --line:#2b3240;
+  --accent:#8b97ff; --accent-soft:#252b45; --mastered:#3cc78f; --bug:#ff7a63; --unlearned:#3a4252; --warn:#e6a93a;
+  --ref:#8b97ff; --rule:#9aa3b4; --agent:#e47aa9; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12151c; --panel:#1a1f29; --ink:#e7eaf1; --muted:#9aa3b4; --line:#2b3240;
+  --accent:#8b97ff; --accent-soft:#252b45; --mastered:#3cc78f; --bug:#ff7a63; --unlearned:#3a4252; --warn:#e6a93a;
+  --ref:#8b97ff; --rule:#9aa3b4; --agent:#e47aa9; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:clamp(28px,4vw,40px)}
+h2{font-size:22px}
+h3{font-size:15px}
+p{margin:0;max-width:68ch}
+.lede{color:var(--muted);font-size:16px}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px;min-width:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+select,button{font:500 14px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+button{cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=range]{width:min(420px,100%);accent-color:var(--accent)}
+/* scoreboard */
+.score{display:grid;gap:6px}
+.srow{display:grid;grid-template-columns:minmax(150px,240px) 1fr 52px;gap:10px;align-items:center}
+.srow .name{font-size:13px;overflow-wrap:anywhere}
+.track{position:relative;height:22px;background:var(--bg);border-radius:4px}
+.bar{position:absolute;left:0;top:4px;height:14px;border-radius:3px}
+.dot{position:absolute;top:6px;width:10px;height:10px;border-radius:50%;margin-left:-5px;border:2px solid var(--panel)}
+.axis{display:grid;grid-template-columns:minmax(150px,240px) 1fr 52px;gap:10px;font:11px var(--mono);color:var(--muted)}
+.axis .ticks{display:flex;justify-content:space-between}
+/* lanes */
+.lanes{display:grid;gap:12px}
+.lane{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:10px;min-width:0;background:var(--panel)}
+.lane-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline}
+.tag{font:600 11px var(--mono);padding:2px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+.state{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.cell{border-radius:6px;padding:6px 4px;text-align:center;font:600 12px var(--mono);color:var(--ink);border:1px solid var(--line);position:relative;min-height:46px;display:grid;align-content:center;gap:2px}
+.cell small{font:400 10px var(--mono);color:var(--muted)}
+.timeline-wrap{overflow-x:auto}
+.timeline{display:grid;grid-template-columns:repeat(30,minmax(22px,1fr));gap:3px;min-width:690px}
+.tick{height:30px;border-radius:4px;border:1px solid var(--line);font:600 11px var(--mono);display:grid;place-items:center;cursor:pointer;position:relative;background:var(--bg);color:var(--muted);padding:0}
+.tick.E{color:var(--ink)} .tick.Q{color:var(--ink)} .tick.C{color:var(--bug)}
+.tick.ok{box-shadow:inset 0 -3px 0 var(--mastered)} .tick.no{box-shadow:inset 0 -3px 0 var(--muted)} .tick.sig{box-shadow:inset 0 -3px 0 var(--bug)}
+.tick.cur{outline:2px solid var(--accent);outline-offset:1px}
+.tick.future{opacity:.35}
+.tick .flag{position:absolute;top:-4px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.sess{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;font:10px var(--mono);color:var(--muted);min-width:690px}
+.sess div{border-top:1px solid var(--line);padding-top:2px}
+.note{font-size:13px;color:var(--ink);background:var(--bg);border-radius:6px;padding:8px 10px;min-height:38px}
+.note b{color:var(--warn)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px;border:1px solid var(--line)}
+/* mistakes */
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.hi{color:var(--bug);font-weight:600}
+.checks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
+.checks label{display:flex;gap:6px;align-items:center}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">AfterQuery · Break the Agent · Junction 2026</div>
+    <h1>Hidden-State Classroom</h1>
+    <p class="lede">Six simulated children learn fractions from different teachers. The teachers only see quiz answers; you see what is really in each child's head. Same children, same random draws: every difference below comes from the teacher's decisions.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="sb-h">
+    <div class="row" style="justify-content:space-between"><h2 id="sb-h">Scoreboard</h2><span class="muted" style="font-size:13px">Pooled exam gain of six children per run, 0 = no teaching, 1 = a teacher who sees the hidden state. Bar = mean of 5 runs, dots = runs.</span></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="rp-h">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="rp-h">Replay one child</h2>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--mastered)"></span>mastered (shade = how well remembered today)</span>
+        <span><span class="sw" style="background:var(--bug)"></span>misconception</span>
+        <span><span class="sw" style="background:var(--unlearned)"></span>not learned</span>
+        <span><span class="sw" style="background:var(--warn);border-radius:50%"></span>questionable decision</span>
+      </div>
+    </div>
+    <div class="row">
+      <label>Run <select id="run"></select></label>
+      <label>Child <select id="child"></select></label>
+      <button id="play" class="primary">Play</button>
+      <input id="turn" type="range" min="0" max="30" value="30" aria-label="Turn">
+      <span class="mono" id="turnlbl"></span>
+    </div>
+    <div class="checks" id="who"></div>
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="mk-h">
+    <h2 id="mk-h">What the agents get wrong</h2>
+    <p class="muted">Counted on every child of every run from the replayed hidden state. Numbers are per child (30 turns).</p>
+    <div class="grid3" id="cards"></div>
+    <div class="tbl-wrap"><table id="mtable"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="fair-h">
+    <h2 id="fair-h">Is it fair?</h2>
+    <div class="grid3">
+      <div class="card"><h3>Same information</h3><p class="muted">The reference sees only what the agent sees: its own actions and the child's answers. Both play through the same MCP tools in the same Harbor harness.</p></div>
+      <div class="card"><h3>Every number disclosed</h3><p class="muted">Giving the agent every simulator parameter does not close the gap: gemini-pro-latest 0.52 → 0.56, gemini-3.1-pro 0.55 → 0.52; the reference still wins 9 of 10 runs.</p></div>
+      <div class="card"><h3>Learned, not hand-tuned</h3><p class="muted">The reference is a small PPO policy trained on simulated children (never these ones). Textbook rulebooks without training score like the agents (0.56). The edge is what experience in the environment teaches.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const TEACH_ORDER=["PPO","literature rulebook","claude-opus-5-5","gpt-6.1-sol","gemini-pro-latest","gemini-3.1-pro-preview","gemini-3.5-flash","gemini-pro-latest (all parameters disclosed)","gemini-3.1-pro-preview (all parameters disclosed)"];
+const LABEL={"PPO":"PPO reference (trained)","literature rulebook":"Learning-science rulebook"};
+const ROLE=n=>n==="PPO"?"ref":n==="literature rulebook"?"rule":"agent";
+const MISTAKES={
+  guess:{t:"Moved on after a lucky guess",d:"A correct quiz answer on a concept the child had not learned (a 1-in-4 guess) was taken as mastery, and the teacher moved to the next concept."},
+  prereq:{t:"Taught on a missing foundation",d:"Explained a concept while the concept before it was not mastered. Almost nothing sticks until the prerequisite is fixed."},
+  massed:{t:"Hammered the same concept",d:"A third or later explanation of the same concept in one session. Massed repetition helps less each time."},
+  overquiz:{t:"Re-checked what was already solid",d:"Quizzed a concept the child had mastered and remembered well, after already seeing it answered correctly that session."},
+  missedbug:{t:"Missed a misconception",d:"A typical misconception answer appeared and the teacher never ran the targeted correction for that child."}
+};
+let D, state={run:"3003",child:0,turn:30,who:new Set(["PPO","literature rulebook","claude-opus-5-5","gemini-3.1-pro-preview"]),timer:null};
+
+function analyse(kid,start){
+  const marks=new Array(kid.steps.length).fill(null); let prev=start; const sessCount={};
+  const sawSig={}; let corrected={};
+  kid.steps.forEach((s,i)=>{
+    const k=s.k-1, before=i?kid.steps[i-1]:start;
+    if(s.act==="explain"){
+      const key=s.day+":"+k; sessCount[key]=(sessCount[key]||0)+1;
+      if(k>0 && before.state[k-1]!=="M") marks[i]="prereq";
+      else if(sessCount[key]>=3) marks[i]="massed";
+    }
+    if(s.act==="quiz"){
+      if(s.sig) sawSig[s.k===6?5:s.k]=true;
+      if(s.ok && before.state[k]!=="M"){
+        const nxt=kid.steps[i+1]; if(nxt && nxt.k===s.k+1) marks[i]="guess";
+      }
+      if(s.ok && before.state[k]==="M" && before.recall[k]>0.9){
+        const earlier=kid.steps.slice(0,i).some(p=>p.act==="quiz"&&p.k===s.k&&p.ok&&p.day===s.day);
+        if(earlier) marks[i]="overquiz";
+      }
+    }
+    if(s.act==="correct") corrected[s.k]=true;
+  });
+  const missed=Object.keys(sawSig).filter(k=>!corrected[k]).length;
+  return {marks,missed};
+}
+
+function el(tag,attrs={},html=""){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(html)e.innerHTML=html;return e}
+const fmt=x=>(x==null||isNaN(x))?"–":x.toFixed(2);
+const colorFor=r=>r==="ref"?"var(--ref)":r==="rule"?"var(--rule)":"var(--agent)";
+
+function scoreboard(){
+  const box=document.getElementById("score"); box.innerHTML="";
+  const rows=TEACH_ORDER.map(n=>{const xs=Object.values(D.runs).map(r=>r.policies[n]?.reward).filter(x=>x!=null);return{n,xs,m:xs.reduce((a,b)=>a+b,0)/xs.length}}).filter(r=>r.xs.length);
+  const ax=el("div",{class:"axis"},`<span></span><span class="ticks"><span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span></span><span></span>`);
+  rows.forEach(r=>{
+    const row=el("div",{class:"srow"});
+    row.append(el("div",{class:"name"},(LABEL[r.n]||r.n)+(r.xs.length<5?` <span class="muted">(${r.xs.length} runs)</span>`:"")));
+    const tr=el("div",{class:"track"});
+    tr.append(el("div",{class:"bar",style:`width:${r.m*100}%;background:${colorFor(ROLE(r.n))};opacity:.35`}));
+    r.xs.forEach(x=>tr.append(el("div",{class:"dot",style:`left:${Math.min(Math.max(x,0),1)*100}%;background:${colorFor(ROLE(r.n))}`,title:x.toFixed(3)})));
+    row.append(tr, el("div",{class:"mono",style:"text-align:right"},r.m.toFixed(2)));
+    box.append(row);
+  });
+  box.append(ax);
+}
+
+function controls(){
+  const runSel=document.getElementById("run"), chSel=document.getElementById("child");
+  Object.keys(D.runs).forEach(s=>runSel.append(el("option",{value:s},"seed "+s)));
+  for(let i=0;i<6;i++) chSel.append(el("option",{value:i},"child "+(i+1)));
+  runSel.value=state.run; chSel.value=state.child;
+  runSel.onchange=()=>{state.run=runSel.value;render()}; chSel.onchange=()=>{state.child=+chSel.value;render()};
+  const t=document.getElementById("turn"); t.oninput=()=>{state.turn=+t.value;stop();render()};
+  document.getElementById("play").onclick=()=>state.timer?stop():play();
+  const who=document.getElementById("who");
+  TEACH_ORDER.forEach(n=>{const id="w"+TEACH_ORDER.indexOf(n);const lab=el("label",{for:id});const cb=el("input",{type:"checkbox",id});cb.checked=state.who.has(n);cb.onchange=()=>{cb.checked?state.who.add(n):state.who.delete(n);render()};lab.append(cb,document.createTextNode(LABEL[n]||n));who.append(lab)});
+}
+function play(){ if(state.turn>=30) state.turn=0; document.getElementById("play").textContent="Pause"; state.timer=setInterval(()=>{state.turn++; if(state.turn>=30){stop()} render()},450)}
+function stop(){clearInterval(state.timer);state.timer=null;document.getElementById("play").textContent="Play"}
+
+function render(){
+  const run=D.runs[state.run], start=run.start[state.child];
+  document.getElementById("turn").value=state.turn;
+  const day=state.turn===0?"before Monday":["Monday","Wednesday","Friday"][Math.min(2,Math.floor((state.turn-1)/10))];
+  document.getElementById("turnlbl").textContent=`after turn ${state.turn} of 30 · ${day}`;
+  const lanes=document.getElementById("lanes"); lanes.innerHTML="";
+  TEACH_ORDER.filter(n=>state.who.has(n)&&run.policies[n]).forEach(n=>{
+    const pol=run.policies[n], kid=pol.kids[state.child]; if(!kid) return;
+    const an=analyse(kid,start);
+    const cur=state.turn===0?start:kid.steps[Math.min(state.turn,kid.steps.length)-1]||kid.steps[kid.steps.length-1];
+    const lane=el("div",{class:"lane"});
+    const finished=kid.steps.length<30?` <span class="muted">(stopped after ${kid.steps.length} turns)</span>`:"";
+    lane.append(el("div",{class:"lane-head"},`<h3>${LABEL[n]||n} <span class="tag">${ROLE(n)==="ref"?"reference":ROLE(n)==="rule"?"no training":"frontier agent"}</span></h3><span class="mono" style="font-size:13px">this child's exam <b>${Math.round(kid.exam*100)}%</b> · run reward ${fmt(pol.reward)}${finished}</span>`));
+    const st=el("div",{class:"state"});
+    D.concepts.forEach((c,i)=>{
+      const s=cur.state[i], r=cur.recall[i];
+      const bg=s==="M"?`color-mix(in srgb, var(--mastered) ${Math.round(25+75*r)}%, var(--panel))`:s==="B"?"var(--bug)":"var(--unlearned)";
+      const sub=s==="M"?`recall ${Math.round(r*100)}%`:s==="B"?"misconception":"not learned";
+      st.append(el("div",{class:"cell",style:`background:${bg}`,title:c},`${i+1}<small>${sub}</small>`));
+    });
+    lane.append(st);
+    const tw=el("div",{class:"timeline-wrap"});
+    const tl=el("div",{class:"timeline"});
+    for(let i=0;i<30;i++){
+      const s=kid.steps[i]; const b=el("button",{class:"tick",title:"turn "+(i+1)});
+      if(s){b.classList.add(s.act[0].toUpperCase()); b.textContent=s.act[0].toUpperCase()+s.k;
+        if(s.act==="quiz") b.classList.add(s.ok?"ok":s.sig?"sig":"no");
+        if(an.marks[i]) b.append(el("span",{class:"flag",title:MISTAKES[an.marks[i]].t}));}
+      if(i+1===state.turn) b.classList.add("cur");
+      if(i+1>state.turn) b.classList.add("future");
+      b.onclick=()=>{stop();state.turn=i+1;render()};
+      tl.append(b);
+    }
+    tw.append(tl, el("div",{class:"sess"},"<div>Monday</div><div>Wednesday</div><div>Friday</div>"));
+    lane.append(tw);
+    const s=kid.steps[state.turn-1]; let txt="";
+    if(s){const what=s.act==="quiz"?`quizzed concept ${s.k}: child answered "${s.ans}" (${s.ok?"correct":s.sig?"misconception answer":"wrong"})`:s.act==="explain"?`explained concept ${s.k}`:`corrected ${s.bug} on concept ${s.k}`;
+      txt=`Turn ${state.turn} (${s.day}): ${what}.`; const m=an.marks[state.turn-1]; if(m) txt+=` <b>${MISTAKES[m].t}.</b> ${MISTAKES[m].d}`;}
+    else txt=state.turn===0?"Before the first lesson. The teacher does not know what the child already knows.":"";
+    lane.append(el("div",{class:"note"},txt));
+    lanes.append(lane);
+  });
+}
+
+function mistakeProfile(){
+  const rows=[], keys=Object.keys(MISTAKES);
+  TEACH_ORDER.forEach(n=>{
+    let kids=0; const tot=Object.fromEntries(keys.map(k=>[k,0])); let rew=[]; const ex={};
+    Object.entries(D.runs).forEach(([seed,run])=>{const pol=run.policies[n]; if(!pol) return; rew.push(pol.reward);
+      pol.kids.forEach((kid,ci)=>{kids++; const an=analyse(kid,run.start[ci]); an.marks.forEach((m,i)=>{if(m){tot[m]++; if(!ex[m]) ex[m]={seed,ci,turn:i+1}}}); tot.missedbug+=an.missed; if(an.missed&&!ex.missedbug) ex.missedbug={seed,ci,turn:30};});});
+    if(kids) rows.push({n,kids,per:Object.fromEntries(keys.map(k=>[k,tot[k]/kids])),ex,r:rew.reduce((a,b)=>a+b,0)/rew.length});
+  });
+  const t=document.getElementById("mtable");
+  const ref=rows.find(r=>r.n==="PPO");
+  t.innerHTML=`<thead><tr><th>teacher</th>${keys.map(k=>`<th title="${MISTAKES[k].d}">${MISTAKES[k].t}</th>`).join("")}<th>reward</th></tr></thead>`;
+  const tb=el("tbody");
+  rows.forEach(r=>{const tr=el("tr");tr.append(el("td",{},LABEL[r.n]||r.n));keys.forEach(k=>tr.append(el("td",{class:(ROLE(r.n)==="agent"&&r.per[k]>ref.per[k]*1.5+0.05)?"hi":""},r.per[k].toFixed(2))));tr.append(el("td",{class:"mono"},r.r.toFixed(2)));tb.append(tr)});
+  t.append(tb);
+  // cards: the three mistakes where agents exceed the reference most, each with a jump to a real example
+  const agents=rows.filter(r=>ROLE(r.n)==="agent"&&!r.n.includes("disclosed"));
+  const gapOf=k=>agents.reduce((a,r)=>a+r.per[k],0)/agents.length-ref.per[k];
+  const cards=document.getElementById("cards"); cards.innerHTML="";
+  keys.slice().sort((a,b)=>gapOf(b)-gapOf(a)).slice(0,3).forEach(k=>{
+    const avg=agents.reduce((a,r)=>a+r.per[k],0)/agents.length;
+    const ex=agents.map(r=>({n:r.n,e:r.ex[k]})).find(x=>x.e);
+    const c=el("div",{class:"card"},`<h3>${MISTAKES[k].t}</h3><p class="muted">${MISTAKES[k].d}</p><p class="mono" style="font-size:13px">frontier agents ${avg.toFixed(2)} per child · PPO ${ref.per[k].toFixed(2)}</p>`);
+    if(ex){const b=el("button",{},`Show an example (${ex.n})`);b.onclick=()=>{state.run=ex.e.seed;state.child=ex.e.ci;state.turn=ex.e.turn;state.who=new Set(["PPO",ex.n]);document.getElementById("run").value=state.run;document.getElementById("child").value=state.child;document.querySelectorAll("#who input").forEach((cb,i)=>cb.checked=state.who.has(TEACH_ORDER[i]));stop();render();document.getElementById("rp-h").scrollIntoView({behavior:"smooth"})};c.append(b)}
+    cards.append(c);
+  });
+}
+
+fetch("traces.json").then(r=>r.json()).then(d=>{
+  D=d;
+  // open on the child where the reference beats the agents by the most
+  let best=null;
+  Object.entries(D.runs).forEach(([seed,run])=>{for(let c=0;c<6;c++){const p=run.policies.PPO?.kids[c]?.exam, a=run.policies["gemini-3.1-pro-preview"]?.kids[c]?.exam; if(p!=null&&a!=null&&(!best||p-a>best.g)) best={g:p-a,seed,c}}});
+  if(best){state.run=best.seed;state.child=best.c}
+  controls(); scoreboard(); render(); mistakeProfile();
+}).catch(e=>{document.getElementById("lanes").textContent="Could not load traces.json: "+e});
+</script>
