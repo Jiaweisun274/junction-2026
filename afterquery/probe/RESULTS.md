@@ -282,3 +282,27 @@ parameter and re-measure, so the "withheld information" objection is answered di
 Per run (disclosed): pro-latest 0.651 0.619 0.483 0.514 0.555; 3.1-pro 0.440 0.601 0.459 0.639 0.436.
 Giving the agent every number the simulator uses does not close the gap (mean change about zero, within noise).
 The PPO edge is therefore not explained by withheld information; it reflects decision quality learned from experience.
+
+# Hand-planned reference: PPO's habits as five readable rules (Sat 14 Nov evening)
+probe/planned_ref.py. Rules in priority order: (1) targeted correction when a misconception's signature answer
+appears; (2) optional teach-only final turns; (3) optional quiz review at Wed/Fri start; (4) after MAXEXPL failed
+explanations of the frontier concept in a session, quiz its prerequisite and move back if it fails; (5) explain once,
+quiz, move on after CONFIRM correct in a row; on Monday quiz the first concepts before explaining (diagnosis).
+6 knobs, 144 combinations, tuned on raw exam gain over training seeds 1001-1400 only. Best: confirm 2, maxexpl 2,
+diagnosis on, prerequisite check on, no session-start review, no teach-only final turns.
+Raw exam gain per child, training seeds 1001-1400: PPO 0.333, planned 0.325, rule 0.303, literature 0.262 (se ~0.007).
+Pooled normalised reward on the salted evaluation children (salt eval1, same scoring as Harbor):
+| policy | 3001-3005 | 3001-3015 |
+|---|---|---|
+| PPO (trained) | 0.701 | 0.687 |
+| **planned (5 rules)** | **0.773** | **0.701** |
+| rule (2-in-a-row) | 0.556 | 0.611 |
+| literature | 0.556 | 0.564 |
+Against the 23 valid frontier-agent runs on 3001-3005: planned wins 23/23, PPO 20/23.
+Ablation on held-out seeds 5001-5400 (change in raw exam gain vs the planned policy, 0.323):
+move on after 1 correct -0.078; review 2 quizzes at Wed/Fri start -0.025; review 1 quiz -0.016; no prerequisite
+check -0.012; teach-only last 4 turns -0.008; no Monday diagnosis -0.005.
+=> The gap does not need RL: a teacher a person could write down in five lines matches PPO. The single most costly
+agent habit is accepting one correct answer (lucky guesses); routine re-testing at session start is second.
+(Note the teach-only final turns did not help the rule policy; PPO's low late quiz share is a consequence of still
+having new concepts to teach, not a separate rule.)
