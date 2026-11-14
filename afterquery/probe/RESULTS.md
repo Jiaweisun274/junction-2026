@@ -357,3 +357,18 @@ misleading), and the characteristic failure is a generic way of acting under hid
 | gemini-pro-latest | abstract | 0.549 | 0.485 | -0.064 (0.032) | 65% / 66% | 15/15 |
 Hint: no consistent effect on score and none on behaviour (quiz share unchanged). Abstract: both models lose about
 0.065 (about 2 se each, same direction), quiz share unchanged; the reference wins all 30 abstract runs.
+
+# Gemma tiebreaker: reward-filtered self-training (expert iteration), A100 on Verda (Sun 15 Nov, night)
+gemma/play.py (text version of the environment: same simulator, rules and pooled scoring; no `ask`, no early finish)
+and gemma/train.py (LoRA r=16 on the turns of each child's best sampled episode). Model google/gemma-4-E4B-it.
+Each round: 128 new training children (seeds 20,000,000+), 8 episodes each at temperature 1, keep each child's best
+episode if it beats that child's mean, fine-tune a fresh LoRA on the base model with those turns (~3,700 turns).
+Evaluation: greedy, the same salted children as the frontier agents (batches 3001-3015).
+| model | mean reward | quiz share | sampled mean exam gain |
+|---|---|---|---|
+| Gemma-4 E4B base | 0.369 | 78% | 0.188 |
+| after round 1 | 0.385 | 74% | 0.202 |
+| after round 2 | 0.409 | 73% | |
+Round 2 vs base, paired over 15 batches: +0.040 (se 0.040), better on 9/15. A consistent trend (score up, quiz share
+down, the direction PPO learned) but not yet significant after two rounds. The untrained small model shows the
+frontier agents' habit in a stronger form (78% quizzes). Frontier agents on the same batches: about 0.54-0.61; PPO 0.69.
