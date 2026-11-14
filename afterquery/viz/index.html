@@ -120,7 +120,11 @@ td.hi{color:var(--bug);font-weight:600}
 
   <section class="panel" aria-labelledby="mk-h">
     <h2 id="mk-h">What the agents get wrong</h2>
-    <p class="muted">Counted on every child of every run from the replayed hidden state. Numbers are per child (30 turns).</p>
+    <div class="grid3">
+      <div class="card"><h3>Testing instead of teaching</h3><p class="muted">Agents spend 61–68% of turns on quizzes in every session. The reference starts at 46% on Monday and shifts to teaching (37% Wednesday, 27% Friday). In the last five turns before the exam: agents 61–77% quizzes, reference 7%.</p><p class="mono" style="font-size:13px">concepts mastered at the end: agents 3.3–3.8 · PPO 4.3</p></div>
+      <div class="card"><h3>The damage is done on Wednesday</h3><p class="muted">Replay the agent's own turns, then let the reference finish. Taking over after Monday recovers almost the whole gap; taking over after Wednesday recovers almost nothing.</p><p class="mono" style="font-size:13px">gain per child: after Mon +0.05 to +0.11 · after Wed −0.01 to +0.02</p></div>
+    </div>
+    <p class="muted">Decision-level mistakes, counted on every child of every run from the replayed hidden state (per child, 30 turns):</p>
     <div class="grid3" id="cards"></div>
     <div class="tbl-wrap"><table id="mtable"></table></div>
   </section>
