@@ -20,6 +20,7 @@
   --know: #86A8F2; --know-soft: #22345A; --bug: #F0A35E; --bug-soft: #4A3420; --none: #8D96A8; --none-soft: #252E40;
   --pen: #F07A6E; --pen-soft: #4A2523; --focus: #86A8F2; color-scheme: dark; }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   background-color: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45;
   background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
@@ -134,6 +135,27 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 .mc .src { color: var(--muted); font-size: 12px; margin-top: 6px; }
 .mc .ours { color: var(--bug); font-size: 12px; font-weight: 700; }
 .hint { font-size: 13px; color: var(--muted); }
+.refs { margin: 6px 0 0; padding-left: 18px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.built { border-color: var(--ink); }
+/* side by side */
+.lanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 900px) { .lanes { grid-template-columns: minmax(0, 1fr); } }
+.lane { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.lane.agent { border-top: 4px solid var(--bug); }
+.lane.ref { border-top: 4px solid var(--know); }
+.lanehead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.lanehead select { font-weight: 700; }
+.lane .week { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.lane .sess { flex-direction: row; align-items: center; gap: 8px; }
+.lane .sess .dn { width: 76px; flex: none; font-size: 12px; }
+.lane .pips { flex: 1; }
+.lane .pip { height: 20px; font-size: 10px; }
+.lrows { display: flex; flex-direction: column; gap: 4px; }
+.lrow { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto 64px; gap: 6px; align-items: center; font-size: 13px; }
+.lrow .lname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lrow .bar { width: 64px; }
+.lane .log { max-height: 280px; }
+.score { font-family: var(--display); font-size: 22px; font-weight: 800; }
 @media (prefers-reduced-motion: reduce) { .row.flash { animation: none; } }
 </style>
 
@@ -148,6 +170,7 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
       <div class="seg" role="group" aria-label="Mode">
         <button id="m-play" aria-pressed="true">Teach</button>
         <button id="m-watch" aria-pressed="false">Watch a teacher</button>
+        <button id="m-compare" aria-pressed="false">Side by side</button>
       </div>
       <label class="xray" id="xray-l"><input type="checkbox" id="xray"> X-ray</label>
       <label class="hint" for="batch">Class</label>
@@ -164,7 +187,7 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
 
     <main class="panel" id="board">
       <div class="watch" id="watchbar" hidden>
-        <label class="hint" for="teacher">Teacher</label>
+        <label class="hint" for="teacher" id="teacher-l">Teacher</label>
         <select id="teacher"></select>
         <button class="btn" id="w-step">Next turn</button>
         <button class="btn ghost" id="w-play">Play</button>
@@ -174,19 +197,44 @@ select { background: var(--panel); border: 1px solid var(--line); border-radius:
         <div><span class="big" id="who"></span> <span class="hint" id="turnlbl"></span></div>
         <div class="hint" id="explbl"></div>
       </div>
-      <div class="week" id="week"></div>
-      <div class="ladder" id="ladder"></div>
-      <div class="exam panel" id="exam"></div>
-      <div>
-        <p class="label" style="margin-bottom:6px;">What happened</p>
-        <div class="log" id="log"></div>
+      <div id="single" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="week" id="week"></div>
+        <div class="ladder" id="ladder"></div>
+        <div class="exam panel" id="exam"></div>
+        <div>
+          <p class="label" style="margin-bottom:6px;">What happened</p>
+          <div class="log" id="log"></div>
+        </div>
       </div>
+      <div id="compare" hidden></div>
     </main>
 
     <aside class="panel mech">
       <p class="label">How a child works</p>
       <p class="hint">Every rule is a documented effect from learning science. With the x-ray on, the rule behind each turn lights up.</p>
       <div class="cards" id="mechs"></div>
+      <details class="mc built">
+        <summary>How it’s built</summary>
+        <p>Every mechanism is a documented effect; where a number had to be chosen, we say so. The first version forgot in one day; a check against real Duolingo review data showed that was far too fast, so forgetting now uses the FSRS default parameters, fitted on real reviews. The agents lose in all 27 variations of the key parameters we tested.</p>
+        <p class="ours">Our own settings: massed-practice factor 0.6, prerequisite leak 5%, misconception susceptibility 40% and fix rate 70%, self-report probabilities, learn chance 30–60%.</p>
+        <ul class="refs">
+          <li>Corbett &amp; Anderson (1995). Knowledge tracing. <i>User Modeling and User-Adapted Interaction</i> 4(4).</li>
+          <li>Settles &amp; Meeder (2016). A trainable spaced repetition model for language learning. <i>ACL</i>.</li>
+          <li>Ye, Su &amp; Cao (2022). Spaced repetition scheduling (FSRS). <i>KDD</i>.</li>
+          <li>Woźniak (1990). SuperMemo SM-2 (ease factor 2.5).</li>
+          <li>Roediger &amp; Karpicke (2006). Test-enhanced learning. <i>Psychological Science</i> 17(3).</li>
+          <li>Cepeda et al. (2006). Distributed practice in verbal recall tasks. <i>Psychological Bulletin</i> 132(3).</li>
+          <li>Dunlosky et al. (2013). Improving students’ learning with effective learning techniques. <i>PSPI</i> 14(1).</li>
+          <li>Doignon &amp; Falmagne (1985, 1999). Knowledge spaces.</li>
+          <li>Brown &amp; Burton (1978). Diagnostic models for procedural bugs. <i>Cognitive Science</i> 2(2).</li>
+          <li>Ni &amp; Zhou (2005). Whole number bias in fractions. <i>Educational Psychologist</i> 40(1).</li>
+          <li>Siegler et al. (2013). Fractions: the new frontier. <i>Trends in Cognitive Sciences</i> 17(1).</li>
+          <li>Rozenblit &amp; Keil (2002). The illusion of explanatory depth. <i>Cognitive Science</i> 26(5).</li>
+          <li>Rafferty et al. (2016). Faster teaching via POMDP planning. <i>Cognitive Science</i> 40(6).</li>
+          <li>Schulman et al. (2017). Proximal policy optimization (the trained reference).</li>
+        </ul>
+        <p class="src">Full table of mechanism, source and setting: afterquery/REFERENCES.md in the project repository.</p>
+      </details>
     </aside>
   </div>
 </div>
@@ -226,12 +274,12 @@ function game(c) {
 }
 function current() { return mode === "watch" && watch ? watch : game(child()); }
 
-function inside(info) {
+function inside(info, sim) {
   const C = D.const, cn = (k) => `concept ${k + 1}`;
   if (info.act === "explain") {
     const dampTxt = info.nThisSession > 1 ? ` (×${info.damp.toFixed(2)}: explanation number ${info.nThisSession} this session)` : "";
     if (info.before === "unlearned") {
-      if (info.result === "mastered") return `It clicked: chance was ${pct(info.chance)}${dampTxt}. Now mastered, memory half-life ${current().sim.h[info.k].toFixed(1)} days.`;
+      if (info.result === "mastered") return `It clicked: chance was ${pct(info.chance)}${dampTxt}. Now mastered, memory half-life ${sim.h[info.k].toFixed(1)} days.`;
       if (info.result === "buggy") return `It clicked, but wrongly: the child formed the misconception “${BUGNAME[D.bugs[info.k]]}”.`;
       if (!info.prereqOk) return `Did not click: ${cn(info.k - 1)} is not mastered, so the chance was only ${pct(info.chance)}${dampTxt}.`;
       return `Did not click this time: chance was ${pct(info.chance)}${dampTxt}.`;
@@ -282,8 +330,63 @@ function act(g, a) {
   if (prev && prev.info.act === "quiz" && prev.info.why === "lucky" && a[0] !== "ask" && a[1] === prev.info.k + 1)
     pen = "Moved on after a lucky guess: the previous concept was never learned.";
   if (a[0] === "explain" && info.before === "unlearned" && info.prereqOk === false) pen = pen || "Taught on a missing prerequisite.";
-  g.log.unshift({ turn, info, pen });
+  g.log.unshift({ turn, info, pen, txt: inside(info, g.sim) });
   return info;
+}
+
+function entryHTML(e) {
+  const d = describe(e.info), si = Math.min(Math.floor(e.turn / 10), 2);
+  const when = e.info.act === "ask" ? `${DAYS[si].slice(0, 3)} · free` : `${DAYS[si].slice(0, 3)} · turn ${e.turn + 1}`;
+  const say = d.say ? `<div class="say ${d.ok === true ? "ok" : d.ok === false ? "bad" : ""}">${esc(d.say)} ${d.ok === true ? "✓ right" : d.ok === false ? "✗ wrong" : ""}${d.sig ? " — the typical answer of a misconception" : ""}</div>` : "";
+  return `<div class="entry"><span class="when">${when}</span><div><div>${esc(d.what)}</div>${say}<div class="in">Inside: ${esc(e.txt)}</div>${e.pen ? `<div class="redpen">✎ ${esc(e.pen)}</div>` : ""}</div></div>`;
+}
+
+// ---- side by side: two teachers on the same child, stepped together ----
+let cmp = null;
+function newLane(c, name) { return { teacher: name, sim: makeSim(D, c), log: [], acts: [], i: 0, planned: c.teachers[name].actions }; }
+function startCompare() {
+  const c = child(), list = teacherList(c);
+  const pick = (prefs, fb) => prefs.find((n) => list.includes(n)) || fb;
+  const keep = (i) => cmp && list.includes(cmp.lanes[i].teacher) ? cmp.lanes[i].teacher : null;
+  const left = keep(0) || pick(["Gemini 3.1 Pro", "Claude Opus 5.5", "Gemini Pro", "GPT 6.1 Sol", "Gemini 3.5 Flash"], list[0]);
+  const right = keep(1) || pick(["PPO (trained)"], list[1]);
+  cmp = { lanes: [newLane(c, left), newLane(c, right)] };
+}
+function stepCompare() {
+  let hot = null, any = false;
+  for (const L of cmp.lanes) if (L.i < L.planned.length) { hot = act(L, L.planned[L.i++]).mech; any = true; }
+  if (!any) { stopPlay(); return; }
+  render(undefined, hot);
+  if (cmp.lanes.every((L) => L.i >= L.planned.length)) stopPlay();
+}
+function laneHTML(L, idx) {
+  const c = child(), s = L.sim, list = teacherList(c), done = L.i >= L.planned.length;
+  const cls = REF.has(L.teacher) ? "ref" : AGENT.has(L.teacher) ? "agent" : "";
+  const nq = L.acts.filter((a) => a[0] === "quiz").length;
+  const rows = D.concepts.map((n, k) => {
+    const st = s.state[k], rx = s.recall(k, D.const.EXAM_DAY), r = s.recall(k);
+    const lab = xray ? { mastered: "knows", buggy: "misconception", unlearned: "not learned" }[st] : "hidden";
+    return `<div class="lrow"><span class="cnum">${k + 1}</span><span class="lname">${esc(n)}</span><span class="chip ${xray ? st : "unlearned"}">${lab}</span>${xray && st === "mastered" ? `<span class="bar" title="recall now; red mark: exam day"><i style="width:${r * 100}%"></i><b style="left:${rx * 100}%"></b></span>` : "<span></span>"}</div>`;
+  }).join("");
+  const log = L.log.length ? L.log.slice(0, 5).map(entryHTML).join("") : `<p class="empty">Press “Next turn”.</p>`;
+  return `<div class="lane ${cls}">
+    <div class="lanehead"><select data-lane="${idx}" aria-label="Teacher ${idx + 1}">${list.map((n) => `<option ${n === L.teacher ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
+      ${done ? `<span>exam <span class="score">${pct(s.exam())}</span></span>` : `<span class="hint">turn ${Math.min(s.turn + 1, 30)} of 30</span>`}</div>
+    <p class="hint">Quizzes so far: ${nq} of ${L.acts.length} turns</p>
+    <div class="week">${weekHTML(L)}</div>
+    <div class="lrows">${rows}</div>
+    <div class="log">${log}</div></div>`;
+}
+function renderCompare() {
+  const c = child(), done = cmp.lanes.every((L) => L.i >= L.planned.length);
+  $("compare").innerHTML = `<div class="lanes">${cmp.lanes.map(laneHTML).join("")}</div>` +
+    (done ? `<p class="hint" style="margin-top:10px;">Same child, same luck. No teaching: ${pct(c.base)} · teacher who can see inside: ${pct(c.full)}.</p>` : "");
+  $("compare").querySelectorAll("[data-lane]").forEach((sel) => sel.onchange = () => {
+    stopPlay(); const c2 = child();
+    cmp.lanes[+sel.dataset.lane].teacher = sel.value;
+    cmp = { lanes: cmp.lanes.map((L) => newLane(c2, L.teacher)) };
+    render();
+  });
 }
 
 function renderKids() {
@@ -293,12 +396,13 @@ function renderKids() {
     const st = !g || g.sim.turn === 0 ? "not started" : g.sim.turn >= g.sim.T ? `exam ${pct(g.sim.exam())}` : `turn ${g.sim.turn} of 30`;
     return `<button class="kid" data-i="${c.idx}" aria-current="${c.idx === kidIdx}"><span class="av">${NAMES[c.idx][0]}</span><span><span class="nm">${NAMES[c.idx]}</span><br><span class="st">${st}</span></span></button>`;
   }).join("");
-  document.querySelectorAll(".kid").forEach((b) => b.onclick = () => { kidIdx = +b.dataset.i; stopPlay(); if (mode === "watch") startWatch(); render(); });
+  document.querySelectorAll(".kid").forEach((b) => b.onclick = () => { kidIdx = +b.dataset.i; stopPlay(); if (mode === "watch") startWatch(); if (mode === "compare") startCompare(); render(); });
 }
 
-function renderWeek(g) {
+function renderWeek(g) { $("week").innerHTML = weekHTML(g); }
+function weekHTML(g) {
   const s = g.sim;
-  $("week").innerHTML = [0, 1, 2].map((si) => {
+  return [0, 1, 2].map((si) => {
     let pips = "";
     for (let j = 0; j < 10; j++) {
       const t = si * 10 + j, a = g.acts[t];
@@ -337,12 +441,7 @@ function renderLadder(g, flashK) {
 
 function renderLog(g) {
   if (!g.log.length) { $("log").innerHTML = `<p class="empty">${mode === "watch" ? "Press “Next turn” to watch the first move." : "Pick an action on a concept. Explain, Quiz and Correct use one turn; Ask is free."}</p>`; return; }
-  $("log").innerHTML = g.log.map((e) => {
-    const d = describe(e.info), si = Math.min(Math.floor(e.turn / 10), 2);
-    const when = e.info.act === "ask" ? `${DAYS[si].slice(0, 3)} · free` : `${DAYS[si].slice(0, 3)} · turn ${e.turn + 1}`;
-    const say = d.say ? `<div class="say ${d.ok === true ? "ok" : d.ok === false ? "bad" : ""}">${esc(d.say)} ${d.ok === true ? "✓ right" : d.ok === false ? "✗ wrong" : ""}${d.sig ? " — the typical answer of a misconception" : ""}</div>` : "";
-    return `<div class="entry"><span class="when">${when}</span><div><div>${esc(d.what)}</div>${say}<div class="in">Inside: ${esc(inside(e.info))}</div>${e.pen ? `<div class="redpen">✎ ${esc(e.pen)}</div>` : ""}</div></div>`;
-  }).join("");
+  $("log").innerHTML = g.log.map(entryHTML).join("");
 }
 
 function teacherList(c) { return TEACHER_ORDER.filter((n) => c.teachers[n]); }
@@ -373,7 +472,21 @@ function renderMechs(hot) {
 }
 
 function render(flashK, hot) {
-  const g = current(), s = g.sim, c = child();
+  const c = child();
+  $("single").hidden = mode === "compare";
+  $("compare").hidden = mode !== "compare";
+  $("board").classList.toggle("xrayon", xray);
+  if (mode === "compare") {
+    const t = Math.max(...cmp.lanes.map((L) => L.sim.turn)), si = Math.min(Math.floor(t / 10), 2);
+    $("who").textContent = `Two teachers, same child: ${NAMES[c.idx]}`;
+    $("turnlbl").textContent = t >= 30 ? "· week over" : `· turn ${t + 1} of 30, ${DAYS[si]}`;
+    $("explbl").textContent = t >= 30 ? "Exam done" : `Exam in ${7 - D.const.SESSIONS[si]} days`;
+    renderKids(); renderCompare(); renderMechs(hot);
+    $("w-step").disabled = cmp.lanes.every((L) => L.i >= L.planned.length);
+    $("w-play").disabled = $("w-step").disabled;
+    return;
+  }
+  const g = current(), s = g.sim;
   $("who").textContent = mode === "watch" ? `${watch.teacher} teaching ${NAMES[c.idx]}` : `You teaching ${NAMES[c.idx]}`;
   const si = Math.min(Math.floor(s.turn / 10), 2);
   $("turnlbl").textContent = s.turn >= s.T ? "· week over" : `· turn ${s.turn + 1} of 30, ${DAYS[si]}`;
@@ -413,8 +526,14 @@ function setMode(m) {
   mode = m; stopPlay();
   $("m-play").setAttribute("aria-pressed", m === "play");
   $("m-watch").setAttribute("aria-pressed", m === "watch");
-  $("watchbar").hidden = m !== "watch";
+  $("m-compare").setAttribute("aria-pressed", m === "compare");
+  $("watchbar").hidden = m === "play";
+  $("teacher").hidden = $("teacher-l").hidden = m !== "watch";
   if (m === "watch") startWatch();
+  if (m === "compare") {
+    startCompare();
+    if (!xray) { xray = true; $("xray").checked = true; $("xray-l").classList.add("on"); }
+  }
 }
 
 async function start() {
@@ -426,17 +545,22 @@ async function start() {
     return;
   }
   $("batch").innerHTML = [3001, 3002, 3003, 3004, 3005].map((b) => `<option value="${b}">Seed ${b}</option>`).join("");
-  $("batch").onchange = () => { batch = +$("batch").value; kidIdx = 0; stopPlay(); if (mode === "watch") startWatch(); render(); };
+  $("batch").onchange = () => { batch = +$("batch").value; kidIdx = 0; stopPlay(); if (mode === "watch") startWatch(); if (mode === "compare") startCompare(); render(); };
   $("m-play").onclick = () => { setMode("play"); render(); };
   $("m-watch").onclick = () => { setMode("watch"); render(); };
+  $("m-compare").onclick = () => { setMode("compare"); render(); };
   $("xray").onchange = () => { xray = $("xray").checked; $("xray-l").classList.toggle("on", xray); render(); };
   $("teacher").onchange = () => { stopPlay(); watch.teacher = $("teacher").value; const c = child(); watch = { teacher: watch.teacher, sim: makeSim(D, c), log: [], acts: [], i: 0, planned: c.teachers[watch.teacher].actions }; render(); };
-  $("w-step").onclick = () => { stopPlay(); stepWatch(); };
-  $("w-reset").onclick = () => { stopPlay(); $("teacher").onchange(); };
+  $("w-step").onclick = () => { stopPlay(); mode === "compare" ? stepCompare() : stepWatch(); };
+  $("w-reset").onclick = () => {
+    stopPlay();
+    if (mode === "compare") { const c = child(); cmp = { lanes: cmp.lanes.map((L) => newLane(c, L.teacher)) }; render(); }
+    else $("teacher").onchange();
+  };
   $("w-play").onclick = () => {
     if (timer) { stopPlay(); return; }
     $("w-play").textContent = "Pause";
-    timer = setInterval(stepWatch, 700);
+    timer = setInterval(mode === "compare" ? stepCompare : stepWatch, 700);
   };
   render();
 }
