@@ -26,6 +26,7 @@ A child who knows and remembers concept K answers a quiz on it correctly about 9
 - A concept learned in one session can fade within days unless it is reviewed. Forgetting speed varies by child and concept.
 - Quizzing strengthens memory more than another explanation. Reviewing after time has passed is more effective than reviewing immediately.
 - A concept is very hard to learn until its prerequisite is mastered.
+- Re-explaining the same concept again in the same session helps less each time (massed repetition); explaining it again in a later session works as well as the first time.
 - Some children develop one of these misconceptions:
   - `bigger_denominator`: thinks a bigger denominator means a bigger fraction; says `1/8 > 1/4`.
   - `add_to_top_and_bottom`: thinks adding the same number to numerator and denominator keeps a fraction equivalent; says `2/3 = 3/4`.

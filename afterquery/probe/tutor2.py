@@ -33,6 +33,7 @@ H0 = 1.0  # legacy; per-child half-lives now come from params(): see CALIBRATION
 # Newly learned concept: half-life U(2.6, 7.8) days (Again..Hard). Known before the course: U(8, 20) (Hard..Good).
 # Correct recall multiplies the half-life by 2.5 = the SM-2 default ease factor.
 RETRIEVE, RESTUDY = 2.5, 1.5
+MASSED = 0.6  # diminishing returns of re-explaining within a session (massed practice)
 FIX_EXPLAIN, FIX_TARGETED = 0.10, 0.70
 BUG_EXAM = 0.10
 BUGS = {1: "bigger_denominator", 2: "add_to_top_and_bottom", 4: "add_across"}
@@ -116,8 +117,15 @@ class Sim:
     def explain(self, k):
         u = self.p["u"][self.turn]
         st = self.state[k]
+        # Massed repetition helps less: each earlier explanation of the same concept in the same session
+        # multiplies the chance of it clicking by MASSED (a new session starts fresh: spacing).
+        if not hasattr(self, "_sess_expl"):
+            self._sess_expl = {}
+        key = (self.turn // TURNS_PER, k)
+        damp = MASSED ** self._sess_expl.get(key, 0)
+        self._sess_expl[key] = self._sess_expl.get(key, 0) + 1
         if st == "unlearned":
-            if u[0] < (self.p["plearn"][k] if self.mastered_ok(k) else LEAK):
+            if u[0] < (self.p["plearn"][k] if self.mastered_ok(k) else LEAK) * damp:
                 self._learn(k, u[1])
         elif st == "mastered":
             sp = 1 + (1 - self.recall(k))
@@ -438,7 +446,7 @@ import copy
 
 def _clone_fresh(s, rng):
     c = copy.copy(s)
-    c.state, c.h, c.last = list(s.state), list(s.h), list(s.last)
+    c.state, c.h, c.last = list(s.state), list(s.h), list(s.last); c._sess_expl = dict(getattr(s, "_sess_expl", {}))
     c.p = dict(s.p)
     u = s.p["u"].copy()
     u[s.turn:] = rng.random(u[s.turn:].shape)      # future draws unknown to the planner
@@ -469,7 +477,7 @@ def rollout_oracle_step(s, n=16, rng=np.random.default_rng(0)):
         v = 0.0
         for fu in futures:
             c = copy.copy(s)
-            c.state, c.h, c.last = list(s.state), list(s.h), list(s.last)
+            c.state, c.h, c.last = list(s.state), list(s.h), list(s.last); c._sess_expl = dict(getattr(s, "_sess_expl", {}))
             c.p = dict(s.p); u = s.p["u"].copy(); u[s.turn:] = fu; c.p["u"] = u
             _apply(c, a)
             while c.turn < T:

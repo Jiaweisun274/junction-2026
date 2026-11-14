@@ -50,6 +50,7 @@ def _clone(s, rng):
     u = s.p["u"].copy(); u[s.turn:] = rng.random(u[s.turn:].shape); c.p["u"] = u
     c.state, c.h, c.last = list(s.state), list(s.h), list(s.last)
     c.turn, c.last_explained = s.turn, s.last_explained
+    c._sess_expl = dict(getattr(s, "_sess_expl", {}))
     return c
 
 

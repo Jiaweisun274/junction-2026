@@ -27,8 +27,13 @@ T = TURNS_PER * len(SESSIONS)
 EXAM_DAY = 7.0
 SLIP, GUESS = 0.10, 0.25
 LEAK = 0.05
-H0 = 1.0
+H0 = 1.0  # legacy; per-child half-lives now come from params(): see CALIBRATION below
+# CALIBRATION (Sat 14 Nov): FSRS-5 default first-review stabilities (days to 90% recall) are 0.40 (Again),
+# 1.18 (Hard), 3.17 (Good). As exponential half-lives (x ln2/ln(1/0.9) = x6.58): ~2.6, ~7.8, ~21 days.
+# Newly learned concept: half-life U(2.6, 7.8) days (Again..Hard). Known before the course: U(8, 20) (Hard..Good).
+# Correct recall multiplies the half-life by 2.5 = the SM-2 default ease factor.
 RETRIEVE, RESTUDY = 2.5, 1.5
+MASSED = 0.6  # diminishing returns of re-explaining within a session (massed practice)
 FIX_EXPLAIN, FIX_TARGETED = 0.10, 0.70
 BUG_EXAM = 0.10
 BUGS = {1: "bigger_denominator", 2: "add_to_top_and_bottom", 4: "add_across"}
@@ -61,10 +66,11 @@ def params(seed):
     m0 = int(r.choice([0, 1, 2, 3], p=[0.2, 0.35, 0.3, 0.15]))
     plearn = r.uniform(0.3, 0.6, K)
     suscept = {b: bool(r.random() < 0.4) for b in BUGS.values()}
-    h_init = r.uniform(2.0, 6.0, K)
+    h_init = r.uniform(8.0, 20.0, K)
     u = r.random((T + 2, 8))
     u_init = r.random(K)
-    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init)
+    h0 = r.uniform(2.6, 7.8, K)
+    return dict(m0=m0, plearn=plearn, suscept=suscept, h_init=h_init, u=u, u_init=u_init, h0=h0)
 
 
 class Sim:
@@ -105,21 +111,28 @@ class Sim:
             self.state[k] = "buggy"
         else:
             self.state[k] = "mastered"
-            self.h[k], self.last[k] = H0, self.now()
+            self.h[k], self.last[k] = self.p["h0"][k], self.now()
 
     # --- actions ---
     def explain(self, k):
         u = self.p["u"][self.turn]
         st = self.state[k]
+        # Massed repetition helps less: each earlier explanation of the same concept in the same session
+        # multiplies the chance of it clicking by MASSED (a new session starts fresh: spacing).
+        if not hasattr(self, "_sess_expl"):
+            self._sess_expl = {}
+        key = (self.turn // TURNS_PER, k)
+        damp = MASSED ** self._sess_expl.get(key, 0)
+        self._sess_expl[key] = self._sess_expl.get(key, 0) + 1
         if st == "unlearned":
-            if u[0] < (self.p["plearn"][k] if self.mastered_ok(k) else LEAK):
+            if u[0] < (self.p["plearn"][k] if self.mastered_ok(k) else LEAK) * damp:
                 self._learn(k, u[1])
         elif st == "mastered":
             sp = 1 + (1 - self.recall(k))
             self.h[k] *= RESTUDY * sp
             self.last[k] = self.now()
         elif st == "buggy" and u[0] < FIX_EXPLAIN:
-            self.state[k] = "mastered"; self.h[k], self.last[k] = H0, self.now()
+            self.state[k] = "mastered"; self.h[k], self.last[k] = self.p["h0"][k], self.now()
         self.turn += 1
         self.last_explained = k
 
@@ -157,7 +170,7 @@ class Sim:
     def correct(self, k, bug):
         u = self.p["u"][self.turn]
         if self.state[k] == "buggy" and BUGS.get(k) == bug and u[0] < FIX_TARGETED:
-            self.state[k] = "mastered"; self.h[k], self.last[k] = H0, self.now()
+            self.state[k] = "mastered"; self.h[k], self.last[k] = self.p["h0"][k], self.now()
         self.turn += 1
         self.last_explained = None
 
@@ -433,7 +446,7 @@ import copy
 
 def _clone_fresh(s, rng):
     c = copy.copy(s)
-    c.state, c.h, c.last = list(s.state), list(s.h), list(s.last)
+    c.state, c.h, c.last = list(s.state), list(s.h), list(s.last); c._sess_expl = dict(getattr(s, "_sess_expl", {}))
     c.p = dict(s.p)
     u = s.p["u"].copy()
     u[s.turn:] = rng.random(u[s.turn:].shape)      # future draws unknown to the planner
@@ -464,7 +477,7 @@ def rollout_oracle_step(s, n=16, rng=np.random.default_rng(0)):
         v = 0.0
         for fu in futures:
             c = copy.copy(s)
-            c.state, c.h, c.last = list(s.state), list(s.h), list(s.last)
+            c.state, c.h, c.last = list(s.state), list(s.h), list(s.last); c._sess_expl = dict(getattr(s, "_sess_expl", {}))
             c.p = dict(s.p); u = s.p["u"].copy(); u[s.turn:] = fu; c.p["u"] = u
             _apply(c, a)
             while c.turn < T:

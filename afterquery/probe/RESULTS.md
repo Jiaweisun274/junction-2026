@@ -208,3 +208,18 @@ Held-out seeds 2041-2140 (never used for training or checkpoint choice):
 | literature policy | 0.58 |
 | naive (2-in-a-row, no review) | 0.60 |
 Matches the estimated observation-only ceiling (~0.7-0.8). Use rl_ref_last.pt (no selection bias).
+
+# Realism check: diminishing returns of massed re-explanation (Sat 14 Nov)
+tutor2.py: each earlier explanation of the same concept in the same session multiplies the chance of it clicking
+by 0.6; a new session starts fresh (massed vs spaced practice). Rules text and Harbor instruction updated; RL
+observation gains "explanations of this concept this session". Harbor simulator copies synced to this version.
+Held-out seeds 2041-2140:
+| policy | before (no damping) | with massed damping |
+|---|---|---|
+| PPO (rl_ref_massed.pt) | 0.78 | **0.70** |
+| literature | 0.58 | 0.59 |
+| naive | 0.60 | 0.54 |
+PPO still leads the literature policy by ~0.11. Its behaviour changed: explain 58% / quiz 39% (was 73/25), runs of
+1.3 explanations (was 2.1), and it now often quizzes the PREREQUISITE right after teaching the next concept
+("E3 Q2-" -> back to 2). It still keeps teaching new material to the end (20% quizzes in the last 5 turns vs 68%
+for the literature policy) and reaches concept 5.7 on average (literature 4.0).

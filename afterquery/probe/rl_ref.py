@@ -15,7 +15,7 @@ import tutor2 as t
 
 BUG_K = sorted(t.BUGS)                     # concepts (0-based) that can hold a misconception: [1, 2, 4]
 N_ACT = 2 * t.K + len(BUG_K)
-F_PER = 9
+F_PER = 10
 OBS_DIM = t.K * F_PER + 6
 
 
@@ -35,12 +35,13 @@ class Env:
         K = t.K
         self.ne = np.zeros(K); self.qr = np.zeros(K); self.qw = np.zeros(K); self.last = np.zeros(K)
         self.sig = np.zeros(K); self.nc = np.zeros(K); self.touch = np.full(K, -1.0); self.b = np.full(K, 0.5)
+        self.se = np.zeros(K); self.sess = 0
 
     def obs(self):
         now = self.s.now()
         since = np.where(self.touch < 0, 0.0, (now - self.touch) / 7.0)
         per = np.stack([self.ne / 5, self.qr / 5, self.qw / 5, self.last, self.sig, self.nc / 3,
-                        since, self.b, (self.touch >= 0).astype(float)], 1).ravel()
+                        since, self.b, (self.touch >= 0).astype(float), self.se / 3], 1).ravel()
         sess = self.s.turn // t.TURNS_PER
         g = [self.s.turn / t.T, (t.T - self.s.turn) / t.T, float(sess == 0), float(sess == 1), float(sess == 2),
              (t.TURNS_PER - self.s.turn % t.TURNS_PER) / t.TURNS_PER]
@@ -49,8 +50,10 @@ class Env:
     def step(self, a):
         kind, k, bug = decode(a)
         now = self.s.now()
+        if self.s.turn // t.TURNS_PER != self.sess:
+            self.sess = self.s.turn // t.TURNS_PER; self.se[:] = 0
         if kind == "explain":
-            self.s.explain(k); self.ne[k] += 1
+            self.s.explain(k); self.ne[k] += 1; self.se[k] += 1
             self.b[k] = self.b[k] + (1 - self.b[k]) * 0.3
         elif kind == "correct":
             self.s.correct(k, bug); self.nc[k] += 1; self.sig[k] = 0; self.b[k] = 0.5

@@ -6,6 +6,7 @@ How children learn and remember:
 - Children forget. A concept learned in one session can fade within days unless it is reviewed; how fast varies by child and concept.
 - Practising recall in a quiz strengthens memory more than hearing the explanation again, and reviewing after some time has passed strengthens it more than reviewing right away. A quiz does not teach a concept the child has never learned.
 - A concept is very hard to learn while the concept before it has not been mastered.
+- Re-explaining the same concept again in the same session helps less each time (massed repetition); explaining it again in a later session works as well as the first time.
 - Some children learn a concept wrongly and form a misconception. Three common ones in this curriculum:
     bigger_denominator: thinks a bigger denominator means a bigger fraction (says 1/8 > 1/4)
     add_to_top_and_bottom: thinks adding the same number to top and bottom keeps a fraction equal (says 2/3 = 3/4)
