@@ -67,7 +67,7 @@ start, review the last five turns; 66-69% quizzes).
 - The agent-like teacher is beaten in all 27 worlds. Its regret is smallest (0.012-0.024 exam points) where
   forgetting is fast and the testing effect weak, close to our first, uncalibrated simulator, and largest
   (0.06-0.07) where forgetting is slow or children learn fast.
-- So the user's concern is partly right: how much the quiz-heavy habit costs depends on the parameters, and in a
+- So the concern is partly right: how much the quiz-heavy habit costs depends on the parameters, and in a
   world with very fast forgetting it is nearly optimal. But the agents keep the same habit everywhere: on the old
   fast-forgetting simulator they quizzed 64-65% of turns, on the calibrated one 61-68%. The failure is not
   "quizzing too much" in the abstract; it is not adapting the quiz/teach balance to the children in front of them,
