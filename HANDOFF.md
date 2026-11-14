@@ -95,3 +95,10 @@ Data: Duolingo half-life regression traces (Settles & Meeder 2016, CC BY-NC) in 
 - AfterQuery: frontier model credits via their harness (ask mentors).
 - Verda: €200 team credit (console.verda.com; create the project before redeeming the coupon).
 - Modal $100/person, Featherless $50/person (Gemma hosting) if needed.
+
+## 8. Ideas parked (Sat 14 Nov)
+- **Abstract re-skin as fallback / ablation.** Same simulator core (hidden skills in a prerequisite tree, decay,
+  "corrupted" states with signature outputs, noisy paid checks, free unreliable self-report), told as a small game
+  instead of tutoring. Pros: no realism debate. Cons: weaker "why it matters", and agent behaviour may change because
+  domain priors no longer help. Best use: run both skins as an ablation ("does the story change decision quality?").
+  Ask mentors whether a literature-grounded but stylised tutoring sim is acceptable before choosing.
