@@ -51,3 +51,25 @@ when the state is hidden**:
 - The mistake definitions use the hidden state, which the teacher cannot see; they describe outcomes of decisions,
   not mistakes the teacher could always have avoided. The hand-over test is the cleaner measure.
 - The simulator is a stylised model of tutoring (see the model card in `README.md`).
+
+## Sensitivity: is "testing instead of teaching" an artefact of our parameters?
+
+`probe/sensitivity.py`, results in `probe/sensitivity_results.txt`. We varied the three parameters that set the
+value of a quiz against an explanation: the testing-effect multiplier (1.5 / 2.5 / 4), the speed of forgetting
+(half-lives x0.3 / x1 / x3) and the learn chance (x0.7 / x1 / x1.3): 27 worlds, 120 children each. In every world we
+searched a family of 54 scripted teachers (correct answers needed before moving on, explanations before the first
+quiz, review at session start, review turns before the exam) and compared the best one with an "agent-like" teacher
+that copies the frontier agents' habits (explain once, quiz, move on after one correct answer, review at each session
+start, review the last five turns; 66-69% quizzes).
+
+- The best quiz share depends on the world: 33% to 64%, most often 50%. Fast forgetting and a weak learner push it
+  up (about 60-64%); slow forgetting and a strong testing effect push it down.
+- The agent-like teacher is beaten in all 27 worlds. Its regret is smallest (0.012-0.024 exam points) where
+  forgetting is fast and the testing effect weak, close to our first, uncalibrated simulator, and largest
+  (0.06-0.07) where forgetting is slow or children learn fast.
+- So the user's concern is partly right: how much the quiz-heavy habit costs depends on the parameters, and in a
+  world with very fast forgetting it is nearly optimal. But the agents keep the same habit everywhere: on the old
+  fast-forgetting simulator they quizzed 64-65% of turns, on the calibrated one 61-68%. The failure is not
+  "quizzing too much" in the abstract; it is not adapting the quiz/teach balance to the children in front of them,
+  which the trained reference does.
+- Caveat: the agent-like teacher is a scripted proxy for the agents' habits, not the agents themselves.
