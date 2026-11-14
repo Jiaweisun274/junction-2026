@@ -244,3 +244,17 @@ PPO beats each frontier model on 4 of 5 seeds; both frontier models beat the lit
 - Auto-finish: the MCP server now runs the exam after the 30th turn; forgetting `finish` no longer scores 0.
 - Reference scores unchanged (held-out 2041-2140: PPO 0.699, literature 0.593; Harbor reference on 2001 = 0.957).
 - Fable review files copied to afterquery/fable_review/ (PHASE1_DESIGN.md, PHASE2_CRITIQUE.md, prototype, analysis).
+
+# Six-child runs (pooled reward), fresh seeds 3001-3005, salt eval1 — Harbor + OpenCode (Sat 14 Nov afternoon)
+Gemini runs executed on a Verda CPU server (8 vCPU, 32 GB) in tmux; Claude/GPT runs on the laptop.
+| policy | n runs | mean reward | PPO minus policy | paired t | PPO wins |
+|---|---|---|---|---|---|
+| PPO reference | 5 | **0.701** | | | |
+| literature policy | 5 | 0.556 | +0.145 | 2.6 | 4/5 |
+| claude-opus-5-5 | 5 | 0.593 | +0.108 | 2.1 | 4/5 |
+| gpt-6.1-sol | 3 (2 lost to OpenAI rate limits) | 0.613 | +0.014 | 0.1 | 2/3 |
+| gemini-pro-latest | 5 | 0.522 | +0.179 | 2.0 | 4/5 |
+| gemini-3.1-pro-preview | 5 | 0.549 | +0.152 | 2.5 | 5/5 |
+| gemini-3.5-flash | 5 | 0.515 | +0.186 | 3.1 | 5/5 |
+All frontier runs pooled: 23 runs, mean gap +0.138, PPO wins 20 of 23. The only run-level losses are on seed 3005
+(a hard batch for PPO) and gpt-6.1-sol on 3001/3005.
