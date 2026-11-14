@@ -1,0 +1,29 @@
+volumes:
+  tutor_results:
+
+services:
+  main:
+    depends_on:
+      tutor:
+        condition: service_healthy
+    environment:
+      AFTERQUERY_MCP_URL: http://127.0.0.1:8000/mcp
+    volumes:
+      - tutor_results:/grader:ro
+
+  tutor:
+    build:
+      context: ./mcp-server
+    environment:
+      AFTERQUERY_SEED: ${AFTERQUERY_SEED:-2001}
+      AFTERQUERY_SEED_SALT: ${AFTERQUERY_SEED_SALT:-}
+      AFTERQUERY_CHILDREN: ${AFTERQUERY_CHILDREN:-6}
+      AFTERQUERY_RESULT_PATH: /grader/result.json
+    volumes:
+      - tutor_results:/grader
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+      start_period: 5s

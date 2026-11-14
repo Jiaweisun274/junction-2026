@@ -1,0 +1,32 @@
+schema_version = "1.4"
+artifacts = ["/grader/result.json"]
+
+[task]
+name = "sauna-renaissance/afterquery-tutor2-hint"
+description = "A multi-session fractions tutoring environment with hidden learning state and delayed exam reward."
+keywords = ["afterquery", "mcp", "tutoring", "decision-making"]
+
+[metadata]
+difficulty = "frontier-agent-evaluation"
+source = "afterquery/probe/tutor2.py"
+
+[agent]
+timeout_sec = 5400
+
+[verifier]
+timeout_sec = 120
+environment_mode = "separate"
+
+[environment]
+cpus = 2
+memory_mb = 4096
+# The agent may reach only the tutor sidecar and model APIs (Harbor also adds the run's inference host),
+# so it cannot download the public simulator and replay the hidden child.
+network_mode = "allowlist"
+allowed_hosts = ["models.opencode.ai", "generativelanguage.googleapis.com","api.openai.com", "api.anthropic.com", "openrouter.ai", "registry.npmjs.org", "models.dev"]
+
+[[environment.mcp_servers]]
+name = "afterquery-tutor"
+transport = "streamable-http"
+# Under the allowlist every service shares the egress sidecar's network namespace, so the tutor is on localhost.
+url = "http://127.0.0.1:8000/mcp"
