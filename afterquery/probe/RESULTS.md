@@ -171,3 +171,16 @@ click; never backs off to the prerequisite. Earlier Claude subagent runs (heavy 
 Note the harness effect: Claude as a Claude Code subagent (shell, own scripts, long thinking) averaged 0.65 on 2001-2008;
 the same family through plain tool calls at medium effort averages 0.40. OpenCode is a coding agent with a shell, so the
 judges' runs may look more like the subagent runs. Must test inside Harbor/OpenCode before claiming the gap.
+
+# Harbor + OpenCode runs (Sat 14 Nov, salt "eval1", seeds 2001-2005; reference = Harbor `-a oracle` running solve.sh)
+| seed | reference | OpenCode + gpt-6.1-sol | OpenCode + claude-opus-5-5 |
+|---|---|---|---|
+| 2001 | 0.52 | 0.89 | 0.53 |
+| 2002 | 0.59 | 0.20 | 0.24 |
+| 2003 | 0.54 | 0.63 | 0.69 |
+| 2004 | 0.65 | 0.47 | 0.51 |
+| 2005 | 0.68 | 0.38 | 0.66 |
+| mean | 0.60 | 0.52 | 0.52 |
+Harness effect confirmed: inside OpenCode both frontier models rise from ~0.40 (plain tool calls) to ~0.52.
+The reference still leads on average but wins only 3 of 5 seeds per model; the gap is not yet "consistent".
+Results TSVs: afterquery/harbor/results/. Batch script: afterquery/harbor/run_seeds.sh.
