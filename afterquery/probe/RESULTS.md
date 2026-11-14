@@ -195,3 +195,16 @@ random numbers, 48 rollouts/candidate: 0.62 (= literature). Diagnostic with the 
 => one-step policy improvement on this base adds nothing; simple observation-based policies plateau near 0.6 while
 the full-information policy defines 1.0. A stronger reference needs real search (e.g. POMCP) or the env needs a
 different source of difficulty.
+
+# RL reference (PPO, observation-only features) on calibrated tutor2 (Sat 14 Nov)
+rl_ref.py: 63 observation features (counts, last result, signature seen, days since contact, BKT belief, time),
+15 actions, reward = exam gain at the end, 2-layer MLP. Trained on random seeds in [1e6, 1e9), 2000 iters x 256
+children (~15M steps), 9 min on a laptop CPU.
+Held-out seeds 2041-2140 (never used for training or checkpoint choice):
+| policy | normalised score |
+|---|---|
+| PPO, last checkpoint (rl_ref_last.pt) | **0.78** |
+| PPO, checkpoint picked on 2001-2040 | 0.78 |
+| literature policy | 0.58 |
+| naive (2-in-a-row, no review) | 0.60 |
+Matches the estimated observation-only ceiling (~0.7-0.8). Use rl_ref_last.pt (no selection bias).
