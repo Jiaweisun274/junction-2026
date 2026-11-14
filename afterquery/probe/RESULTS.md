@@ -336,3 +336,14 @@ weak evidence, re-quizzing rarely pays), batches 3001-3005, paired with the plai
 | gemini-pro-latest | 0.522 | 0.441 | 65% -> 64% | 5/5 |
 Explicit advice barely changes behaviour: the quiz share stays above 60% (PPO 37%). One model gains a little, the
 other loses. Being told the right principle is not the same as acting on it.
+
+# Abstract skin (harbor/tutor2_abstract, "Node Lattice"): same simulator and draws, no teaching story
+Batches 3001-3005, paired with the tutoring runs (the reference reproduces the tutoring reward exactly).
+| model | tutoring | abstract | quiz share tutoring -> abstract | PPO wins (abstract) |
+|---|---|---|---|---|
+| gemini-3.1-pro-preview | 0.549 | 0.476 | 68% -> 66% | 5/5 |
+| gemini-pro-latest | 0.522 | 0.444 | 65% -> 68% | 5/5 |
+Without the teaching story both models lose about 0.075 and the gap to the reference widens (+0.15 to +0.26).
+The quiz-heavy habit is the same in both skins (about two thirds of steps are probes), so it is not imported from
+beliefs about teaching. Reading: the tutoring story helps the agents a little (prior knowledge is useful, not
+misleading), and the characteristic failure is a generic way of acting under hidden state, present with or without it.
