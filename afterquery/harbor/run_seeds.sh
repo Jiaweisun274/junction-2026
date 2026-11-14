@@ -12,7 +12,7 @@ out=harbor/results/$tag.tsv
 mkdir -p harbor/results jobs/$tag
 echo -e "seed\treward\texam\treference_reward\tliterature_reward\tturns\tjob" > "$out"
 for seed in "$@"; do
-  args=(run --env-file .env -p harbor/tutor2 -a "$agent" -k 1 -o "jobs/$tag/seed_$seed")
+  args=(run --env-file .env -p harbor/${TASK:-tutor2} -a "$agent" -k 1 -o "jobs/$tag/seed_$seed")
   [ "$model" != "-" ] && args+=(-m "$model")
   AFTERQUERY_SEED=$seed AFTERQUERY_SEED_SALT=$salt .venv/bin/harbor "${args[@]}" > "jobs/$tag/seed_$seed.log" 2>&1
   res=$(ls jobs/$tag/seed_$seed/*/*/result.json 2>/dev/null | head -1)
