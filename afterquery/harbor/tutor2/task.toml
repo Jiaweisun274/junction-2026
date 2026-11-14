@@ -23,7 +23,7 @@ memory_mb = 4096
 # The agent may reach only the tutor sidecar and model APIs (Harbor also adds the run's inference host),
 # so it cannot download the public simulator and replay the hidden child.
 network_mode = "allowlist"
-allowed_hosts = ["models.opencode.ai","api.openai.com", "api.anthropic.com", "openrouter.ai", "registry.npmjs.org", "models.dev"]
+allowed_hosts = ["models.opencode.ai", "generativelanguage.googleapis.com","api.openai.com", "api.anthropic.com", "openrouter.ai", "registry.npmjs.org", "models.dev"]
 
 [[environment.mcp_servers]]
 name = "afterquery-tutor"
