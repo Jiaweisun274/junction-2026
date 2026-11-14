@@ -306,3 +306,16 @@ check -0.012; teach-only last 4 turns -0.008; no Monday diagnosis -0.005.
 agent habit is accepting one correct answer (lucky guesses); routine re-testing at session start is second.
 (Note the teach-only final turns did not help the rule policy; PPO's low late quiz share is a consequence of still
 having new concepts to teach, not a separate rule.)
+
+## Correction: planned teacher on 200 fresh evaluation batches (3016-3215, salt eval1, 1,200 children)
+| policy | mean pooled reward |
+|---|---|
+| PPO (trained) | **0.725** |
+| planned (5 rules, 6 knobs tuned on 1001-1400) | 0.671 |
+| rule (2-in-a-row) | 0.653 |
+| literature | 0.561 |
+Planned minus PPO per batch: -0.054 (se 0.011); planned wins 73/200. The earlier "planned 0.773 > PPO 0.701 on
+3001-3005" was small-sample luck: 3001-3005 happens to be a batch set where the simple policies score low and the
+planned one high. Corrected claim: a readable 5-rule teacher gets most of the way (0.67 vs PPO 0.73), clearly above
+the textbook rulebook (0.56); PPO still learns something beyond these rules. Agent-vs-reference comparisons must be
+paired on the same batches (agents have run only on 3001-3005 so far; 3006-3015 queued).
