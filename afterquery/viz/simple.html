@@ -57,8 +57,13 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .tile .b button.fix { border-color: var(--bug); color: var(--bug); font-weight: 700; }
 .tile .b button:disabled { opacity: 0.4; cursor: default; }
 .bubble { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start; }
-.av { width: 52px; height: 52px; border-radius: 50%; background: var(--know-soft); color: var(--know); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 24px; }
-.said { font-family: var(--display); font-size: 26px; font-weight: 700; }
+.av { width: 64px; height: 64px; border-radius: 50%; background: var(--know-soft); color: var(--know); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 30px; }
+.speech { position: relative; background: var(--paper); border: 2px solid var(--ink); border-radius: 18px; padding: 14px 20px; display: flex; flex-direction: column; gap: 6px; min-height: 120px; justify-content: center; }
+.speech::before { content: ""; position: absolute; left: -11px; top: 22px; width: 18px; height: 18px; background: var(--paper); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg); }
+.said { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); font-weight: 800; line-height: 1.1; }
+.speech .q { font-size: 17px; }
+.lastbox { border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; min-height: 92px; display: flex; flex-direction: column; gap: 4px; }
+.lastbox .said { font-size: 26px; }
 .said.ok { color: var(--know); }
 .said.bad { color: var(--bug); }
 .q { color: var(--muted); font-size: 15px; }
@@ -106,8 +111,8 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
       <p class="when" id="when"></p>
       <button class="xray" id="xray" aria-pressed="false">X-ray: see inside her head</button>
     </div>
+    <div class="bubble"><div class="av">A</div><div class="speech" id="talk" aria-live="polite"></div></div>
     <div class="tiles" id="tiles"></div>
-    <div class="bubble"><div class="av">A</div><div id="talk"></div></div>
     <div id="end" hidden></div>
   </section>
 
@@ -227,12 +232,19 @@ function render1() {
 
 function laneHTML(g, name, cls) {
   const s = g.sim, done = g.i >= g.planned.length;
-  const last = g.last ? (() => { const [w] = why(g.last, s); const d = g.last.act === "quiz" ? `Quiz ${g.last.k + 1} → “${esc(g.last.ans)}” ${g.last.ok ? "✓" : "✗"}` : g.last.act === "explain" ? `Explain ${g.last.k + 1}` : `Fix misconception on ${g.last.k + 1}`; return `<b>${d}</b><br>${esc(w)}${g.last.pen ? ` <span class="pen">✎ moved on after a lucky guess</span>` : ""}`; })() : "";
+  const L = g.last;
+  const last = L ? (() => {
+    const [w] = why(L, s);
+    const top = L.act === "quiz" ? `<p class="q">Quiz ${L.k + 1}: ${esc(L.q)}</p><p class="said ${L.ok ? "ok" : "bad"}">“${esc(L.ans)}” ${L.ok ? "✓" : "✗"}</p>`
+      : L.act === "explain" ? `<p class="q">Explains idea ${L.k + 1}</p><p class="said">“Okay, I’m listening!”</p>`
+      : `<p class="q">Fixes the misconception on idea ${L.k + 1}</p><p class="said">“Oh, I see!”</p>`;
+    return `${top}<p class="hint">${esc(w)}</p>${L.pen ? `<p class="pen">✎ moved on after a lucky guess</p>` : ""}`;
+  })() : `<p class="hint">Press Play.</p>`;
   return `<div class="card" style="gap:12px;">
     <div class="who"><h2 class="${cls}">${esc(name)}</h2>${done ? `<span>exam <span class="big">${pct(s.exam())}</span></span>` : ""}</div>
     <div class="tally"><span>quizzes <b>${g.quiz}</b> of ${g.acts.length}</span><span>moved on after a lucky guess <b>${g.lucky}</b></span></div>
-    <div class="tiles">${tilesHTML(g, false)}</div>
-    <p class="last">${last}</p></div>`;
+    <div class="lastbox">${last}</div>
+    <div class="tiles">${tilesHTML(g, false)}</div></div>`;
 }
 
 function startLanes() {
