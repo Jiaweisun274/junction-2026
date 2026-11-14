@@ -273,3 +273,12 @@ the consistent gap exists only against the trained PPO policy. PPO's edge theref
 environment (it has, in effect, learned the unstated parameters and how to use them). Next: give agents every numeric
 parameter and re-measure, so the "withheld information" objection is answered directly.
 (PPO numbers recomputed locally match the Harbor reference runs exactly.)
+
+# All parameters disclosed to the agent (harbor/tutor2_disclosed), same six-child instances 3001-3005, salt eval1
+| model | rules only (mean) | all parameters disclosed (mean) | change | PPO minus agent (disclosed) | PPO wins |
+|---|---|---|---|---|---|
+| gemini-pro-latest | 0.522 | 0.564 | +0.042 | +0.137 | 4/5 |
+| gemini-3.1-pro-preview | 0.549 | 0.515 | -0.034 | +0.186 | 5/5 |
+Per run (disclosed): pro-latest 0.651 0.619 0.483 0.514 0.555; 3.1-pro 0.440 0.601 0.459 0.639 0.436.
+Giving the agent every number the simulator uses does not close the gap (mean change about zero, within noise).
+The PPO edge is therefore not explained by withheld information; it reflects decision quality learned from experience.
