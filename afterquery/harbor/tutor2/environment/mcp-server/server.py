@@ -9,6 +9,7 @@ from mcp.server.fastmcp import FastMCP
 from starlette.responses import JSONResponse
 
 import lit_ref
+import ppo_policy
 import sweep_tutor2
 import tutor2 as sim
 
@@ -144,9 +145,10 @@ def _result():
         return None
     baseline = sim.Sim(SEED).exam()
     oracle = sweep_tutor2.oracle_exam(SEED)
-    reference_exam = sim.run_policy(SEED, lit_ref.lit_step, obs=True).exam()
-    reward = (EXAM - baseline) / (oracle - baseline) if oracle != baseline else 0.0
-    reference_reward = (reference_exam - baseline) / (oracle - baseline) if oracle != baseline else 0.0
+    reference_exam = ppo_policy.run(SEED).exam()          # reference run = trained PPO policy (observation-only)
+    literature_exam = sim.run_policy(SEED, lit_ref.lit_step, obs=True).exam()
+    nz = lambda e: (e - baseline) / (oracle - baseline) if oracle != baseline else 0.0
+    reward, reference_reward, literature_reward = nz(EXAM), nz(reference_exam), nz(literature_exam)
     return {
         "completed": True,
         "reward": float(reward),
@@ -154,7 +156,9 @@ def _result():
         "no_teaching_score": float(baseline),
         "reference_exam_score": float(reference_exam),
         "reference_reward": float(reference_reward),
-        "oracle_score": float(oracle),
+        "literature_exam_score": float(literature_exam),
+        "literature_reward": float(literature_reward),
+        "full_info_score": float(oracle),
         "turns_used": int(GAME.turn),
     }
 

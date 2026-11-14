@@ -21,7 +21,8 @@ else:
         "no_teaching_score": float(result["no_teaching_score"]),
         "reference_exam_score": float(result["reference_exam_score"]),
         "reference_reward": float(result["reference_reward"]),
-        "oracle_score": float(result["oracle_score"]),
+        "literature_reward": float(result["literature_reward"]),
+        "full_info_score": float(result["full_info_score"]),
         "turns_used": float(result["turns_used"]),
     }
 

@@ -223,3 +223,15 @@ PPO still leads the literature policy by ~0.11. Its behaviour changed: explain 5
 1.3 explanations (was 2.1), and it now often quizzes the PREREQUISITE right after teaching the next concept
 ("E3 Q2-" -> back to 2). It still keeps teaching new material to the end (20% quizzes in the last 5 turns vs 68%
 for the literature policy) and reaches concept 5.7 on average (literature 4.0).
+
+# Harbor + OpenCode on the current simulator (calibrated forgetting + massed damping), PPO as reference (salt eval1)
+| seed | PPO reference | gpt-6.1-sol | claude-opus-5-5 | literature |
+|---|---|---|---|---|
+| 2001 | 0.96 | 0.93 | 0.56 | 0.39 |
+| 2002 | 0.56 | 0.35 | 0.24 | 0.09 |
+| 2003 | 0.78 | 0.60 | 0.55 | 0.61 |
+| 2004 | 0.90 | 0.43 | 0.43 | 0.44 |
+| 2005 | 0.40 | 0.67 | 0.71 | 0.72 |
+| mean | **0.72** | 0.60 | 0.50 | 0.45 |
+PPO run through MCP (`-a oracle`, solve.sh -> ppo_agent.py) reproduces the sidecar's internal reference score exactly.
+PPO beats each frontier model on 4 of 5 seeds; both frontier models beat the literature policy on average.

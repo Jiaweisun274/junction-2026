@@ -10,7 +10,7 @@ agent=$1; model=$2; tag=$3; shift 3
 salt=${AFTERQUERY_SEED_SALT:-eval1}
 out=harbor/results/$tag.tsv
 mkdir -p harbor/results jobs/$tag
-echo -e "seed\treward\texam\treference_reward\tturns\tjob" > "$out"
+echo -e "seed\treward\texam\treference_reward\tliterature_reward\tturns\tjob" > "$out"
 for seed in "$@"; do
   args=(run --env-file .env -p harbor/tutor2 -a "$agent" -k 1 -o "jobs/$tag/seed_$seed")
   [ "$model" != "-" ] && args+=(-m "$model")
@@ -21,7 +21,7 @@ import json, sys
 path, seed = sys.argv[1], sys.argv[2]
 try:
     r = json.load(open(path)); v = (r.get("verifier_result") or {}).get("rewards", {})
-    print(f"{seed}\t{v.get('reward', 'NA')}\t{v.get('exam_score', 'NA')}\t{v.get('reference_reward', 'NA')}\t{v.get('turns_used', 'NA')}\t{path}")
+    print(f"{seed}\t{v.get('reward', 'NA')}\t{v.get('exam_score', 'NA')}\t{v.get('reference_reward', 'NA')}\t{v.get('literature_reward', 'NA')}\t{v.get('turns_used', 'NA')}\t{path}")
 except Exception as e:
     print(f"{seed}\tERROR\t\t\t\t{path} {e}")
 PY

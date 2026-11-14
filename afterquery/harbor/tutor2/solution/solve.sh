@@ -1,3 +1,4 @@
 #!/bin/sh
 set -eu
-exec python /solution/reference_agent.py
+# Reference run: trained PPO policy (observation-only). The literature policy is in reference_agent.py.
+exec python /solution/ppo_agent.py
