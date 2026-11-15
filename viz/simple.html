@@ -188,6 +188,7 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .checks p.keyrule { background: var(--know-soft); border-radius: 8px; padding: 10px 12px; border-top: 0; margin: 4px 0; }
 .checks p.keyrule + p { border-top: 0; }
 .keyrule small { display: block; color: var(--know); font-weight: 700; font-size: 13px; margin-top: 2px; }
+.replay { font-size: 15px; font-weight: 700; color: var(--ink); background: var(--paper); border-left: 4px solid var(--bug); padding: 8px 12px; border-radius: 0 8px 8px 0; }
 .review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
@@ -267,6 +268,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
       <button class="btn ghost" id="reset">Restart</button>
       <span class="hint" id="t2"></span>
     </div>
+    <p class="replay">Replayed step by step from the AI’s own Harbor run log: every action is what the model actually chose (Harbor + OpenCode, seed batches 3001–3005). The child’s answers come from the same simulator, with the same random draws.</p>
     <p class="legend"><span><i style="background:var(--teach)"></i>Teach</span><span><i style="background:var(--quiz)"></i>Quiz</span><span><i style="background:var(--fix)"></i>Fix misconception</span><span>· one square per turn: Monday, Wednesday, Friday</span></p>
     <div class="duo" id="duo"></div>
     <p class="hint">Same child, same luck. Colours show what is really in the child’s head; neither teacher can see it. Try other children: the AI wins on some of them. Over all 30 evaluation children the reference wins on average.</p>
