@@ -37,11 +37,11 @@ over 2:00, cut words rather than speeding up. In step 2 press Play, not Next tur
 | 4:30–5:00 | Reward integrity: do-nothing 0, stop-early 0, state in a separate container | slide 5 |
 | 5:00–5:30 | The gap: 39 of 43 runs | slide 6 |
 | 5:30–7:00 | Four checks (information, principles, story, parameters) | slide 7 |
-| 7:00–8:00 | Three decisions: testing instead of teaching, lucky guesses, damage done on Wednesday | slides 8–10 |
-| 8:00–9:00 | Five rules beat the agents; Gemma tiebreaker; limits | slides 11–13 |
-| 9:00–10:00 | One command; questions | slide 14 |
+| 7:00–8:00 | Three habits: testing instead of teaching, lucky guesses, the gap opens on Wednesday | slide 8 |
+| 8:00–9:00 | Five rules beat the agents; Gemma tiebreaker; limits | slides 9–11 |
+| 9:00–10:00 | One command; questions | slide 12 (appendix 13–16 for detail questions) |
 
-If short on time, skip slides 8–10 (the demo already showed the habits) and slide 12 (Gemma).
+If short on time, skip slide 8 (the demo already showed the habits) and slide 10 (Gemma). Each slide shows one idea; the explanation is in its speaker notes.
 
 For the judges' rerun: `./eval.sh <model> 3001 3002 3003` (see README). A full three-seed run takes about an hour
 with a Gemini model; have the seed-3002 result table ready on screen.
