@@ -327,7 +327,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         </div>
         <p class="hint">For comparison: frontier AI agents score about 0.55, a textbook rulebook from the learning-science literature 0.56.</p>
       </div>
-      <div class="card">
+      <div class="card wide">
         <p class="eyebrow">The five rules, in priority order</p>
         <h2>Each rule is tied to a mechanism</h2>
         <div class="checks">
@@ -337,25 +337,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
           <p><span>4 · On Monday, quiz before teaching</span><i>the child may already know it</i></p>
           <p><span>5 · No routine review quizzes at the start of a session</span><i>keep working on the next idea</i></p>
         </div>
-        <p class="hint">Written as five rules: 0.67. The trained reference: 0.73. AI agents: about 0.55.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">How you use a quiz matters</p>
-        <h2>Quizzing a lot is not the problem</h2>
-        <div class="checks">
-          <p><span><b style="color:var(--bug)">Gemini 3.1 Pro</b> · quizzes 68% of turns</span><i style="font-style:normal">knows <b style="color:var(--ink)">3.4</b> of 6 ideas at the exam</i></p>
-          <p><span><b style="color:var(--know)">Five-rule teacher</b> · quizzes 67%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.6</b></i></p>
-          <p><span><b style="color:var(--know)">Trained reference</b> · quizzes 37%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.3</b></i></p>
-        </div>
-        <p class="hint">Same 30 children. The five-rule teacher quizzes as often as the AI and still wins. The difference is what each one does with the answers.</p>
-      </div>
-      <div class="card wide">
-        <p class="eyebrow">What the AI is missing</p>
-        <h2>Not knowledge. Two decision skills.</h2>
-        <div class="skills">
-          <div><b>Acting on evidence</b><span>Knows a quiz is noisy, still trusts one answer.</span></div>
-          <div><b>Adapting to the learner</b><span>The same habit for every child, every simulator, with or without the story.</span></div>
-        </div>
+        <p class="hint">The five rules quiz as often as the AI (67% vs 68% of turns) and still win clearly. Quizzing a lot is not the problem; what each does with the answers is.</p>
       </div>
     </div>
   </section>
