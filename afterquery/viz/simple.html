@@ -185,6 +185,9 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .big2 { font-family: var(--display); font-size: 28px; font-weight: 800; }
 .big2 small, .score2 small { font-family: var(--body); font-size: 14px; font-weight: 400; color: var(--muted); }
 .score2 { font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--know); margin-top: auto; }
+.checks p.keyrule { background: var(--know-soft); border-radius: 8px; padding: 10px 12px; border-top: 0; margin: 4px 0; }
+.checks p.keyrule + p { border-top: 0; }
+.keyrule small { display: block; color: var(--know); font-weight: 700; font-size: 13px; margin-top: 2px; }
 .review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
@@ -332,11 +335,12 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <h2>Each rule is tied to a mechanism</h2>
         <div class="checks">
           <p><span>1 · Fix a wrong rule as soon as its typical answer appears</span><i>fix works, re-explaining rarely</i></p>
-          <p><span>2 · Teach once, then quiz; move on only after two right in a row</span><i>turns 71% into 90% sure</i></p>
+          <p class="keyrule"><span><b>2 · Teach once, then quiz; move on only after two right in a row</b><small>This is the rule the AI skips.</small></span><i>turns 71% into 90% sure</i></p>
           <p><span>3 · At most two explanations per idea per session; still stuck? quiz the idea before it</span><i>repeats work less; no prerequisite, 5%</i></p>
           <p><span>4 · On Monday, quiz before teaching</span><i>the child may already know it</i></p>
           <p><span>5 · No routine review quizzes at the start of a session</span><i>keep working on the next idea</i></p>
         </div>
+        <p class="hint">Remove one rule at a time: dropping rule 2 costs 8 points on a child’s exam; each of the others 0.5–1.6 points.</p>
         <p class="hint">The five rules quiz as often as the AI (67% vs 68% of turns) and still win clearly. Quizzing a lot is not the problem; what each does with the answers is.</p>
       </div>
     </div>
