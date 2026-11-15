@@ -133,7 +133,7 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .chain > span.ai b { color: var(--bug); }
 .chain > span.ref b { color: var(--know); }
 .chain .arr { border: 0; padding: 0; justify-content: center; font-size: 24px; }
-.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 760px) { .skills { grid-template-columns: minmax(0, 1fr); } .chain { grid-template-columns: minmax(0, 1fr); } .chain .arr { display: none; } }
 .skills div { display: flex; flex-direction: column; gap: 4px; border-left: 4px solid var(--pen); padding: 4px 12px; }
 .skills b { font-family: var(--display); font-size: 20px; }
@@ -271,21 +271,11 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
 
   <section id="v3" hidden>
     <div class="ev">
-      <div class="card">
-        <p class="eyebrow">Mistake 1 · evidence</p>
+      <div class="card wide">
+        <p class="eyebrow">The mistake · evidence</p>
         <h2>One right answer is weak evidence</h2>
         <div class="chain"><span><b>40%</b>after one explanation</span><span class="arr">→</span><span class="ai"><b>71%</b>one right answer: AI moves on</span><span class="arr">→</span><span class="ref"><b>90%</b>two in a row: reference moves on</span></div>
         <p class="hint">How sure the teacher can be that the idea was learned, using the rule the AI was given (right 9 in 10 if known, 1 in 4 if not). Move on too early and the next idea clicks 5% of the time instead of 30–60%. Trusting one answer is the costliest habit we measured.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">Mistake 2 · timing</p>
-        <h2>The gap opens on Wednesday</h2>
-        <div class="checks">
-          <p><span><b style="color:var(--ink)">Monday</b> · find out what the child knows</span><i style="color:var(--know); font-style:normal; font-weight:700;">AI does this well</i></p>
-          <p><span><b style="color:var(--ink)">Wednesday</b> · re-teach what didn’t stick</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI re-tests</i></p>
-          <p><span><b style="color:var(--ink)">Friday</b> · teach as far as possible</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI still quizzes</i></p>
-        </div>
-        <p class="hint">Replay the AI’s own turns, then let the reference take over: after Monday it recovers the whole gap, after Wednesday almost nothing.</p>
       </div>
       <div class="card wide">
         <p class="eyebrow">In its own words · Gemini 3.1 Pro, given every simulator parameter</p>
@@ -354,10 +344,9 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
       </div>
       <div class="card wide">
         <p class="eyebrow">What the AI is missing</p>
-        <h2>Not knowledge. Three decision skills.</h2>
+        <h2>Not knowledge. Two decision skills.</h2>
         <div class="skills">
           <div><b>Acting on evidence</b><span>Knows a quiz is noisy, still trusts one answer.</span></div>
-          <div><b>Planning over the week</b><span>Doesn’t re-teach in a new session what didn’t stick on Monday; the gap opens on Wednesday.</span></div>
           <div><b>Adapting to the learner</b><span>The same habit for every child, every simulator, with or without the story.</span></div>
         </div>
       </div>
