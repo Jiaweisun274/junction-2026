@@ -110,7 +110,6 @@ Other variants: `TASK=tutor2_disclosed`, `TASK=tutor2_hint`, `TASK=tutor2_abstra
 | `viz/` | demo page, full game, JavaScript port of the simulator (checked against Python on 228 replays) |
 | `gemma/` | Gemma tiebreaker: text harness, training, results |
 | `REFERENCES.md` | the sources for every mechanism, and which numbers are our own settings |
-| `fable_review/` | an independent design review and critique |
 
 ## Integrity
 

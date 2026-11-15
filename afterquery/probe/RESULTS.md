@@ -1,3 +1,8 @@
+> **Read this first.** This is the full lab notebook, in time order, kept unedited (corrections are added as new
+> sections, never rewritten). The current results are summarised in `afterquery/README.md`. The early probes
+> (bike sale, sauna, ferry gate, tutor v1, class of five) and the API runner were removed from the repository to keep
+> it small; their code is in the git history.
+
 # Probe 1 (Fri 13 Nov evening): two small daily-life games, blind Claude subagent
 
 Setup: subagent (Claude Opus-class, Python allowed, could not read the source) played 3 seeds per game from a rules text.

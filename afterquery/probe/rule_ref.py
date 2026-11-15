@@ -1,4 +1,4 @@
-"""Training-free rule reference for tutor2 (from the Fable review, afterquery/fable_review/analysis/check_tutor2.py).
+"""Training-free rule reference for tutor2 (suggested by an independent design review).
 
 Uses only what the rules state and no experience with the simulator:
   explain the next concept, quiz it, move on after two correct answers in a row, re-explain after a wrong answer,

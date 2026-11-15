@@ -5,7 +5,7 @@
 3. Counterfactual hand-over: replay the agent's own first t turns for a child, then let the PPO reference finish the
    remaining turns (it rebuilds its observation record from the agent's history). The exam gain over the agent's own
    result shows how much of the loss is still recoverable at Monday's end (t=10) and Wednesday's end (t=20).
-Writes FAILURE_ANALYSIS_DATA.md next to this file's parent folder.
+Writes failure_analysis_output.md next to this file.
 """
 import json, os, statistics as st
 import tutor2 as t, ppo_policy as P
@@ -102,7 +102,7 @@ def main():
           "| agent | children | PPO teaches all week (t=0) | PPO takes over after Monday (t=10) | PPO takes over after Wednesday (t=20) |", "|---|---|---|---|---|"]
     for n, z, a, b, c in hand:
         L.append(f"| {n} | {c} | {z:+.3f} | {a:+.3f} | {b:+.3f} |")
-    out = os.path.join(HERE, "../FAILURE_ANALYSIS_DATA.md")
+    out = os.path.join(HERE, "failure_analysis_output.md")
     open(out, "w").write("\n".join(L) + "\n")
     print("\n".join(L))
 
