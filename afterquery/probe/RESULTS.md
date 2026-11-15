@@ -430,3 +430,12 @@ check prerequisites, diagnose on Monday) and its knobs were tuned on training se
 that tuning, not from PPO's actions. PPO itself moves on after one right answer (59%) or straight after an explanation
 (41%) and verifies by checking back later (half its quizzes). Earlier notes calling it "PPO's habits as five rules" or
 "distilled" overstate the link. Demo page wording corrected.
+
+# Disclosure on 15 batches (3001-3015), Gemini, paired with the plain runs
+| model | plain | every parameter | paired diff (se) | reference wins |
+|---|---|---|---|---|
+| gemini-3.1-pro-preview | 0.544 | 0.553 | +0.009 (0.030) | 14/15 |
+| gemini-pro-latest | 0.549 | 0.584 | +0.035 (0.034) | 12/15 |
+Reference on these batches 0.687. With Opus (3 seeds, +0.071, 3/3): disclosure helps a little at most, never closes
+the gap; the reference wins 29 of 33. Gemini 4 Argon smoke run (seed 3001): 0.574 vs reference 0.675, quiz share 64%,
+160 free `ask` calls, OpenCode cost estimate $3.19 per run.
