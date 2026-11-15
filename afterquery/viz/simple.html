@@ -146,10 +146,6 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .rules ul { margin: 4px 0 0; padding-left: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 28px; font-size: 16px; }
 @media (max-width: 760px) { .rules ul { grid-template-columns: minmax(0, 1fr); } }
 .rules .src { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
-.fixrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.fixb { border: 1px solid var(--fix); color: var(--fix); background: var(--paper); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 15px; }
-.fixb small { font-weight: 400; color: var(--muted); }
-.fixb:disabled { opacity: 0.4; cursor: default; }
 .review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
@@ -181,7 +177,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
       <li><b>Repeating in one session helps less.</b> Explaining the same idea again in the same session works less each time; in a later session it works as well as the first time.<span class="src">Spacing effect (Cepeda et al. 2006)</span></li>
       <li><b>Memory fades.</b> Something learned can be forgotten within days unless it is reviewed.<span class="src">Forgetting curves; FSRS, fitted on millions of real reviews</span></li>
       <li><b>Quizzing helps memory.</b> A quiz strengthens memory more than another explanation, especially after some time has passed. But a quiz never teaches an idea that wasn’t learned.<span class="src">Testing effect (Roediger &amp; Karpicke 2006)</span></li>
-      <li><b>Some children learn a wrong rule.</b> It shows as a typical wrong answer: 1/8 &gt; 1/4 (idea 2), 2/3 = 3/4 (idea 3), 1/2 + 1/3 = 2/5 (idea 5, also shows in idea 6). “Fix a wrong rule” (the buttons under the ideas) works on it; re-explaining rarely does. Fixing when there is no wrong rule wastes the turn.<span class="src">These errors are documented in fraction learning (Ni &amp; Zhou 2005; Brown &amp; Burton 1978). The fix rates are our settings.</span></li>
+      <li><b>Some children learn a wrong rule.</b> It shows as a typical wrong answer: 1/8 &gt; 1/4 (idea 2), 2/3 = 3/4 (idea 3), 1/2 + 1/3 = 2/5 (idea 5, also shows in idea 6). “Fix” works on it; re-explaining rarely does.<span class="src">These errors are documented in fraction learning (Ni &amp; Zhou 2005; Brown &amp; Burton 1978). The fix rates are our settings.</span></li>
       <li><b>The child may already know some early ideas.</b></li>
       <li><b>The exam</b> counts all six ideas equally: known and remembered ≈ 90%, not known ≈ 25% (guessing), a wrong rule ≈ 10%.</li>
     </ul>
@@ -195,7 +191,6 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     </div>
     <div class="bubble"><div class="av" id="av">A</div><div class="speech" id="talk" aria-live="polite"></div></div>
     <div class="tiles" id="tiles"></div>
-    <div class="fixrow" id="fixrow"></div>
     <div id="end" hidden></div>
   </section>
 
@@ -403,7 +398,7 @@ function tilesHTML(g, buttons) {
     const st = s.state[k], show = xray || !buttons;
     const lab = !show ? "" : st === "mastered" ? "knows it" : st === "buggy" ? "misconception" : "doesn’t know";
     const mem = show && st === "mastered" ? `<div class="mem" title="memory on exam day"><i style="width:${s.recall(k, D.const.EXAM_DAY) * 100}%"></i></div>` : `<div class="mem" style="visibility:hidden"></div>`;
-    const btns = buttons ? `<div class="b"><button class="t" data-a="explain" data-k="${k}" ${done ? "disabled" : ""}>Teach</button><button class="qz" data-a="quiz" data-k="${k}" ${done ? "disabled" : ""}>Quiz</button></div>` : "";
+    const btns = buttons ? `<div class="b"><button class="t" data-a="explain" data-k="${k}" ${done ? "disabled" : ""}>Teach</button><button class="qz" data-a="quiz" data-k="${k}" ${done ? "disabled" : ""}>Quiz</button>${g.seen[k] ? `<button class="fix" data-a="correct" data-k="${k}" ${done ? "disabled" : ""}>Fix</button>` : ""}</div>` : "";
     const hit = g.last && g.last.k === k ? "hit-" + g.last.act : "";
     return `<div class="tile ${show ? "x-" + st : ""} ${hit}"><span class="n">${k + 1}</span><span class="nm">${SHORT[k]}</span><span class="st">${lab}</span>${mem}${btns}</div>`;
   }).join("");
@@ -449,10 +444,8 @@ function render1() {
   $("when").textContent = t >= s.T ? "The week is over" : `${DAYS[Math.floor(t / 10)]} · turn ${t + 1} of 30`;
   $("tiles").innerHTML = tilesHTML(me, true);
   $("talk").innerHTML = talkHTML(me, xray);
-  const done1 = s.turn >= s.T;
-  $("fixrow").innerHTML = `<span class="hint">Fix a wrong rule (uses a turn):</span>` + [[1, "1/8 > 1/4"], [2, "2/3 = 3/4"], [4, "1/2 + 1/3 = 2/5"]].map(([k, r]) => `<button class="fixb" data-a="correct" data-k="${k}" ${done1 ? "disabled" : ""}>${r} <small>idea ${k + 1}</small></button>`).join("");
-  document.querySelectorAll("#tiles [data-a], #fixrow [data-a]").forEach((b) => b.onclick = () => {
-    const k = +b.dataset.k, a = b.dataset.a === "correct" ? ["correct", k, D.bugs[k]] : [b.dataset.a, k];
+  $("tiles").querySelectorAll("[data-a]").forEach((b) => b.onclick = () => {
+    const k = +b.dataset.k, a = b.dataset.a === "correct" ? ["correct", k, me.seen[k]] : [b.dataset.a, k];
     doAct(me, a); render1();
   });
   const end = $("end");
