@@ -246,15 +246,15 @@ const DAYS = ["Monday", "Wednesday", "Friday"];
 const SHORT = ["one", "two", "three"];
 const BUGNAME = { bigger_denominator: "bigger denominator = bigger", add_to_top_and_bottom: "add to top and bottom", add_across: "add across" };
 const MECH = [
-  ["learn", "Explaining", "Explaining a concept the child has not learned makes it click with a chance of 30–60%, different for every child and concept.", "Bayesian knowledge tracing, learn rate (Corbett & Anderson 1995)", ""],
+  ["learn", "Explaining", "Explaining a concept the child has not learned makes it click with a chance of 30–60%, different for every child and concept.", "Bayesian knowledge tracing, learn rate (Corbett & Anderson 1995)", "30–60% is our setting"],
   ["prereq", "Prerequisites", "The six concepts build on each other. If the previous concept is not mastered, an explanation clicks only 5% of the time.", "Knowledge space theory (Doignon & Falmagne 1985); fraction learning progressions", "5% is our setting"],
   ["massed", "Massed vs spaced", "Each extra explanation of the same concept in the same session works less: the chance is multiplied by 0.6 per earlier explanation. A new session starts fresh.", "Spacing effect (Cepeda et al. 2006)", "0.6 is our setting"],
   ["forgetting", "Forgetting", "Recall halves every half-life: 2.6–7.8 days for a newly learned concept, 8–20 days for one known before the course. The exam is on day 7.", "FSRS, the Anki scheduler fitted on real reviews; half-life regression (Settles & Meeder 2016)", ""],
-  ["testing", "Testing effect", "Answering correctly from memory multiplies the half-life by 2.5, more when the memory was fading. Re-explaining a known concept: ×1.5.", "Roediger & Karpicke 2006; SM-2 default ease 2.5", ""],
-  ["noisy", "Noisy quizzes", "A child who knows a concept still slips 10% of the time. A child who does not know it guesses right 25% of the time. One right answer proves little.", "Knowledge tracing slip and guess", ""],
+  ["testing", "Testing effect", "Answering correctly from memory multiplies the half-life by 2.5, more when the memory was fading. Re-explaining a known concept: ×1.5.", "Roediger & Karpicke 2006; SM-2 default ease 2.5", "The (2 − recall) bonus and ×1.5 are our settings"],
+  ["noisy", "Noisy quizzes", "A child who knows a concept still slips 10% of the time. A child who does not know it guesses right 25% of the time. One right answer proves little.", "Knowledge tracing slip and guess (Corbett & Anderson 1995)", "10% and 25% are our settings"],
   ["misconception", "Misconceptions", "Some children learn a concept wrongly: 1/8 > 1/4, 2/3 = 3/4, 1/2 + 1/3 = 2/5. They give that typical wrong answer 90% of the time. A targeted correction fixes it 70% of the time, a plain explanation 10%.", "Whole-number bias in fractions (Ni & Zhou 2005)", "40% susceptibility and 70% fix rate are our settings"],
   ["selfreport", "“Do you get it?”", "Asking is free but over-confident: 75–97% of children say yes, whatever they know.", "Illusion of explanatory depth (Rozenblit & Keil 2002)", "Numbers are our settings"],
-  ["exam", "The exam", "Next Monday (day 7), per concept: mastered scores 0.9 × recall + 0.25 × (1 − recall); a misconception 10%; unlearned 25% (guessing).", "Same scoring as the Harbor verifier", ""],
+  ["exam", "The exam", "Next Monday (day 7), per concept: mastered scores 0.9 × recall + 0.25 × (1 − recall); a misconception 10%; unlearned 25% (guessing).", "Same scoring as the Harbor verifier", "Exam scores are our task design"],
 ];
 const TEACHER_ORDER = ["Planned (5 rules)", "PPO (trained)", "Textbook rulebook", "Claude Opus 5.5", "GPT 6.1 Sol", "Gemini 3.1 Pro", "Gemini Pro", "Gemini 3.5 Flash"];
 const REF = new Set(["Planned (5 rules)", "PPO (trained)"]);
