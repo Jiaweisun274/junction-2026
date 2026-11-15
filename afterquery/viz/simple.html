@@ -119,18 +119,22 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <p class="hint">AfterQuery · Break the Agent · Junction 2026</p>
     <h1>Can you teach better than an AI?</h1>
   </div>
-  <p class="sub">Aino is 10 and learning fractions: six ideas, each building on the one before. You get 30 turns over Monday, Wednesday and Friday. Her exam is next Monday. You only see her answers.</p>
-  <div class="steps" role="group" aria-label="Step">
-    <button id="s1" aria-pressed="true">1 · You teach</button>
-    <button id="s2" aria-pressed="false">2 · AI vs reference</button>
+  <p class="sub"><span class="cn">Aino</span> is 10 and learning fractions: six ideas, each building on the one before. You get 30 turns over Monday, Wednesday and Friday. The exam is next Monday. You only see the answers.</p>
+  <div class="ctrl">
+    <div class="steps" role="group" aria-label="Step">
+      <button id="s1" aria-pressed="true">1 · You teach</button>
+      <button id="s2" aria-pressed="false">2 · AI vs reference</button>
+    </div>
+    <label class="hint" for="kid">Child</label>
+    <select id="kid"></select>
   </div>
 
   <section id="v1" class="card">
     <div class="bar-top">
       <p class="when" id="when"></p>
-      <button class="xray" id="xray" aria-pressed="false">X-ray: see inside her head</button>
+      <button class="xray" id="xray" aria-pressed="false">X-ray: see inside the child’s head</button>
     </div>
-    <div class="bubble"><div class="av">A</div><div class="speech" id="talk" aria-live="polite"></div></div>
+    <div class="bubble"><div class="av" id="av">A</div><div class="speech" id="talk" aria-live="polite"></div></div>
     <div class="tiles" id="tiles"></div>
     <div id="end" hidden></div>
   </section>
@@ -146,7 +150,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     </div>
     <p class="legend"><span><i style="background:var(--teach)"></i>Teach</span><span><i style="background:var(--quiz)"></i>Quiz</span><span><i style="background:var(--fix)"></i>Fix misconception</span><span>· one square per turn: Monday, Wednesday, Friday</span></p>
     <div class="duo" id="duo"></div>
-    <p class="hint">Same child, same luck. Colours show what is really in her head; neither teacher can see it.</p>
+    <p class="hint">Same child, same luck. Colours show what is really in the child’s head; neither teacher can see it. Try other children: the AI wins on some of them. Over all 30 evaluation children the reference wins on average.</p>
   </section>
 
   <p class="hint">A simulated child built from learning-science findings (knowledge tracing, forgetting curves, the testing effect, fraction misconceptions). The full version with every rule and source: game.html.</p>
@@ -157,6 +161,9 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
 const SHORT = ["Equal parts", "Comparing", "Equivalent", "Common denominators", "Adding", "Word problems"];
 const DAYS = ["Monday", "Wednesday", "Friday"];
 const BUGNAME = { bigger_denominator: "“bigger denominator = bigger”", add_to_top_and_bottom: "“add to top and bottom”", add_across: "“add across”" };
+const NAMES = ["Eero", "Lumi", "Onni", "Venla", "Veeti", "Ilona", "Leevi", "Helmi", "Elias", "Siiri", "Oliver", "Aino", "Kerttu", "Väinö", "Aada", "Niilo", "Hilla", "Eino", "Isla", "Toivo", "Pihla", "Aatos", "Selma", "Joel", "Lilja", "Otso", "Minea", "Aapo", "Sofia", "Lenni"];
+const DEFAULT_CHILD = "3002-6";   // a representative child: the AI teaches some ideas, the reference teaches more
+const NAME = () => NAMES[D.children.indexOf(C)];
 const AGENTS = ["Gemini 3.1 Pro", "Claude Opus 5.5", "GPT 6.1 Sol", "Gemini Pro", "Gemini 3.5 Flash"];
 const REFN = "PPO (trained)";
 let D, C, me, xray = false, lanes = null, timer = null;
@@ -169,23 +176,23 @@ function why(info, sim) {
   if (info.act === "explain") {
     if (info.before === "unlearned") {
       if (info.result === "mastered") return [`It clicked (chance was ${pct(info.chance)}).`, "Knowledge tracing, Corbett & Anderson 1995"];
-      if (info.result === "buggy") return [`It clicked, but wrongly: she now believes ${BUGNAME[D.bugs[info.k]]}.`, "Whole-number bias, Ni & Zhou 2005"];
+      if (info.result === "buggy") return [`It clicked, but wrongly: the child now believes ${BUGNAME[D.bugs[info.k]]}.`, "Whole-number bias, Ni & Zhou 2005"];
       if (!info.prereqOk) return [`Did not click: idea ${info.k} is not mastered yet, so the chance was only ${pct(info.chance)}.`, "Prerequisites, knowledge space theory"];
       if (info.nThisSession > 1) return [`Did not click. A repeat explanation in the same session works less (chance ${pct(info.chance)}).`, "Spacing effect, Cepeda et al. 2006"];
       return [`Did not click this time (chance was ${pct(info.chance)}).`, "Knowledge tracing, Corbett & Anderson 1995"];
     }
-    if (info.before === "mastered") return ["She already knew it; the reminder makes the memory last longer.", "Spacing effect, Cepeda et al. 2006"];
-    return ["Her misconception stays: a plain explanation rarely fixes it. A targeted fix works 70% of the time.", "Misconceptions, Brown & Burton 1978"];
+    if (info.before === "mastered") return ["Already known; the reminder makes the memory last longer.", "Spacing effect, Cepeda et al. 2006"];
+    return ["The misconception stays: a plain explanation rarely fixes it. A targeted fix works 70% of the time.", "Misconceptions, Brown & Burton 1978"];
   }
   if (info.act === "quiz") {
     switch (info.why) {
-      case "recalled": return [`She remembered, and answering from memory makes it stick longer.`, "Testing effect, Roediger & Karpicke 2006"];
-      case "slip": return ["She knows it but slipped (happens 1 time in 10).", "Knowledge tracing slip"];
-      case "forgot": return [`She had learned it but forgot (memory was at ${pct(info.recall)}).`, "Forgetting curve, FSRS"];
-      case "forgot_guess": return ["She had forgotten it and guessed right.", "Forgetting curve, FSRS"];
+      case "recalled": return [`Remembered it, and answering from memory makes it stick longer.`, "Testing effect, Roediger & Karpicke 2006"];
+      case "slip": return ["Knows it but slipped (happens 1 time in 10).", "Knowledge tracing slip"];
+      case "forgot": return [`Had learned it but forgot (memory was at ${pct(info.recall)}).`, "Forgetting curve, FSRS"];
+      case "forgot_guess": return ["Had forgotten it and guessed right.", "Forgetting curve, FSRS"];
       case "buggy": case "carried": return ["That is the typical answer of a misconception.", "Whole-number bias, Ni & Zhou 2005"];
-      case "lucky": return ["Lucky guess! She has NOT learned this. A child who doesn’t know guesses right 1 time in 4.", "Knowledge tracing guess"];
-      default: return ["She hasn’t learned it yet.", "Knowledge tracing"];
+      case "lucky": return ["Lucky guess! This idea has NOT been learned. A child who doesn’t know guesses right 1 time in 4.", "Knowledge tracing guess"];
+      default: return ["Not learned yet.", "Knowledge tracing"];
     }
   }
   if (info.result === "fixed") return ["The targeted fix worked.", "Misconceptions, Brown & Burton 1978"];
@@ -232,7 +239,7 @@ function stripHTML(g) {
 }
 function talkHTML(g, withInside) {
   const i = g.last;
-  if (!i) return `<p class="said">Hi! I’m Aino.</p><p class="q">Pick an idea and explain it or quiz her.</p>`;
+  if (!i) return `<p class="said">Hi! I’m ${NAME()}.</p><p class="q">Pick an idea and teach it or quiz it.</p>`;
   const head = actHead(i);
   const [w, src] = why(i, g.sim);
   const ins = withInside ? `<p class="inside">Inside: ${esc(w)}${src ? `<span class="src">${esc(src)}</span>` : ""}</p>` : "";
@@ -253,7 +260,7 @@ function render1() {
   if (t >= s.T) {
     const ag = "Gemini 3.1 Pro" in C.teachers ? "Gemini 3.1 Pro" : AGENTS.find((n) => C.teachers[n]);
     const rows = [["You", s.exam(), "you"], [ag, C.teachers[ag].exam, "ai"], ["Reference (PPO)", C.teachers[REFN].exam, "ref"], ["No teaching", C.base, ""]].sort((a, b) => b[1] - a[1]);
-    end.innerHTML = `<h2>Exam result</h2><div class="results">${rows.map(([n, v, c]) => `<div class="res ${c}"><span>${esc(n)}</span><span class="tr"><i style="width:${v * 100}%"></i></span><b>${pct(v)}</b></div>`).join("")}</div><p class="hint">Now see step 2: how the AI and the reference taught Aino.</p>`;
+    end.innerHTML = `<h2>Exam result</h2><div class="results">${rows.map(([n, v, c]) => `<div class="res ${c}"><span>${esc(n)}</span><span class="tr"><i style="width:${v * 100}%"></i></span><b>${pct(v)}</b></div>`).join("")}</div><p class="hint">Now see step 2: how the AI and the reference taught ${NAME()}.</p>`;
     end.hidden = false;
   } else end.hidden = true;
 }
@@ -303,17 +310,29 @@ function setStep(n) {
 async function start() {
   try { D = await (await fetch("game_data.json")).json(); }
   catch (e) { $("v1").innerHTML = "<p>Could not load the child’s data. Reload the page to try again.</p>"; return; }
-  C = D.children.find((c) => c.id === "3001-1");
-  me = newGame();
-  $("agent").innerHTML = AGENTS.filter((n) => C.teachers[n]).map((n) => `<option>${n}</option>`).join("");
+  $("kid").innerHTML = D.children.map((c, i) => `<option value="${c.id}">${NAMES[i]} (class ${c.batch})</option>`).join("");
+  $("kid").value = DEFAULT_CHILD;
+  $("kid").onchange = () => { stop(); pickChild($("kid").value); };
   $("agent").onchange = () => { stop(); startLanes(); render2(); };
+  pickChild(DEFAULT_CHILD);
   $("xray").onclick = () => { xray = !xray; $("xray").setAttribute("aria-pressed", xray); render1(); };
   $("s1").onclick = () => setStep(1);
   $("s2").onclick = () => setStep(2);
   $("step").onclick = () => { stop(); step2(); };
   $("reset").onclick = () => { stop(); startLanes(); render2(); };
   $("play").onclick = () => { if (timer) { stop(); return; } $("play").textContent = "Pause"; timer = setInterval(step2, 650); };
-  render1();
+}
+function pickChild(id) {
+  C = D.children.find((c) => c.id === id);
+  me = newGame();
+  document.querySelectorAll(".cn").forEach((e) => e.textContent = NAME());
+  $("av").textContent = NAME()[0];
+  const keep = $("agent").value;
+  const list = AGENTS.filter((n) => C.teachers[n]);
+  $("agent").innerHTML = list.map((n) => `<option>${n}</option>`).join("");
+  if (list.includes(keep)) $("agent").value = keep;
+  startLanes();
+  if ($("v2").hidden) render1(); else render2();
 }
 start();
 </script>
