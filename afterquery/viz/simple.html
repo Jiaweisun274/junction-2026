@@ -119,6 +119,25 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .checks p:first-child { border-top: 0; }
 .checks b { color: var(--pen); white-space: nowrap; }
 .checks i { color: var(--muted); text-align: right; }
+.ev .wide { grid-column: 1 / -1; }
+.days { display: flex; gap: 28px; align-items: flex-end; height: 170px; padding: 0 8px; }
+.days > div { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.pair { display: flex; gap: 6px; align-items: flex-end; height: 140px; }
+.pair i { display: block; width: 38px; border-radius: 4px 4px 0 0; }
+.pair i.ai { background: var(--bug); }
+.pair i.ref { background: var(--know); }
+.days span { font-weight: 700; font-size: 15px; }
+.chain { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 8px; align-items: stretch; }
+.chain > span { display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 14px; color: var(--muted); }
+.chain > span b { font-family: var(--display); font-size: 32px; color: var(--ink); }
+.chain > span.ai b { color: var(--bug); }
+.chain > span.ref b { color: var(--know); }
+.chain .arr { border: 0; padding: 0; justify-content: center; font-size: 24px; }
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .skills { grid-template-columns: minmax(0, 1fr); } .chain { grid-template-columns: minmax(0, 1fr); } .chain .arr { display: none; } }
+.skills div { display: flex; flex-direction: column; gap: 4px; border-left: 4px solid var(--pen); padding: 4px 12px; }
+.skills b { font-family: var(--display); font-size: 20px; }
+.skills span { color: var(--muted); font-size: 15px; }
 .cmd { margin: 0; background: var(--ink); color: var(--paper); padding: 14px 16px; border-radius: 10px; font-size: 15px; overflow-x: auto; }
 .rules summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; list-style: none; }
 .rules summary::-webkit-details-marker { display: none; }
@@ -142,7 +161,8 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <div class="steps" role="group" aria-label="Step">
       <button id="s1" aria-pressed="true">1 · You teach</button>
       <button id="s2" aria-pressed="false">2 · AI vs reference</button>
-      <button id="s3" aria-pressed="false">3 · The evidence</button>
+      <button id="s3" aria-pressed="false">3 · Why the AI loses</button>
+      <button id="s4" aria-pressed="false">4 · Is it fair?</button>
     </div>
     <label class="hint" for="kid">Child</label>
     <select id="kid"></select>
@@ -191,6 +211,59 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
   <section id="v3" hidden>
     <div class="ev">
       <div class="card">
+        <p class="eyebrow">What the AI does</p>
+        <h2>It tests at the same rate all week</h2>
+        <div class="days">
+          <div><div class="pair"><i class="ai" style="height:65%"></i><i class="ref" style="height:46%"></i></div><span>Mon</span></div>
+          <div><div class="pair"><i class="ai" style="height:62%"></i><i class="ref" style="height:37%"></i></div><span>Wed</span></div>
+          <div><div class="pair"><i class="ai" style="height:67%"></i><i class="ref" style="height:27%"></i></div><span>Fri</span></div>
+        </div>
+        <p class="legend"><span><i style="background:var(--bug)"></i>AI agents 65 · 62 · 67%</span><span><i style="background:var(--know)"></i>Reference 46 · 37 · 27%</span></p>
+        <p class="hint">Share of turns spent quizzing. In the last 5 turns before the exam: AI 61–77%, reference 7%. Ideas known at the exam: AI 3.3–3.8, reference 4.3.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Why it fails, 1 · evidence</p>
+        <h2>One right answer is weak evidence</h2>
+        <div class="chain"><span><b>40%</b>after one explanation</span><span class="arr">→</span><span class="ai"><b>71%</b>one right answer: AI moves on</span><span class="arr">→</span><span class="ref"><b>90%</b>two in a row: reference moves on</span></div>
+        <p class="hint">How sure the teacher can be that the idea was learned, using the rule the AI was given (right 9 in 10 if known, 1 in 4 if not). Move on too early and the next idea clicks 5% of the time instead of 30–60%. Trusting one answer is the costliest habit we measured.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Why it fails, 2 · the week</p>
+        <h2>The gap opens on Wednesday</h2>
+        <div class="checks">
+          <p><span><b style="color:var(--ink)">Monday</b> · find out what the child knows</span><i style="color:var(--know); font-style:normal; font-weight:700;">AI does this well</i></p>
+          <p><span><b style="color:var(--ink)">Wednesday</b> · re-teach what didn’t stick</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI re-tests</i></p>
+          <p><span><b style="color:var(--ink)">Friday</b> · teach as far as possible</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI still quizzes</i></p>
+        </div>
+        <p class="hint">Replay the AI’s own turns, then let the reference take over: after Monday it recovers the whole gap, after Wednesday almost nothing.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">What the reference does</p>
+        <h2>Five rules, each tied to a mechanism</h2>
+        <div class="checks">
+          <p><span>Two right answers before moving on</span><i>turns 71% into 90% sure</i></p>
+          <p><span>Didn’t click? Re-teach next session</span><i>same-session repeats work less</i></p>
+          <p><span>Stuck? Check the prerequisite</span><i>without it, 5% chance</i></p>
+          <p><span>Fix a wrong rule at once</span><i>fix works, re-explaining rarely</i></p>
+          <p><span>No routine re-testing</span><i>a check is a turn not teaching</i></p>
+        </div>
+        <p class="hint">Written as five rules: 0.67. The trained reference: 0.73. AI agents: about 0.55.</p>
+      </div>
+      <div class="card wide">
+        <p class="eyebrow">What the AI is missing</p>
+        <h2>Not knowledge. Three decision skills.</h2>
+        <div class="skills">
+          <div><b>Acting on evidence</b><span>Knows a quiz is noisy, still trusts one answer.</span></div>
+          <div><b>Planning a budget</b><span>30 turns, one week: the same quiz rate Monday to Friday.</span></div>
+          <div><b>Adapting to the learner</b><span>The same habit for every child, every simulator, with or without the story.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="v4" hidden>
+    <div class="ev">
+      <div class="card">
         <p class="eyebrow">Not one lucky example</p>
         <h2>The reference beats 39 of 43 AI runs</h2>
         <div class="results">
@@ -235,6 +308,22 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <h2>One command reruns everything</h2>
         <pre class="cmd">./eval.sh gemini/gemini-pro-latest 3001 3002 3003</pre>
         <p class="hint">Runs the reference, the AI and the do-nothing and stop-early baselines, then prints the table. The child’s state lives in a separate container; a separate verifier scores it.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Reward integrity</p>
+        <h2>It can’t be gamed</h2>
+        <div class="checks">
+          <p><span>Do nothing</span><b>0.00</b></p>
+          <p><span>Stop early</span><b>0.00</b></p>
+          <p><span>Teach on Monday only</span><b>0.07</b></p>
+        </div>
+        <p class="hint">The AI cannot see or change the child’s state. Children come from secret seeds. An independent review found two loopholes; both are fixed.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Tiebreaker and limits</p>
+        <h2>A small model learns; what we don’t claim</h2>
+        <p><b>Gemma 4 (4B)</b>, trained only on its own best games: 0.37 → 0.39 → 0.41 in two rounds (a trend, not yet significant).</p>
+        <p class="hint">We don’t claim real children learn exactly like this; the simulator isn’t fitted to student data yet. The four checks ran on two Gemini models.</p>
       </div>
     </div>
   </section>
@@ -404,8 +493,8 @@ function render2() {
 
 function setStep(n) {
   stop();
-  for (const i of [1, 2, 3]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
-  $("rules").hidden = n === 3;
+  for (const i of [1, 2, 3, 4]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
+  $("rules").hidden = n >= 3;
   if (n === 2) { if (!lanes) startLanes(); render2(); } else if (n === 1) render1();
 }
 
@@ -421,6 +510,7 @@ async function start() {
   $("s1").onclick = () => setStep(1);
   $("s2").onclick = () => setStep(2);
   $("s3").onclick = () => setStep(3);
+  $("s4").onclick = () => setStep(4);
   $("step").onclick = () => { stop(); step2(); };
   $("reset").onclick = () => { stop(); startLanes(); render2(); };
   $("play").onclick = () => { if (timer) { stop(); return; } $("play").textContent = "Pause"; timer = setInterval(step2, 650); };
