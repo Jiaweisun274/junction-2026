@@ -126,6 +126,7 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .rules:not([open]) summary::after { content: "show"; }
 .rules ul { margin: 4px 0 0; padding-left: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 28px; font-size: 16px; }
 @media (max-width: 760px) { .rules ul { grid-template-columns: minmax(0, 1fr); } }
+.rules .src { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
 .review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
@@ -148,15 +149,15 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
   </div>
 
   <details class="card rules" id="rules" open>
-    <summary><h2>The rules</h2><span class="hint">The AI got exactly these. Use them to plan.</span></summary>
+    <summary><h2>The rules</h2><span class="hint">The AI got exactly these rules. Sources added for you.</span></summary>
     <ul>
-      <li><b>Answers are noisy.</b> A child who knows an idea answers right about 9 times in 10. A child who doesn’t still guesses right about 1 time in 4.</li>
-      <li><b>Ideas build on each other.</b> An idea is very hard to learn until the one before it is learned.</li>
-      <li><b>Teaching may not click.</b> Each explanation has some chance of working; it differs by child and idea.</li>
-      <li><b>Repeating in one session helps less.</b> Explaining the same idea again in the same session works less each time; in a later session it works as well as the first time.</li>
-      <li><b>Memory fades.</b> Something learned can be forgotten within days unless it is reviewed.</li>
-      <li><b>Quizzing helps memory.</b> A quiz strengthens memory more than another explanation, especially after some time has passed. But a quiz never teaches an idea that wasn’t learned.</li>
-      <li><b>Some children learn a wrong rule.</b> It shows as a typical wrong answer: 1/8 &gt; 1/4 (idea 2), 2/3 = 3/4 (idea 3), 1/2 + 1/3 = 2/5 (idea 5, also shows in idea 6). “Fix” works on it; re-explaining rarely does.</li>
+      <li><b>Answers are noisy.</b> A child who knows an idea answers right about 9 times in 10. A child who doesn’t still guesses right about 1 time in 4.<span class="src">Bayesian knowledge tracing (Corbett &amp; Anderson 1995)</span></li>
+      <li><b>Ideas build on each other.</b> An idea is very hard to learn until the one before it is learned.<span class="src">Knowledge space theory (Doignon &amp; Falmagne 1985)</span></li>
+      <li><b>Teaching may not click.</b> Each explanation has some chance of working; it differs by child and idea.<span class="src">Knowledge tracing learn rate (Corbett &amp; Anderson 1995)</span></li>
+      <li><b>Repeating in one session helps less.</b> Explaining the same idea again in the same session works less each time; in a later session it works as well as the first time.<span class="src">Spacing effect (Cepeda et al. 2006)</span></li>
+      <li><b>Memory fades.</b> Something learned can be forgotten within days unless it is reviewed.<span class="src">Forgetting curves; FSRS, fitted on millions of real reviews</span></li>
+      <li><b>Quizzing helps memory.</b> A quiz strengthens memory more than another explanation, especially after some time has passed. But a quiz never teaches an idea that wasn’t learned.<span class="src">Testing effect (Roediger &amp; Karpicke 2006)</span></li>
+      <li><b>Some children learn a wrong rule.</b> It shows as a typical wrong answer: 1/8 &gt; 1/4 (idea 2), 2/3 = 3/4 (idea 3), 1/2 + 1/3 = 2/5 (idea 5, also shows in idea 6). “Fix” works on it; re-explaining rarely does.<span class="src">Whole-number bias (Ni &amp; Zhou 2005); “buggy” rules (Brown &amp; Burton 1978)</span></li>
       <li><b>The child may already know some early ideas.</b></li>
       <li><b>The exam</b> counts all six ideas equally: known and remembered ≈ 90%, not known ≈ 25% (guessing), a wrong rule ≈ 10%.</li>
     </ul>
