@@ -36,7 +36,7 @@ The whole talk runs on the simple demo page; the slides are backup for detail qu
 | 0:30–2:00 | Step 1, x-ray off. Teach idea 3, quiz it. If Aino answers right, ask the room: move on? Then turn the x-ray on and read the red line (the effect and its source). If the quiz is wrong, teach again and quiz once more. | step 1 |
 | 2:00–3:30 | Step 2: Gemini 3.1 Pro vs reference on Aino, press Play. Point at the colour strip and the lucky-guess marks. End on 64% vs 81%. Say the AI wins on some children (switch to Toivo, class 3004: 82% vs 56%) and the gap is an average. | step 2 |
 | 3:30–5:00 | Where the AI goes wrong: one right answer is weak evidence (40 → 71 → 90%); the gap opens on Wednesday; in its own words (Gemini 3.1 Pro with every parameter states the 25% guess rule, then moves on after four lucky guesses) | step 3 |
-| 5:00–6:30 | What works: the five rules and why each works; quizzing a lot is not the problem (the 5-rule teacher quizzes as much and wins); what the AI is missing (three decision skills) | step 4 |
+| 5:00–6:30 | Why the reference wins: the five rules and why each works; quizzing a lot is not the problem (the 5-rule teacher quizzes as much and wins); what the AI is missing (three decision skills) | step 4 |
 | 6:30–9:00 | Is it fair: 39 of 43 runs; four objections (swipe through); every rule is a documented effect; can't be gamed; one command; Gemma and limits | step 5 |
 | 9:00–10:00 | Questions | slides as backup |
 
