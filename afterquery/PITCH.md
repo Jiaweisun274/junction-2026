@@ -39,8 +39,13 @@ The whole talk runs on the simple demo page; the slides are backup for detail qu
 | 4:30–6:00 | Evidence 2: four checks; five rules beat the AI too | step 3, top right |
 | 6:00–7:00 | Evidence 3: every rule is a documented effect; which numbers are ours; Duolingo calibration | step 3, bottom left |
 | 7:00–7:30 | Evidence 4: one command; separate container and verifier | step 3, bottom right |
-| 7:30–8:30 | Optional: three habits (slide 8), Gemma tiebreaker (slide 10), limits (slide 11) | slides |
-| 8:30–10:00 | Questions | slides 13–16 for detail |
+| 7:30–9:00 | Analysis: what agents do, why it fails (evidence, the week), what the reference does and why, what the AI is missing | slides 9–13 |
+| 9:00–10:00 | Gemma, limits, questions | slides 14–15; appendix 17–20 for detail |
+
+Slide deck order: 1 cover, 2 thesis, 3 task, 4 demo, 5 how it is built, 6 score, 7 the gap, 8 four checks,
+9 what agents do, 10 one right answer is weak evidence, 11 the week has a shape, 12 the reference and why it works,
+13 what the AI is missing, 14 Gemma, 15 limits, 16 one command, 17–20 appendix.
+If the talk runs only on slides (no live demo), use 1–3, 5–16.
 
 For the judges' rerun: `./eval.sh <model> 3001 3002 3003` (see README). A full three-seed run takes about an hour
 with a Gemini model; have the seed-3002 result table ready on screen.
