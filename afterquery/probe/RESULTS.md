@@ -400,3 +400,9 @@ differences is significant with 3 seeds. Readings: disclosure may help Opus a li
 still wins every run; advice does not help consistently; removing the story does not make Opus better (Gemini got
 worse), so the "real-world knowledge misleads it" objection is not supported for either lab. Demo page updated:
 objection 1 now says "a little help at most", objection 3 "no model does better without the story".
+
+# Fresh-clone check of the README command (Sun 15 Nov, ~02:40)
+`git archive HEAD` into an empty directory on the Verda CPU server, then only the README steps: `python3 -m venv .venv`,
+`pip install "harbor==0.25.0" numpy`, `cp .env.example .env` (Gemini key filled in), `./eval.sh gemini/gemini-3.5-flash 3001`.
+Python 3.14. All four runs completed: reference 0.675 (identical to every earlier reference run on 3001), agent 0.388,
+do-nothing 0.000, stop-early 0.000. The README command works from a clean copy of the repository.
