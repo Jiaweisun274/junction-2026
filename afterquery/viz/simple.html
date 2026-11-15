@@ -120,6 +120,14 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .checks b { color: var(--pen); white-space: nowrap; }
 .checks i { color: var(--muted); text-align: right; }
 .cmd { margin: 0; background: var(--ink); color: var(--paper); padding: 14px 16px; border-radius: 10px; font-size: 15px; overflow-x: auto; }
+.rules summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; list-style: none; }
+.rules summary::-webkit-details-marker { display: none; }
+.rules summary::after { content: "hide"; margin-left: auto; font-size: 14px; color: var(--muted); text-decoration: underline; }
+.rules:not([open]) summary::after { content: "show"; }
+.rules ul { margin: 4px 0 0; padding-left: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 28px; font-size: 16px; }
+@media (max-width: 760px) { .rules ul { grid-template-columns: minmax(0, 1fr); } }
+.review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
 </style>
 
@@ -138,6 +146,21 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <label class="hint" for="kid">Child</label>
     <select id="kid"></select>
   </div>
+
+  <details class="card rules" id="rules" open>
+    <summary><h2>The rules</h2><span class="hint">The AI got exactly these. Use them to plan.</span></summary>
+    <ul>
+      <li><b>Answers are noisy.</b> A child who knows an idea answers right about 9 times in 10. A child who doesn’t still guesses right about 1 time in 4.</li>
+      <li><b>Ideas build on each other.</b> An idea is very hard to learn until the one before it is learned.</li>
+      <li><b>Teaching may not click.</b> Each explanation has some chance of working; it differs by child and idea.</li>
+      <li><b>Repeating in one session helps less.</b> Explaining the same idea again in the same session works less each time; in a later session it works as well as the first time.</li>
+      <li><b>Memory fades.</b> Something learned can be forgotten within days unless it is reviewed.</li>
+      <li><b>Quizzing helps memory.</b> A quiz strengthens memory more than another explanation, especially after some time has passed. But a quiz never teaches an idea that wasn’t learned.</li>
+      <li><b>Some children learn a wrong rule.</b> It shows as a typical wrong answer: 1/8 &gt; 1/4 (idea 2), 2/3 = 3/4 (idea 3), 1/2 + 1/3 = 2/5 (idea 5, also shows in idea 6). “Fix” works on it; re-explaining rarely does.</li>
+      <li><b>The child may already know some early ideas.</b></li>
+      <li><b>The exam</b> counts all six ideas equally: known and remembered ≈ 90%, not known ≈ 25% (guessing), a wrong rule ≈ 10%.</li>
+    </ul>
+  </details>
 
   <section id="v1" class="card">
     <div class="bar-top">
@@ -261,7 +284,7 @@ function why(info, sim) {
   return ["There was no such misconception here; the turn is used up.", ""];
 }
 
-function newGame(acts) { return { sim: makeSim(D, C), acts: [], last: null, seen: {}, lucky: 0, quiz: 0, planned: acts || null, i: 0 }; }
+function newGame(acts) { return { sim: makeSim(D, C), acts: [], last: null, seen: {}, lucky: 0, quiz: 0, planned: acts || null, i: 0, hist: [] }; }
 
 function doAct(g, a) {
   const prev = g.last;
@@ -273,6 +296,7 @@ function doAct(g, a) {
   info.pen = prev && prev.act === "quiz" && prev.why === "lucky" && a[1] === prev.k + 1;
   if (info.pen) g.lucky++;
   g.last = info;
+  g.hist.push({ turn: g.sim.turn - 1, info });
   return info;
 }
 
@@ -298,13 +322,28 @@ function actHead(L) {
 function stripHTML(g) {
   return `<div class="strip" aria-label="Actions by turn">${[0, 1, 2].map((s) => `<div>${Array.from({ length: 10 }, (_, j) => { const a = g.acts[s * 10 + j]; return `<span class="${a ? a[0] : ""}"></span>`; }).join("")}</div>`).join("")}</div>`;
 }
+// After the week: look back with the x-ray (nothing hidden is shown while you play, unless you turn the x-ray on)
+function reviewHTML(g) {
+  const day = (t) => `${DAYS[Math.floor(t / 10)].slice(0, 3)} turn ${t + 1}`;
+  const items = [];
+  for (const h of g.hist) {
+    if (h.info.pen) items.push(`${day(h.turn)}: you moved on to idea ${h.info.k + 1}, but the right answer on idea ${h.info.k} was a lucky guess.`);
+  }
+  const noPre = g.hist.filter((h) => h.info.act === "explain" && h.info.before === "unlearned" && h.info.prereqOk === false);
+  if (noPre.length) items.push(`${noPre.length} explanation${noPre.length > 1 ? "s" : ""} of an idea whose prerequisite wasn’t learned yet (only 5% chance to click).`);
+  const massed = g.hist.filter((h) => h.info.act === "explain" && h.info.before === "unlearned" && h.info.nThisSession >= 3);
+  if (massed.length) items.push(`${massed.length} third-or-later explanation${massed.length > 1 ? "s" : ""} of the same idea in one session (each repeat works less).`);
+  const late = g.acts.slice(-5).filter((a) => a[0] === "quiz").length;
+  items.push(`Quizzes: ${g.quiz} of 30 turns, ${late} of the last 5. Ideas known at the exam: ${g.sim.state.filter((s) => s === "mastered").length} of 6.`);
+  return `<div class="review"><h2>Your week, seen with the x-ray</h2><ul>${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+}
 function talkHTML(g, withInside) {
   const i = g.last;
   if (!i) return `<p class="said">Hi! I’m ${NAME()}.</p><p class="q">Pick an idea and teach it or quiz it.</p>`;
   const head = actHead(i);
   const [w, src] = why(i, g.sim);
   const ins = withInside ? `<p class="inside">Inside: ${esc(w)}${src ? `<span class="src">${esc(src)}</span>` : ""}</p>` : "";
-  const pen = i.pen ? `<p class="pen">✎ You moved on after a lucky guess.</p>` : "";
+  const pen = i.pen && withInside ? `<p class="pen">✎ You moved on after a lucky guess.</p>` : "";
   return head + ins + pen;
 }
 
@@ -321,7 +360,7 @@ function render1() {
   if (t >= s.T) {
     const ag = "Gemini 3.1 Pro" in C.teachers ? "Gemini 3.1 Pro" : AGENTS.find((n) => C.teachers[n]);
     const rows = [["You", s.exam(), "you"], [ag, C.teachers[ag].exam, "ai"], ["Reference (PPO)", C.teachers[REFN].exam, "ref"], ["No teaching", C.base, ""]].sort((a, b) => b[1] - a[1]);
-    end.innerHTML = `<h2>Exam result</h2><div class="results">${rows.map(([n, v, c]) => `<div class="res ${c}"><span>${esc(n)}</span><span class="tr"><i style="width:${v * 100}%"></i></span><b>${pct(v)}</b></div>`).join("")}</div><p class="hint">Now see step 2: how the AI and the reference taught ${NAME()}.</p>`;
+    end.innerHTML = `<h2>Exam result</h2><div class="results">${rows.map(([n, v, c]) => `<div class="res ${c}"><span>${esc(n)}</span><span class="tr"><i style="width:${v * 100}%"></i></span><b>${pct(v)}</b></div>`).join("")}</div>${reviewHTML(me)}<p class="hint">Now see step 2: how the AI and the reference taught ${NAME()}.</p>`;
     end.hidden = false;
   } else end.hidden = true;
 }
@@ -364,6 +403,7 @@ function render2() {
 function setStep(n) {
   stop();
   for (const i of [1, 2, 3]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
+  $("rules").hidden = n === 3;
   if (n === 2) { if (!lanes) startLanes(); render2(); } else if (n === 1) render1();
 }
 
