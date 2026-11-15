@@ -17,9 +17,8 @@ per run, salt `eval1`. Raw results: one TSV per experiment in `harbor/results/` 
 | 9 | Five-rule ablation | `probe/compare_refs.py ablation` | printed | rule 2 off: -0.078 per child; others -0.005 to -0.016 |
 | 10 | Lucky-guess move-ons, quotes | `probe/replay_traces.py`, `failure_analysis.py`, `find_quotes.py` | needs the run logs | AI 1.4-2.0 per child, reference 0.5 |
 | 11 | "Check back later" variant | `probe/checkback_ref.py` | printed | as good as rule 2 with fewer quizzes |
-| 12 | Gemma 4 E4B expert iteration | `gemma/` | `gemma/results/` | 0.37 → 0.39 → 0.41 (not significant) |
-| 13 | README command from a clean copy | `./eval.sh gemini/gemini-3.5-flash 3001` | `fresh_clone_*.tsv` | reference 0.675, agent 0.388, baselines 0 |
-| 14 | Gemini 4 Argon, one run | `harbor/tutor2` | `v12_argon_smoke.tsv` | 0.57 vs reference 0.67 |
+| 12 | README command from a clean copy | `./eval.sh gemini/gemini-3.5-flash 3001` | `fresh_clone_*.tsv` | reference 0.675, agent 0.388, baselines 0 |
+| 13 | Gemini 4 Argon, one run | `harbor/tutor2` | `v12_argon_smoke.tsv` | 0.57 vs reference 0.67 |
 
 Notes
 - Runs that crashed (GPT on 3002 and 3003, rate limits) are excluded. A later retry of GPT on 3002 finished

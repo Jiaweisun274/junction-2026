@@ -2,13 +2,13 @@ schema_version = "1.4"
 artifacts = ["/grader/result.json"]
 
 [task]
-name = "sauna-renaissance/afterquery-tutor2-disclosed"
+name = "sauna-renaissance/afterquery-tutor2"
 description = "A multi-session fractions tutoring environment with hidden learning state and delayed exam reward."
 keywords = ["afterquery", "mcp", "tutoring", "decision-making"]
 
 [metadata]
 difficulty = "frontier-agent-evaluation"
-source = "afterquery/probe/tutor2.py"
+source = "probe/tutor2.py"
 
 [agent]
 timeout_sec = 5400

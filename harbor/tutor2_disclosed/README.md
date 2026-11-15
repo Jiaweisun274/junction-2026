@@ -7,7 +7,6 @@ This packages `probe/tutor2.py` as a Harbor task. OpenCode sees the rules and ca
 Install Harbor and make sure Docker is running. Supply the model provider key in the shell that launches Harbor; do not put it in this task package.
 
 ```sh
-cd afterquery
 # Put your key in the ignored .env file using a local editor, then:
 AFTERQUERY_SEED=2001 .venv/bin/harbor run --env-file .env -p harbor/tutor2 -a opencode -m openai/<model-id> -k 1
 ```
@@ -34,8 +33,8 @@ The reference solver in `solution/` uses the observation-only literature policy 
 
 ## Current scope
 
-Harbor 0.25.0 is installed in `afterquery/.venv`; the ignored `afterquery/.env` supplies provider keys.
+Harbor 0.25.0 is installed in `.venv`; the ignored `.env` supplies provider keys.
 Verified on Sat 14 Nov with the allowlist and a salted seed (`AFTERQUERY_SEED=2001`, salt `smoketest`):
 - OpenCode + `openai/gpt-5.4-mini`: completed 30 turns through MCP, reward 0.304.
 - Reference (`-a oracle`, runs `solution/solve.sh`): reward 0.607, identical to the verifier's own reference computation.
-Harbor job folders (`afterquery/jobs/`) are not committed; re-run to reproduce.
+Harbor job folders (`jobs/`) are not committed; re-run to reproduce.

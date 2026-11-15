@@ -1,4 +1,4 @@
-"""Export the 30 evaluation children (seeds 3001-3005, salt eval1) for the browser teaching game (viz/game.html).
+"""Export the 30 evaluation children (seeds 3001-3005, salt eval1) for the browser teaching game (viz/simple.html).
 
 For each child: the simulator's random draws and parameters (so the JavaScript port reproduces the Python simulator
 exactly), the untaught and full-information exam scores, and the action sequence of every teacher that taught this

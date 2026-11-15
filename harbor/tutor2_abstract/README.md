@@ -6,4 +6,4 @@ misconception -> fault, session -> window, exam -> evaluation; answers become sy
 `environment/mcp-server/skin.py`. A run on seed S is therefore paired one-to-one with the tutoring run on seed S,
 which isolates the effect of the tutoring story (and the model's prior knowledge about teaching) on decisions.
 
-Run: `TASK=tutor2_abstract harbor/run_seeds.sh opencode <model> <tag> <seed...>` from `afterquery/`.
+Run: `TASK=tutor2_abstract harbor/run_seeds.sh opencode <model> <tag> <seed...>` from the repository root.

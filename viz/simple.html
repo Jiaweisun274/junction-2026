@@ -430,15 +430,14 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <p class="hint">Runs the reference, the AI and the do-nothing and stop-early baselines, then prints the table. The child’s state lives in a separate container; a separate verifier scores it.</p>
       </div>
       <div class="card wide">
-        <p class="eyebrow">Tiebreaker and limits</p>
-        <h2>A small model learns; what we don’t claim</h2>
-        <p><b>Gemma 4 (4B)</b>, trained only on its own best games: 0.37 → 0.39 → 0.41 in two rounds (a trend, not yet significant).</p>
+        <p class="eyebrow">Limits</p>
+        <h2>What we don’t claim</h2>
         <p class="hint">We don’t claim real children learn exactly like this; the simulator isn’t fitted to student data yet. The checks ran on two Gemini models (15 batches) and Claude Opus (3 seeds).</p>
       </div>
     </div>
   </section>
 
-  <p class="hint">A simulated child built from learning-science findings (knowledge tracing, forgetting curves, the testing effect, fraction misconceptions). The full version with every rule and source: game.html.</p>
+  <p class="hint">A simulated child built from learning-science findings (knowledge tracing, forgetting curves, the testing effect, fraction misconceptions).</p>
 </div>
 
 <script src="sim.js"></script>

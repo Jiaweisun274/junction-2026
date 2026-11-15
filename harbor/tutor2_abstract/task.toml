@@ -2,13 +2,13 @@ schema_version = "1.4"
 artifacts = ["/grader/result.json"]
 
 [task]
-name = "sauna-renaissance/afterquery-tutor2"
-description = "A multi-session fractions tutoring environment with hidden learning state and delayed exam reward."
-keywords = ["afterquery", "mcp", "tutoring", "decision-making"]
+name = "sauna-renaissance/afterquery-lattice"
+description = "A multi-window maintenance environment with hidden node state and a delayed evaluation reward."
+keywords = ["afterquery", "mcp", "decision-making"]
 
 [metadata]
 difficulty = "frontier-agent-evaluation"
-source = "afterquery/probe/tutor2.py"
+source = "probe/tutor2.py"
 
 [agent]
 timeout_sec = 5400
@@ -26,7 +26,7 @@ network_mode = "allowlist"
 allowed_hosts = ["models.opencode.ai", "generativelanguage.googleapis.com","api.openai.com", "api.anthropic.com", "openrouter.ai", "registry.npmjs.org", "models.dev"]
 
 [[environment.mcp_servers]]
-name = "afterquery-tutor"
+name = "afterquery-lattice"
 transport = "streamable-http"
 # Under the allowlist every service shares the egress sidecar's network namespace, so the tutor is on localhost.
 url = "http://127.0.0.1:8000/mcp"

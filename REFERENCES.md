@@ -30,14 +30,9 @@ FSRS-derived ranges [5]. A second realism fix added diminishing returns for mass
 | Planned 5-rule teacher (`probe/planned_ref.py`) | mastery criterion of two correct in a row, prerequisite check, diagnosis | mastery learning [16]; real tutoring systems also require several correct answers in a row before moving on, e.g. ASSISTments skill builders [20] |
 | Full-information teacher (normalisation only) | greedy and rollout planning with the hidden state visible | teaching as a POMDP: Rafferty et al. (2016) [21] |
 
-## 3. Gemma tiebreaker (training a small model on the environment's experience)
+## 3. Data for future calibration
 
-Reward-filtered self-training (expert iteration): sample episodes, keep each child's best by exam gain, fine-tune on
-them, repeat. Sources: Anthony et al. (2017) [22]; Zelikman et al. (2022) [23]; Gulcehre et al. (2023) [24].
-
-## 4. Data for future calibration
-
-ASSISTments tutoring logs [20, 25]; Eedi diagnostic questions (NeurIPS 2020 Education Challenge) [26];
+ASSISTments tutoring logs [20, 22]; Eedi diagnostic questions (NeurIPS 2020 Education Challenge) [23];
 Duolingo spaced-repetition data [3].
 
 ## Bibliography
@@ -63,10 +58,7 @@ Duolingo spaced-repetition data [3].
 19. Schulman, J., Wolski, F., Dhariwal, P., Radford, A., & Klimov, O. (2017). Proximal policy optimization algorithms. arXiv:1707.06347.
 20. Heffernan, N. T., & Heffernan, C. L. (2014). The ASSISTments ecosystem. *International Journal of Artificial Intelligence in Education*, 24(4), 470–497.
 21. Rafferty, A. N., Brunskill, E., Griffiths, T. L., & Shafto, P. (2016). Faster teaching via POMDP planning. *Cognitive Science*, 40(6), 1290–1332.
-22. Anthony, T., Tian, Z., & Barber, D. (2017). Thinking fast and slow with deep learning and tree search. *NeurIPS 2017*.
-23. Zelikman, E., Wu, Y., Mu, J., & Goodman, N. (2022). STaR: Bootstrapping reasoning with reasoning. *NeurIPS 2022*.
-24. Gulcehre, C., et al. (2023). Reinforced self-training (ReST) for language modeling. arXiv:2308.08998.
-25. Feng, M., Heffernan, N., & Koedinger, K. (2009). Addressing the assessment challenge with an online system that tutors as it assesses. *User Modeling and User-Adapted Interaction*, 19(3), 243–266.
-26. Wang, Z., et al. (2020). Instructions and guide for diagnostic questions: The NeurIPS 2020 Education Challenge. arXiv:2007.12061.
+22. Feng, M., Heffernan, N., & Koedinger, K. (2009). Addressing the assessment challenge with an online system that tutors as it assesses. *User Modeling and User-Adapted Interaction*, 19(3), 243–266.
+23. Wang, Z., et al. (2020). Instructions and guide for diagnostic questions: The NeurIPS 2020 Education Challenge. arXiv:2007.12061.
 
 Citations were compiled from memory during the event; check volume and page numbers before reusing them in a paper.
