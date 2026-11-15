@@ -194,8 +194,9 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <div class="steps" role="group" aria-label="Step">
       <button id="s1" aria-pressed="true">1 · You teach</button>
       <button id="s2" aria-pressed="false">2 · AI vs reference</button>
-      <button id="s3" aria-pressed="false">3 · Why the AI loses</button>
-      <button id="s4" aria-pressed="false">4 · Is it fair?</button>
+      <button id="s3" aria-pressed="false">3 · Where the AI goes wrong</button>
+      <button id="s4" aria-pressed="false">4 · What works</button>
+      <button id="s5" aria-pressed="false">5 · Is it fair?</button>
     </div>
     <label class="hint" for="kid">Child</label>
     <select id="kid"></select>
@@ -265,20 +266,20 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
   <section id="v3" hidden>
     <div class="ev">
       <div class="card">
-        <p class="eyebrow">What the AI does</p>
-        <h2>Quizzing a lot is not the problem</h2>
-        <div class="checks">
-          <p><span><b style="color:var(--bug)">Gemini 3.1 Pro</b> · quizzes 68% of turns</span><i style="font-style:normal">knows <b style="color:var(--ink)">3.4</b> of 6 ideas at the exam</i></p>
-          <p><span><b style="color:var(--know)">Five-rule teacher</b> · quizzes 67%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.6</b></i></p>
-          <p><span><b style="color:var(--know)">Trained reference</b> · quizzes 37%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.3</b></i></p>
-        </div>
-        <p class="hint">Same 30 children. The five-rule teacher quizzes as often as the AI and still wins. The difference is what each one does with the answers.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">Why it fails, 1 · evidence</p>
+        <p class="eyebrow">Mistake 1 · evidence</p>
         <h2>One right answer is weak evidence</h2>
         <div class="chain"><span><b>40%</b>after one explanation</span><span class="arr">→</span><span class="ai"><b>71%</b>one right answer: AI moves on</span><span class="arr">→</span><span class="ref"><b>90%</b>two in a row: reference moves on</span></div>
         <p class="hint">How sure the teacher can be that the idea was learned, using the rule the AI was given (right 9 in 10 if known, 1 in 4 if not). Move on too early and the next idea clicks 5% of the time instead of 30–60%. Trusting one answer is the costliest habit we measured.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Mistake 2 · timing</p>
+        <h2>The gap opens on Wednesday</h2>
+        <div class="checks">
+          <p><span><b style="color:var(--ink)">Monday</b> · find out what the child knows</span><i style="color:var(--know); font-style:normal; font-weight:700;">AI does this well</i></p>
+          <p><span><b style="color:var(--ink)">Wednesday</b> · re-teach what didn’t stick</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI re-tests</i></p>
+          <p><span><b style="color:var(--ink)">Friday</b> · teach as far as possible</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI still quizzes</i></p>
+        </div>
+        <p class="hint">Replay the AI’s own turns, then let the reference take over: after Monday it recovers the whole gap, after Wednesday almost nothing.</p>
       </div>
       <div class="card wide">
         <p class="eyebrow">In its own words · Gemini 3.1 Pro, given every simulator parameter</p>
@@ -295,16 +296,11 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         </div>
         <p class="hint">Replayed with the x-ray: this child never learned a single idea all week. Exam 25%, the same as no teaching. (Seed 3005, child 2; quotes are the agent’s own reasoning from the Harbor log.)</p>
       </div>
-      <div class="card">
-        <p class="eyebrow">Why it fails, 2 · the week</p>
-        <h2>The gap opens on Wednesday</h2>
-        <div class="checks">
-          <p><span><b style="color:var(--ink)">Monday</b> · find out what the child knows</span><i style="color:var(--know); font-style:normal; font-weight:700;">AI does this well</i></p>
-          <p><span><b style="color:var(--ink)">Wednesday</b> · re-teach what didn’t stick</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI re-tests</i></p>
-          <p><span><b style="color:var(--ink)">Friday</b> · teach as far as possible</span><i style="color:var(--bug); font-style:normal; font-weight:700;">AI still quizzes</i></p>
-        </div>
-        <p class="hint">Replay the AI’s own turns, then let the reference take over: after Monday it recovers the whole gap, after Wednesday almost nothing.</p>
-      </div>
+    </div>
+  </section>
+
+  <section id="v4" hidden>
+    <div class="ev">
       <div class="card">
         <p class="eyebrow">What the reference does</p>
         <h2>Five rules, each tied to a mechanism</h2>
@@ -316,6 +312,16 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
           <p><span>No routine re-tests at session start</span><i>quiz the frontier idea instead</i></p>
         </div>
         <p class="hint">Written as five rules: 0.67. The trained reference: 0.73. AI agents: about 0.55.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">How you use a quiz matters</p>
+        <h2>Quizzing a lot is not the problem</h2>
+        <div class="checks">
+          <p><span><b style="color:var(--bug)">Gemini 3.1 Pro</b> · quizzes 68% of turns</span><i style="font-style:normal">knows <b style="color:var(--ink)">3.4</b> of 6 ideas at the exam</i></p>
+          <p><span><b style="color:var(--know)">Five-rule teacher</b> · quizzes 67%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.6</b></i></p>
+          <p><span><b style="color:var(--know)">Trained reference</b> · quizzes 37%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.3</b></i></p>
+        </div>
+        <p class="hint">Same 30 children. The five-rule teacher quizzes as often as the AI and still wins. The difference is what each one does with the answers.</p>
       </div>
       <div class="card wide">
         <p class="eyebrow">What the AI is missing</p>
@@ -329,7 +335,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     </div>
   </section>
 
-  <section id="v4" hidden>
+  <section id="v5" hidden>
     <div class="ev">
       <div class="card">
         <p class="eyebrow">Not one lucky example</p>
@@ -588,7 +594,7 @@ function render2() {
 
 function setStep(n) {
   stop();
-  for (const i of [1, 2, 3, 4]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
+  for (const i of [1, 2, 3, 4, 5]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
   $("rules").hidden = n >= 3;
   if (n === 2) { if (!lanes) startLanes(); render2(); } else if (n === 1) render1();
 }
@@ -606,7 +612,8 @@ async function start() {
   $("s1").onclick = () => setStep(1);
   $("s2").onclick = () => setStep(2);
   $("s3").onclick = () => setStep(3);
-  $("s4").onclick = () => { setStep(4); setupCarousel(); };
+  $("s4").onclick = () => setStep(4);
+  $("s5").onclick = () => { setStep(5); setupCarousel(); };
   $("step").onclick = () => { stop(); step2(); };
   $("reset").onclick = () => { stop(); startLanes(); render2(); };
   $("play").onclick = () => { if (timer) { stop(); return; } $("play").textContent = "Pause"; timer = setInterval(step2, 650); };

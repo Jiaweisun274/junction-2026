@@ -35,8 +35,9 @@ The whole talk runs on the simple demo page; the slides are backup for detail qu
 | 0:00–0:30 | The question: can you teach better than an AI? | title |
 | 0:30–2:00 | Step 1, x-ray off. Teach idea 3, quiz it. If Aino answers right, ask the room: move on? Then turn the x-ray on and read the red line (the effect and its source). If the quiz is wrong, teach again and quiz once more. | step 1 |
 | 2:00–3:30 | Step 2: Gemini 3.1 Pro vs reference on Aino, press Play. Point at the colour strip and the lucky-guess marks. End on 64% vs 81%. Say the AI wins on some children (switch to Toivo, class 3004: 82% vs 56%) and the gap is an average. | step 2 |
-| 3:30–7:00 | Why the AI loses: same quiz rate all week; one right answer is weak evidence (40 → 71 → 90%); the gap opens on Wednesday; what the reference does and why each rule works; what the AI is missing (three decision skills) | step 3, card by card |
-| 7:00–9:00 | Is it fair: 39 of 43 runs; four checks; every rule is a documented effect (which numbers are ours); can't be gamed (0.00 baselines); one command; Gemma and limits | step 4 |
+| 3:30–5:00 | Where the AI goes wrong: one right answer is weak evidence (40 → 71 → 90%); the gap opens on Wednesday; in its own words (Gemini 3.1 Pro with every parameter states the 25% guess rule, then moves on after four lucky guesses) | step 3 |
+| 5:00–6:30 | What works: the five rules and why each works; quizzing a lot is not the problem (the 5-rule teacher quizzes as much and wins); what the AI is missing (three decision skills) | step 4 |
+| 6:30–9:00 | Is it fair: 39 of 43 runs; four objections (swipe through); every rule is a documented effect; can't be gamed; one command; Gemma and limits | step 5 |
 | 9:00–10:00 | Questions | slides as backup |
 
 Slide deck order: 1 cover, 2 thesis, 3 task, 4 demo, 5 how it is built, 6 score, 7 the gap, 8 four checks,
