@@ -9,9 +9,9 @@ Wednesday / Friday) to `explain`, `quiz`, `correct` a named misconception, or `a
 The reward is the children's exam gain next Monday, pooled over the six children and normalised so that no teaching
 scores 0 and a teacher who could see each child's hidden state scores about 1.
 
-**Demo page:** `viz/simple.html` (teach a child yourself, x-ray the hidden state, watch an AI agent and the reference
-teach the same child, and the evidence). It loads a data file, so serve the folder:
-`cd viz && python3 -m http.server 8000`, then open http://localhost:8000/simple.html.
+**Live demo:** https://claude.ai/artifact/VLc1hRpqnntBMZ6XK5BvvM (teach a learner yourself, x-ray the hidden state, watch an
+AI agent's real run against the reference on the same learner, and the evidence). The same page is `viz/simple.html`;
+to run it locally, serve the folder: `cd viz && python3 -m http.server 8000`, then open http://localhost:8000/simple.html.
 
 ## Result
 
