@@ -1,5 +1,12 @@
 # Where frontier agents fail as tutors
 
+> **Correction (Sun 15 Nov).** Finding 1 below describes the agents' behaviour but is not the cause of the gap. Our
+> hand-written five-rule teacher quizzes as much as the agents (67% vs 68% of turns) and still beats them clearly. The
+> cause is finding 2: moving on after a single right answer. Switching that habit off in the five-rule teacher costs
+> about 8 points on a child's exam, about the whole gap (7 points). The Wednesday hand-over result (finding 3) shows
+> *when* the loss becomes unrecoverable, not a separate mistake. See `probe/RESULTS.md`, "Correction to the testing
+> instead of teaching reading".
+
 Data: 5 runs x 6 salted children per teacher, Harbor + OpenCode, replayed through the simulator to recover the hidden
 state at every step (`probe/replay_traces.py`; every replayed reward matches the Harbor reward exactly). Numbers are
 from `FAILURE_ANALYSIS_DATA.md` (`probe/failure_analysis.py`). Interactive version: the Hidden-State Classroom page
