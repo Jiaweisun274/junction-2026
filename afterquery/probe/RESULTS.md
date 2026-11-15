@@ -372,3 +372,16 @@ Evaluation: greedy, the same salted children as the frontier agents (batches 300
 Round 2 vs base, paired over 15 batches: +0.040 (se 0.040), better on 9/15. A consistent trend (score up, quiz share
 down, the direction PPO learned) but not yet significant after two rounds. The untrained small model shows the
 frontier agents' habit in a stronger form (78% quizzes). Frontier agents on the same batches: about 0.54-0.61; PPO 0.69.
+
+# Correction to the "testing instead of teaching" reading (Sun 15 Nov, night)
+On the 30 evaluation children (3001-3005), from the replayed actions:
+| teacher | quiz share | mean exam | ideas known at exam |
+|---|---|---|---|
+| gemini-3.1-pro-preview | 68% | 0.596 | 3.43 |
+| planned (5 rules) | 67% | 0.710 | 4.57 |
+| PPO | 37% | 0.673 | 4.33 |
+The five-rule teacher quizzes as much as the agents and still beats them clearly, so a high quiz share is not itself
+the cause of the gap; it is PPO's style. The cause is what the teacher does with the answers: moving on after one
+correct answer (the costliest habit in the ablation), not checking the prerequisite when stuck, and the timing of
+re-teaching (hand-over test). FAILURE_ANALYSIS finding 1 should be read as a description of the behaviour profile,
+not as the mechanism. Demo page and slides updated accordingly.

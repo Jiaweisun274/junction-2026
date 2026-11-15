@@ -198,6 +198,8 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <div class="ctrl">
       <label class="hint" for="agent">AI agent</label>
       <select id="agent"></select>
+      <label class="hint" for="ref">vs</label>
+      <select id="ref"><option value="PPO (trained)">Reference: PPO (trained)</option><option value="Planned (5 rules)">Reference: 5 rules</option></select>
       <button class="btn" id="play">Play</button>
       <button class="btn ghost" id="step">Next turn</button>
       <button class="btn ghost" id="reset">Restart</button>
@@ -212,18 +214,13 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <div class="ev">
       <div class="card">
         <p class="eyebrow">What the AI does</p>
-        <h2>It tests at the same rate all week</h2>
-        <div class="days">
-          <div><div class="pair"><i class="ai" style="height:65%"></i><i class="ref" style="height:46%"></i></div><span>Mon</span></div>
-          <div><div class="pair"><i class="ai" style="height:62%"></i><i class="ref" style="height:37%"></i></div><span>Wed</span></div>
-          <div><div class="pair"><i class="ai" style="height:67%"></i><i class="ref" style="height:27%"></i></div><span>Fri</span></div>
-        </div>
-        <p class="legend"><span><i style="background:var(--bug)"></i>AI agents 65 · 62 · 67%</span><span><i style="background:var(--know)"></i>Reference 46 · 37 · 27%</span></p>
-        <p class="hint">Bars: share of each session’s turns spent quizzing instead of teaching. A quiz checks and refreshes memory, but never teaches an idea that wasn’t learned.</p>
+        <h2>Quizzing a lot is not the problem</h2>
         <div class="checks">
-          <p><span>Quizzes in the last 5 turns before the exam</span><b>AI 61–77% · reference 7%</b></p>
-          <p><span>Ideas the child knows at the exam (of 6)</span><b>AI 3.3–3.8 · reference 4.3</b></p>
+          <p><span><b style="color:var(--bug)">Gemini 3.1 Pro</b> · quizzes 68% of turns</span><i style="font-style:normal">knows <b style="color:var(--ink)">3.4</b> of 6 ideas at the exam</i></p>
+          <p><span><b style="color:var(--know)">Five-rule teacher</b> · quizzes 67%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.6</b></i></p>
+          <p><span><b style="color:var(--know)">Trained reference</b> · quizzes 37%</span><i style="font-style:normal">knows <b style="color:var(--ink)">4.3</b></i></p>
         </div>
+        <p class="hint">Same 30 children. The five-rule teacher quizzes as often as the AI and still wins. The difference is what each one does with the answers.</p>
       </div>
       <div class="card">
         <p class="eyebrow">Why it fails, 1 · evidence</p>
@@ -249,7 +246,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
           <p><span>Didn’t click? Re-teach next session</span><i>same-session repeats work less</i></p>
           <p><span>Stuck? Check the prerequisite</span><i>without it, 5% chance</i></p>
           <p><span>Fix a wrong rule at once</span><i>fix works, re-explaining rarely</i></p>
-          <p><span>No routine re-testing</span><i>a check is a turn not teaching</i></p>
+          <p><span>No routine re-tests at session start</span><i>quiz the frontier idea instead</i></p>
         </div>
         <p class="hint">Written as five rules: 0.67. The trained reference: 0.73. AI agents: about 0.55.</p>
       </div>
@@ -258,7 +255,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <h2>Not knowledge. Three decision skills.</h2>
         <div class="skills">
           <div><b>Acting on evidence</b><span>Knows a quiz is noisy, still trusts one answer.</span></div>
-          <div><b>Planning a budget</b><span>30 turns, one week: the same quiz rate Monday to Friday.</span></div>
+          <div><b>Planning over the week</b><span>Doesn’t re-teach in a new session what didn’t stick on Monday; the gap opens on Wednesday.</span></div>
           <div><b>Adapting to the learner</b><span>The same habit for every child, every simulator, with or without the story.</span></div>
         </div>
       </div>
@@ -454,7 +451,7 @@ function render1() {
   const end = $("end");
   if (t >= s.T) {
     const ag = "Gemini 3.1 Pro" in C.teachers ? "Gemini 3.1 Pro" : AGENTS.find((n) => C.teachers[n]);
-    const rows = [["You", s.exam(), "you"], [ag, C.teachers[ag].exam, "ai"], ["Reference (PPO)", C.teachers[REFN].exam, "ref"], ["No teaching", C.base, ""]].sort((a, b) => b[1] - a[1]);
+    const rows = [["You", s.exam(), "you"], [ag, C.teachers[ag].exam, "ai"], ["Reference (PPO)", C.teachers[REFN].exam, "ref"], ["Reference (5 rules)", C.teachers["Planned (5 rules)"].exam, "ref"], ["No teaching", C.base, ""]].sort((a, b) => b[1] - a[1]);
     end.innerHTML = `<h2>Exam result</h2><div class="results">${rows.map(([n, v, c]) => `<div class="res ${c}"><span>${esc(n)}</span><span class="tr"><i style="width:${v * 100}%"></i></span><b>${pct(v)}</b></div>`).join("")}</div>${reviewHTML(me)}<p class="hint">Now see step 2: how the AI and the reference taught ${NAME()}.</p>`;
     end.hidden = false;
   } else end.hidden = true;
@@ -478,7 +475,8 @@ function laneHTML(g, name, cls) {
 
 function startLanes() {
   const ag = $("agent").value;
-  lanes = [[ag, newGame(C.teachers[ag].actions), "ai"], ["Reference (PPO, trained)", newGame(C.teachers[REFN].actions), "ref"]];
+  const rf = $("ref").value;
+  lanes = [[ag, newGame(C.teachers[ag].actions), "ai"], [rf === REFN ? "Reference (PPO, trained)" : "Reference (5 rules)", newGame(C.teachers[rf].actions), "ref"]];
 }
 function step2() {
   let any = false;
@@ -509,6 +507,7 @@ async function start() {
   $("kid").value = DEFAULT_CHILD;
   $("kid").onchange = () => { stop(); pickChild($("kid").value); };
   $("agent").onchange = () => { stop(); startLanes(); render2(); };
+  $("ref").onchange = () => { stop(); startLanes(); render2(); };
   pickChild(DEFAULT_CHILD);
   $("xray").onclick = () => { xray = !xray; $("xray").setAttribute("aria-pressed", xray); render1(); };
   $("s1").onclick = () => setStep(1);
