@@ -17,7 +17,7 @@ Code locations refer to `probe/tutor2.py` (the simulator) and `probe/lit_ref.py`
 | Over-confident self-report | "do you get it?" answered yes with 0.75–0.97 regardless of knowledge | Rozenblit & Keil (2002) [15] | people overestimate how well they understand | all four probabilities |
 | Exam | mastered: 0.9 × recall + 0.25 × (1 − recall); misconception 0.10; unlearned 0.25 | follows from the quiz model above | | misconception exam score 0.10 |
 
-Calibration history (`probe/RESULTS.md`): our first simulator used a 1-day half-life. A quick fit of half-life
+Calibration history: our first simulator used a 1-day half-life. A quick fit of half-life
 regression [3] on the first 2M rows of the Duolingo data showed real forgetting is far slower, so we switched to the
 FSRS-derived ranges [5]. A second realism fix added diminishing returns for massed explanations [8, 9].
 

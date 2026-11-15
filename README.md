@@ -11,8 +11,7 @@ alone costs about as much as the whole gap.
 - **Everything is in [`afterquery/`](afterquery/)**: the Harbor task, the simulator, the references, every result and
   the one-command evaluation. Start with [`afterquery/README.md`](afterquery/README.md).
 - **Demo page**: `afterquery/viz/simple.html` (serve the folder with `python3 -m http.server`).
-- **Lab notebook**: [`afterquery/probe/RESULTS.md`](afterquery/probe/RESULTS.md), every experiment including the
-  ones that failed and every correction.
+- **Experiments**: [`afterquery/EXPERIMENTS.md`](afterquery/EXPERIMENTS.md), where every number comes from.
 - **Sources**: [`afterquery/REFERENCES.md`](afterquery/REFERENCES.md).
 
 Rerun it:

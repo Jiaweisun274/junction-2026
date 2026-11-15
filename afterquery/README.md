@@ -63,7 +63,7 @@ Gemma 4 E4B trained by expert iteration on its own reward-filtered episodes (`ge
 rounds (paired +0.04, se 0.04: a trend, not yet significant). The PPO reference is itself a small network trained only
 on the environment's experience.
 
-Full lab notebook, including the experiments that failed and every correction: `probe/RESULTS.md`.
+Where every number comes from, and how to reproduce it: `EXPERIMENTS.md`.
 
 ## For judges: how to rerun
 
@@ -104,11 +104,11 @@ Other variants: `TASK=tutor2_disclosed`, `TASK=tutor2_hint`, `TASK=tutor2_abstra
 | `harbor/results/` | every run's result (one TSV per experiment) |
 | `probe/tutor2.py` | the simulator (single child); `probe/rules_tutor2.txt` the rules |
 | `probe/rl_ref.py`, `probe/ppo_policy.py`, `probe/ppo_ref.npz` | PPO training and the numpy policy used at run time |
-| `probe/planned_ref.py`, `probe/checkback_ref.py` | the five-rule teacher and the check-back variant |
+| `probe/planned_ref.py`, `probe/checkback_ref.py`, `probe/compare_refs.py` | the five-rule teacher, the check-back variant, the comparison with PPO and the ablation |
 | `probe/failure_analysis.py`, `probe/find_quotes.py`, `probe/sensitivity.py` | failure analysis, quote finder, sensitivity analysis |
-| `probe/RESULTS.md` | every experiment, including the ones that failed |
 | `viz/` | demo page, full game, JavaScript port of the simulator (checked against Python on 228 replays) |
 | `gemma/` | Gemma tiebreaker: text harness, training, results |
+| `EXPERIMENTS.md` | every experiment: script, raw results file, result |
 | `REFERENCES.md` | the sources for every mechanism, and which numbers are our own settings |
 
 ## Integrity
