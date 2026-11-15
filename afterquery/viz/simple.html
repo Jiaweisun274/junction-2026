@@ -111,6 +111,15 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .btn.ghost { background: transparent; color: var(--ink); }
 .btn:disabled { opacity: 0.4; cursor: default; }
 .hint { color: var(--muted); font-size: 14px; }
+.ev { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .ev { grid-template-columns: minmax(0, 1fr); } }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
+.checks { display: flex; flex-direction: column; }
+.checks p { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 17px; }
+.checks p:first-child { border-top: 0; }
+.checks b { color: var(--pen); white-space: nowrap; }
+.checks i { color: var(--muted); text-align: right; }
+.cmd { margin: 0; background: var(--ink); color: var(--paper); padding: 14px 16px; border-radius: 10px; font-size: 15px; overflow-x: auto; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
 </style>
 
@@ -124,6 +133,7 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <div class="steps" role="group" aria-label="Step">
       <button id="s1" aria-pressed="true">1 · You teach</button>
       <button id="s2" aria-pressed="false">2 · AI vs reference</button>
+      <button id="s3" aria-pressed="false">3 · The evidence</button>
     </div>
     <label class="hint" for="kid">Child</label>
     <select id="kid"></select>
@@ -151,6 +161,57 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
     <p class="legend"><span><i style="background:var(--teach)"></i>Teach</span><span><i style="background:var(--quiz)"></i>Quiz</span><span><i style="background:var(--fix)"></i>Fix misconception</span><span>· one square per turn: Monday, Wednesday, Friday</span></p>
     <div class="duo" id="duo"></div>
     <p class="hint">Same child, same luck. Colours show what is really in the child’s head; neither teacher can see it. Try other children: the AI wins on some of them. Over all 30 evaluation children the reference wins on average.</p>
+  </section>
+
+  <section id="v3" hidden>
+    <div class="ev">
+      <div class="card">
+        <p class="eyebrow">Not one lucky example</p>
+        <h2>The reference beats 39 of 43 AI runs</h2>
+        <div class="results">
+          <div class="res ref"><span>Reference (trained)</span><span class="tr"><i style="width:70%"></i></span><b>0.70</b></div>
+          <div class="res ai"><span>GPT 6.1 Sol</span><span class="tr"><i style="width:61%"></i></span><b>0.61</b></div>
+          <div class="res ai"><span>Claude Opus 5.5</span><span class="tr"><i style="width:59%"></i></span><b>0.59</b></div>
+          <div class="res"><span>Textbook rulebook</span><span class="tr"><i style="width:56%"></i></span><b>0.56</b></div>
+          <div class="res ai"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div>
+          <div class="res ai"><span>Gemini Pro</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div>
+          <div class="res ai"><span>Gemini 3.5 Flash</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div>
+          <div class="res"><span>Do nothing / stop early</span><span class="tr"><i style="width:0%"></i></span><b>0.00</b></div>
+        </div>
+        <p class="hint">Score 0 = no teaching, 1 = a teacher who can see inside. Six children per run, standard harness (Harbor + OpenCode).</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Not our environment’s fault</p>
+        <h2>Four checks</h2>
+        <div class="checks">
+          <p><span>Give the AI every hidden parameter</span><b>no better</b></p>
+          <p><span>Tell it the right principles</span><b>same behaviour</b></p>
+          <p><span>Remove the teaching story</span><b>worse</b></p>
+          <p><span>Change our numbers 27 ways</span><b>still loses</b></p>
+        </div>
+        <p class="said" style="font-size:26px;">It knows what to do. It doesn’t do it.</p>
+        <p class="hint">And five rules a person could write down beat the AI too (0.67).</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Built from learning science</p>
+        <h2>Every rule is a documented effect</h2>
+        <div class="checks">
+          <p><span>Answers are noisy</span><i>Knowledge tracing, 1995</i></p>
+          <p><span>Memory fades</span><i>FSRS, fitted on real reviews</i></p>
+          <p><span>Quizzing strengthens memory</span><i>Testing effect, 2006</i></p>
+          <p><span>Ideas need their prerequisite</span><i>Knowledge space theory</i></p>
+          <p><span>Typical fraction mistakes</span><i>Whole-number bias, 2005</i></p>
+          <p><span>“I get it” is unreliable</span><i>Illusion of understanding, 2002</i></p>
+        </div>
+        <p class="hint">Some numbers are our own settings; the sources list says which.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Check it yourself</p>
+        <h2>One command reruns everything</h2>
+        <pre class="cmd">./eval.sh gemini/gemini-pro-latest 3001 3002 3003</pre>
+        <p class="hint">Runs the reference, the AI and the do-nothing and stop-early baselines, then prints the table. The child’s state lives in a separate container; a separate verifier scores it.</p>
+      </div>
+    </div>
   </section>
 
   <p class="hint">A simulated child built from learning-science findings (knowledge tracing, forgetting curves, the testing effect, fraction misconceptions). The full version with every rule and source: game.html.</p>
@@ -302,9 +363,8 @@ function render2() {
 
 function setStep(n) {
   stop();
-  $("s1").setAttribute("aria-pressed", n === 1); $("s2").setAttribute("aria-pressed", n === 2);
-  $("v1").hidden = n !== 1; $("v2").hidden = n !== 2;
-  if (n === 2) { if (!lanes) startLanes(); render2(); } else render1();
+  for (const i of [1, 2, 3]) { $("s" + i).setAttribute("aria-pressed", n === i); $("v" + i).hidden = n !== i; }
+  if (n === 2) { if (!lanes) startLanes(); render2(); } else if (n === 1) render1();
 }
 
 async function start() {
@@ -318,6 +378,7 @@ async function start() {
   $("xray").onclick = () => { xray = !xray; $("xray").setAttribute("aria-pressed", xray); render1(); };
   $("s1").onclick = () => setStep(1);
   $("s2").onclick = () => setStep(2);
+  $("s3").onclick = () => setStep(3);
   $("step").onclick = () => { stop(); step2(); };
   $("reset").onclick = () => { stop(); startLanes(); render2(); };
   $("play").onclick = () => { if (timer) { stop(); return; } $("play").textContent = "Pause"; timer = setInterval(step2, 650); };

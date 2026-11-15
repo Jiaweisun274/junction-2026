@@ -28,20 +28,19 @@ over 2:00, cut words rather than speeding up. In step 2 press Play, not Next tur
 
 ## 10-minute live demo
 
+The whole talk runs on the simple demo page; the slides are backup for detail questions.
+
 | min | what | where |
 |---|---|---|
-| 0:00–0:30 | The question: can you teach better than an AI? | simple demo, title |
-| 0:30–2:00 | Step 1, x-ray off. Teach idea 3, quiz it. If Aino answers right, ask the room: move on? Then turn the x-ray on and read the red line (the effect and its source). If the quiz is wrong, teach again and quiz once more. | simple demo |
-| 2:00–3:00 | How the simulator is built: mechanism, source, which numbers are ours, calibration against Duolingo data | slide 4 |
-| 3:00–4:30 | Step 2: Gemini 3.1 Pro vs reference on Aino, press Play. Point at the colour strip and the lucky-guess marks. End on 64% vs 81%. Say the AI wins on some children (switch to Toivo, class 3004: 82% vs 56%) and the gap is an average. | simple demo |
-| 4:30–5:00 | Reward integrity: do-nothing 0, stop-early 0, state in a separate container | slide 5 |
-| 5:00–5:30 | The gap: 39 of 43 runs | slide 6 |
-| 5:30–7:00 | Four checks (information, principles, story, parameters) | slide 7 |
-| 7:00–8:00 | Three habits: testing instead of teaching, lucky guesses, the gap opens on Wednesday | slide 8 |
-| 8:00–9:00 | Five rules beat the agents; Gemma tiebreaker; limits | slides 9–11 |
-| 9:00–10:00 | One command; questions | slide 12 (appendix 13–16 for detail questions) |
-
-If short on time, skip slide 8 (the demo already showed the habits) and slide 10 (Gemma). Each slide shows one idea; the explanation is in its speaker notes.
+| 0:00–0:30 | The question: can you teach better than an AI? | title |
+| 0:30–2:00 | Step 1, x-ray off. Teach idea 3, quiz it. If Aino answers right, ask the room: move on? Then turn the x-ray on and read the red line (the effect and its source). If the quiz is wrong, teach again and quiz once more. | step 1 |
+| 2:00–3:30 | Step 2: Gemini 3.1 Pro vs reference on Aino, press Play. Point at the colour strip and the lucky-guess marks. End on 64% vs 81%. Say the AI wins on some children (switch to Toivo, class 3004: 82% vs 56%) and the gap is an average. | step 2 |
+| 3:30–4:30 | Evidence 1: not one lucky example, 39 of 43 runs; do-nothing and stop-early score 0 | step 3, top left |
+| 4:30–6:00 | Evidence 2: four checks; five rules beat the AI too | step 3, top right |
+| 6:00–7:00 | Evidence 3: every rule is a documented effect; which numbers are ours; Duolingo calibration | step 3, bottom left |
+| 7:00–7:30 | Evidence 4: one command; separate container and verifier | step 3, bottom right |
+| 7:30–8:30 | Optional: three habits (slide 8), Gemma tiebreaker (slide 10), limits (slide 11) | slides |
+| 8:30–10:00 | Questions | slides 13–16 for detail |
 
 For the judges' rerun: `./eval.sh <model> 3001 3002 3003` (see README). A full three-seed run takes about an hour
 with a Gemini model; have the seed-3002 result table ready on screen.
