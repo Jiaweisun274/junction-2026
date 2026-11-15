@@ -423,3 +423,10 @@ five rules 0.3233 (quiz share 65%); check-back variant 0.3225 (60%); one right a
 => Checking back later fixes the lucky-guess problem as well as "two in a row" does, with somewhat fewer quizzes.
 It does not by itself reproduce PPO's 37% quiz share or its higher score (PPO also moves on straight after an
 explanation 41% of the time). Partial explanation; the common factor is not building on an unverified idea.
+
+# Correction: the five-rule teacher is hand-written, not extracted from PPO
+planned_ref.py was designed by hand around the principle PPO also achieves (do not build on an unconfirmed idea,
+check prerequisites, diagnose on Monday) and its knobs were tuned on training seeds; "two right in a row" comes from
+that tuning, not from PPO's actions. PPO itself moves on after one right answer (59%) or straight after an explanation
+(41%) and verifies by checking back later (half its quizzes). Earlier notes calling it "PPO's habits as five rules" or
+"distilled" overstate the link. Demo page wording corrected.
