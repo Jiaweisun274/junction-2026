@@ -331,14 +331,14 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <p class="hint">For comparison: frontier AI agents score about 0.55, a textbook rulebook from the learning-science literature 0.56.</p>
       </div>
       <div class="card">
-        <p class="eyebrow">What the reference does</p>
-        <h2>Five rules, each tied to a mechanism</h2>
+        <p class="eyebrow">The five rules, in priority order</p>
+        <h2>Each rule is tied to a mechanism</h2>
         <div class="checks">
-          <p><span>Two right answers before moving on</span><i>turns 71% into 90% sure</i></p>
-          <p><span>Didn’t click? Re-teach next session</span><i>same-session repeats work less</i></p>
-          <p><span>Stuck? Check the prerequisite</span><i>without it, 5% chance</i></p>
-          <p><span>Fix a wrong rule at once</span><i>fix works, re-explaining rarely</i></p>
-          <p><span>No routine re-tests at session start</span><i>quiz the frontier idea instead</i></p>
+          <p><span>1 · Fix a wrong rule as soon as its typical answer appears</span><i>fix works, re-explaining rarely</i></p>
+          <p><span>2 · Teach once, then quiz; move on only after two right in a row</span><i>turns 71% into 90% sure</i></p>
+          <p><span>3 · At most two explanations per idea per session; still stuck? quiz the idea before it</span><i>repeats work less; no prerequisite, 5%</i></p>
+          <p><span>4 · On Monday, quiz before teaching</span><i>the child may already know it</i></p>
+          <p><span>5 · No routine review quizzes at the start of a session</span><i>keep working on the next idea</i></p>
         </div>
         <p class="hint">Written as five rules: 0.67. The trained reference: 0.73. AI agents: about 0.55.</p>
       </div>
