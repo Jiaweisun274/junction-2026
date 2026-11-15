@@ -165,6 +165,15 @@ button:focus-visible { outline: 2px solid var(--know); outline-offset: 2px; }
 .hms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .hmg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
 .hmg span { aspect-ratio: 1.4; display: grid; place-items: center; border-radius: 4px; font-size: 13px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.objhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.objnav { display: flex; align-items: center; gap: 10px; }
+.objnav .btn { padding: 6px 14px; }
+#odots { display: flex; gap: 6px; }
+#odots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; background: var(--line); }
+#odots button[aria-current="true"] { background: var(--ink); }
+.carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 24px; scrollbar-width: none; }
+.carousel::-webkit-scrollbar { display: none; }
+.carousel .slide { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .review { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
 .review li { font-size: 16px; }
 select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
@@ -318,38 +327,6 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <p class="hint">Score 0 = no teaching, 1 = a teacher who can see inside. Six children per run, standard harness (Harbor + OpenCode).</p>
       </div>
       <div class="card">
-        <p class="eyebrow">Objection 1</p>
-        <h2>“The AI just lacks information a trained policy picks up”</h2>
-        <p>We gave it every hidden number of the simulator: learn chances, forgetting speeds, misconception rates.</p>
-        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div><div class="res var"><span>+ every parameter</span><span class="tr"><i style="width:56%"></i></span><b>0.56</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>+ every parameter</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:70%"></i></span><b>0.70</b></div></div>
-        <p class="verdict">No better. The reference still wins 9 of 10.</p>
-        <p class="hint">Seeds 3001–3005, six children per run.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">Objection 2</p>
-        <h2>“It doesn’t know what good tutoring looks like”</h2>
-        <p>We added tutoring advice: turns are scarce, one right answer is weak evidence, a quiz never teaches.</p>
-        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>+ advice</span><span class="tr"><i style="width:50%"></i></span><b>0.50</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:54%"></i></span><b>0.54</b></div><div class="res var"><span>+ advice</span><span class="tr"><i style="width:57%"></i></span><b>0.57</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:69%"></i></span><b>0.69</b></div></div>
-        <p class="verdict">No consistent gain: one model a bit up, one down, the same way of playing.</p>
-        <p class="hint">15 paired batches (3001–3015). The reference wins 24 of 30.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">Objection 3</p>
-        <h2>“Your simulator is unrealistic, so real-world knowledge misleads the AI”</h2>
-        <p>Same simulator, same children, same numbers, told as abstract “nodes” with no teaching story.</p>
-        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>no story</span><span class="tr"><i style="width:49%"></i></span><b>0.49</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:54%"></i></span><b>0.54</b></div><div class="res var"><span>no story</span><span class="tr"><i style="width:48%"></i></span><b>0.48</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:69%"></i></span><b>0.69</b></div></div>
-        <p class="verdict">Worse without the story: the real-world knowledge helps, it doesn’t mislead.</p>
-        <p class="hint">15 paired batches. The reference wins all 30.</p>
-      </div>
-      <div class="card">
-        <p class="eyebrow">Objection 4</p>
-        <h2>“You picked numbers that make the AI lose”</h2>
-        <p>We varied the three numbers that decide what a quiz is worth: the testing effect, forgetting speed and learning speed. 27 worlds, 120 children each.</p>
-        <div class="hms"><div class="hm"><p class="hint">testing effect ×1.5</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 27%, var(--panel))" title="0.012">1</span><span style="background:color-mix(in srgb, var(--pen) 31%, var(--panel))" title="0.015">2</span><span style="background:color-mix(in srgb, var(--pen) 40%, var(--panel))" title="0.024">2</span><span style="background:color-mix(in srgb, var(--pen) 43%, var(--panel))" title="0.027">3</span><span style="background:color-mix(in srgb, var(--pen) 57%, var(--panel))" title="0.040">4</span><span style="background:color-mix(in srgb, var(--pen) 60%, var(--panel))" title="0.042">4</span><span style="background:color-mix(in srgb, var(--pen) 54%, var(--panel))" title="0.037">4</span><span style="background:color-mix(in srgb, var(--pen) 73%, var(--panel))" title="0.055">6</span><span style="background:color-mix(in srgb, var(--pen) 78%, var(--panel))" title="0.059">6</span></div></div><div class="hm"><p class="hint">testing effect ×2.5</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 43%, var(--panel))" title="0.027">3</span><span style="background:color-mix(in srgb, var(--pen) 47%, var(--panel))" title="0.030">3</span><span style="background:color-mix(in srgb, var(--pen) 55%, var(--panel))" title="0.038">4</span><span style="background:color-mix(in srgb, var(--pen) 51%, var(--panel))" title="0.034">3</span><span style="background:color-mix(in srgb, var(--pen) 70%, var(--panel))" title="0.052">5</span><span style="background:color-mix(in srgb, var(--pen) 81%, var(--panel))" title="0.062">6</span><span style="background:color-mix(in srgb, var(--pen) 57%, var(--panel))" title="0.040">4</span><span style="background:color-mix(in srgb, var(--pen) 82%, var(--panel))" title="0.063">6</span><span style="background:color-mix(in srgb, var(--pen) 87%, var(--panel))" title="0.068">7</span></div></div><div class="hm"><p class="hint">testing effect ×4.0</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 54%, var(--panel))" title="0.037">4</span><span style="background:color-mix(in srgb, var(--pen) 65%, var(--panel))" title="0.047">5</span><span style="background:color-mix(in srgb, var(--pen) 77%, var(--panel))" title="0.058">6</span><span style="background:color-mix(in srgb, var(--pen) 56%, var(--panel))" title="0.039">4</span><span style="background:color-mix(in srgb, var(--pen) 82%, var(--panel))" title="0.063">6</span><span style="background:color-mix(in srgb, var(--pen) 87%, var(--panel))" title="0.068">7</span><span style="background:color-mix(in srgb, var(--pen) 61%, var(--panel))" title="0.043">4</span><span style="background:color-mix(in srgb, var(--pen) 84%, var(--panel))" title="0.065">6</span><span style="background:color-mix(in srgb, var(--pen) 90%, var(--panel))" title="0.070">7</span></div></div></div>
-        <p class="hint">Rows: forgetting fast → slow. Columns: learning slow → fast. Each cell: how far the AI’s habits fall behind the best simple teacher, in exam points per 100.</p>
-        <p class="verdict">The AI’s habits lose in all 27 worlds.</p>
-      </div>
-      <div class="card">
         <p class="eyebrow">Built from learning science</p>
         <h2>Every rule is a documented effect</h2>
         <div class="checks">
@@ -362,11 +339,43 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         </div>
         <p class="hint">Some numbers are our own settings; the sources list says which.</p>
       </div>
-      <div class="card">
-        <p class="eyebrow">Check it yourself</p>
-        <h2>One command reruns everything</h2>
-        <pre class="cmd">./eval.sh gemini/gemini-pro-latest 3001 3002 3003</pre>
-        <p class="hint">Runs the reference, the AI and the do-nothing and stop-early baselines, then prints the table. The child’s state lives in a separate container; a separate verifier scores it.</p>
+      <div class="card wide objs">
+        <div class="objhead"><h2>Is the gap our fault? Four objections</h2>
+          <div class="objnav"><button class="btn ghost" id="oprev" aria-label="Previous objection">←</button><span id="odots"></span><button class="btn ghost" id="onext" aria-label="Next objection">→</button></div></div>
+        <div class="carousel" id="car" tabindex="0" aria-label="Objections, scroll sideways">
+        <div class="slide">
+          <p class="eyebrow">Objection 1</p>
+        <h2>“The AI just lacks information a trained policy picks up”</h2>
+        <p>We gave it every hidden number of the simulator: learn chances, forgetting speeds, misconception rates.</p>
+        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div><div class="res var"><span>+ every parameter</span><span class="tr"><i style="width:56%"></i></span><b>0.56</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>+ every parameter</span><span class="tr"><i style="width:52%"></i></span><b>0.52</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:70%"></i></span><b>0.70</b></div></div>
+        <p class="verdict">No better. The reference still wins 9 of 10.</p>
+        <p class="hint">Seeds 3001–3005, six children per run.</p>
+        </div>
+        <div class="slide">
+          <p class="eyebrow">Objection 2</p>
+        <h2>“It doesn’t know what good tutoring looks like”</h2>
+        <p>We added tutoring advice: turns are scarce, one right answer is weak evidence, a quiz never teaches.</p>
+        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>+ advice</span><span class="tr"><i style="width:50%"></i></span><b>0.50</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:54%"></i></span><b>0.54</b></div><div class="res var"><span>+ advice</span><span class="tr"><i style="width:57%"></i></span><b>0.57</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:69%"></i></span><b>0.69</b></div></div>
+        <p class="verdict">No consistent gain: one model a bit up, one down, the same way of playing.</p>
+        <p class="hint">15 paired batches (3001–3015). The reference wins 24 of 30.</p>
+        </div>
+        <div class="slide">
+          <p class="eyebrow">Objection 3</p>
+        <h2>“Your simulator is unrealistic, so real-world knowledge misleads the AI”</h2>
+        <p>Same simulator, same children, same numbers, told as abstract “nodes” with no teaching story.</p>
+        <div class="results"><div class="res plain"><span>Gemini Pro</span><span class="tr"><i style="width:55%"></i></span><b>0.55</b></div><div class="res var"><span>no story</span><span class="tr"><i style="width:49%"></i></span><b>0.49</b></div><div class="res plain"><span>Gemini 3.1 Pro</span><span class="tr"><i style="width:54%"></i></span><b>0.54</b></div><div class="res var"><span>no story</span><span class="tr"><i style="width:48%"></i></span><b>0.48</b></div><div class="res ref"><span>Reference</span><span class="tr"><i style="width:69%"></i></span><b>0.69</b></div></div>
+        <p class="verdict">Worse without the story: the real-world knowledge helps, it doesn’t mislead.</p>
+        <p class="hint">15 paired batches. The reference wins all 30.</p>
+        </div>
+        <div class="slide">
+          <p class="eyebrow">Objection 4</p>
+        <h2>“You picked numbers that make the AI lose”</h2>
+        <p>We varied the three numbers that decide what a quiz is worth: the testing effect, forgetting speed and learning speed. 27 worlds, 120 children each.</p>
+        <div class="hms"><div class="hm"><p class="hint">testing effect ×1.5</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 27%, var(--panel))" title="0.012">1</span><span style="background:color-mix(in srgb, var(--pen) 31%, var(--panel))" title="0.015">2</span><span style="background:color-mix(in srgb, var(--pen) 40%, var(--panel))" title="0.024">2</span><span style="background:color-mix(in srgb, var(--pen) 43%, var(--panel))" title="0.027">3</span><span style="background:color-mix(in srgb, var(--pen) 57%, var(--panel))" title="0.040">4</span><span style="background:color-mix(in srgb, var(--pen) 60%, var(--panel))" title="0.042">4</span><span style="background:color-mix(in srgb, var(--pen) 54%, var(--panel))" title="0.037">4</span><span style="background:color-mix(in srgb, var(--pen) 73%, var(--panel))" title="0.055">6</span><span style="background:color-mix(in srgb, var(--pen) 78%, var(--panel))" title="0.059">6</span></div></div><div class="hm"><p class="hint">testing effect ×2.5</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 43%, var(--panel))" title="0.027">3</span><span style="background:color-mix(in srgb, var(--pen) 47%, var(--panel))" title="0.030">3</span><span style="background:color-mix(in srgb, var(--pen) 55%, var(--panel))" title="0.038">4</span><span style="background:color-mix(in srgb, var(--pen) 51%, var(--panel))" title="0.034">3</span><span style="background:color-mix(in srgb, var(--pen) 70%, var(--panel))" title="0.052">5</span><span style="background:color-mix(in srgb, var(--pen) 81%, var(--panel))" title="0.062">6</span><span style="background:color-mix(in srgb, var(--pen) 57%, var(--panel))" title="0.040">4</span><span style="background:color-mix(in srgb, var(--pen) 82%, var(--panel))" title="0.063">6</span><span style="background:color-mix(in srgb, var(--pen) 87%, var(--panel))" title="0.068">7</span></div></div><div class="hm"><p class="hint">testing effect ×4.0</p><div class="hmg"><span style="background:color-mix(in srgb, var(--pen) 54%, var(--panel))" title="0.037">4</span><span style="background:color-mix(in srgb, var(--pen) 65%, var(--panel))" title="0.047">5</span><span style="background:color-mix(in srgb, var(--pen) 77%, var(--panel))" title="0.058">6</span><span style="background:color-mix(in srgb, var(--pen) 56%, var(--panel))" title="0.039">4</span><span style="background:color-mix(in srgb, var(--pen) 82%, var(--panel))" title="0.063">6</span><span style="background:color-mix(in srgb, var(--pen) 87%, var(--panel))" title="0.068">7</span><span style="background:color-mix(in srgb, var(--pen) 61%, var(--panel))" title="0.043">4</span><span style="background:color-mix(in srgb, var(--pen) 84%, var(--panel))" title="0.065">6</span><span style="background:color-mix(in srgb, var(--pen) 90%, var(--panel))" title="0.070">7</span></div></div></div>
+        <p class="hint">Rows: forgetting fast → slow. Columns: learning slow → fast. Each cell: how far the AI’s habits fall behind the best simple teacher, in exam points per 100.</p>
+        <p class="verdict">The AI’s habits lose in all 27 worlds.</p>
+        </div>
+        </div>
       </div>
       <div class="card">
         <p class="eyebrow">Reward integrity</p>
@@ -379,6 +388,12 @@ select { font: inherit; background: var(--panel); color: var(--ink); border: 1px
         <p class="hint">The AI cannot see or change the child’s state. Children come from secret seeds. An independent review found two loopholes; both are fixed.</p>
       </div>
       <div class="card">
+        <p class="eyebrow">Check it yourself</p>
+        <h2>One command reruns everything</h2>
+        <pre class="cmd">./eval.sh gemini/gemini-pro-latest 3001 3002 3003</pre>
+        <p class="hint">Runs the reference, the AI and the do-nothing and stop-early baselines, then prints the table. The child’s state lives in a separate container; a separate verifier scores it.</p>
+      </div>
+      <div class="card wide">
         <p class="eyebrow">Tiebreaker and limits</p>
         <h2>A small model learns; what we don’t claim</h2>
         <p><b>Gemma 4 (4B)</b>, trained only on its own best games: 0.37 → 0.39 → 0.41 in two rounds (a trend, not yet significant).</p>
@@ -571,10 +586,25 @@ async function start() {
   $("s1").onclick = () => setStep(1);
   $("s2").onclick = () => setStep(2);
   $("s3").onclick = () => setStep(3);
-  $("s4").onclick = () => setStep(4);
+  $("s4").onclick = () => { setStep(4); setupCarousel(); };
   $("step").onclick = () => { stop(); step2(); };
   $("reset").onclick = () => { stop(); startLanes(); render2(); };
   $("play").onclick = () => { if (timer) { stop(); return; } $("play").textContent = "Pause"; timer = setInterval(step2, 650); };
+}
+
+function setupCarousel() {
+  const car = $("car"), slides = [...car.querySelectorAll(".slide")];
+  $("odots").innerHTML = slides.map((_, i) => `<button aria-label="Objection ${i + 1}"></button>`).join("");
+  const dots = [...$("odots").children];
+  const cur = () => Math.round(car.scrollLeft / (car.clientWidth + 24));
+  const go = (i) => { const j = Math.max(0, Math.min(slides.length - 1, i)); car.scrollLeft = j * (car.clientWidth + 24); slides[j].animate?.([{ opacity: 0.3, transform: "translateX(24px)" }, { opacity: 1, transform: "none" }], { duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 280, easing: "ease-out" }); mark(); };
+  const mark = () => { const c = cur(); dots.forEach((d, i) => d.setAttribute("aria-current", i === c)); $("oprev").disabled = c === 0; $("onext").disabled = c === slides.length - 1; };
+  dots.forEach((d, i) => d.onclick = () => go(i));
+  $("oprev").onclick = () => go(cur() - 1);
+  $("onext").onclick = () => go(cur() + 1);
+  car.addEventListener("scroll", () => requestAnimationFrame(mark));
+  car.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") go(cur() + 1); if (e.key === "ArrowLeft") go(cur() - 1); });
+  mark();
 }
 function pickChild(id) {
   C = D.children.find((c) => c.id === id);
