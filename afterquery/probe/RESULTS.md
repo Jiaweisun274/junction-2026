@@ -385,3 +385,18 @@ the cause of the gap; it is PPO's style. The cause is what the teacher does with
 correct answer (the costliest habit in the ablation), not checking the prerequisite when stuck, and the timing of
 re-teaching (hand-over test). FAILURE_ANALYSIS finding 1 should be read as a description of the behaviour profile,
 not as the mechanism. Demo page and slides updated accordingly.
+
+# The three checks on Claude Opus 5.5 (seeds 3001-3003, Harbor + OpenCode on Verda, Sun 15 Nov night)
+Paired with Opus's plain runs on the same children. OpenCode's cost estimate for the 9 runs: $13.27.
+| condition | 3001 | 3002 | 3003 | mean | vs plain | reference wins |
+|---|---|---|---|---|---|---|
+| plain (v4) | 0.470 | 0.595 | 0.664 | 0.576 | | 3/3 |
+| every parameter disclosed | 0.432 | 0.718 | 0.791 | 0.647 | +0.071 | 3/3 |
+| tutoring advice (hint) | 0.425 | 0.786 | 0.577 | 0.596 | +0.020 | 2/3 |
+| abstract skin (no story) | 0.449 | 0.774 | 0.589 | 0.604 | +0.028 | 3/3 |
+| PPO reference | 0.675 | 0.776 | 0.848 | 0.766 | | |
+Quiz share 62-63% in every condition (plain 63%). Per-seed swings are large (about 0.1-0.2), so none of these
+differences is significant with 3 seeds. Readings: disclosure may help Opus a little (unlike Gemini) but the reference
+still wins every run; advice does not help consistently; removing the story does not make Opus better (Gemini got
+worse), so the "real-world knowledge misleads it" objection is not supported for either lab. Demo page updated:
+objection 1 now says "a little help at most", objection 3 "no model does better without the story".
