@@ -1,0 +1,11 @@
+{
+    "task": {
+        "path": "harbor/tutor2"
+    },
+    "trial_name": "tutor2__Zj63mbX",
+    "trials_dir": "jobs/eval_1115_0549_nop/seed_3001/2026-11-15__05-56-45",
+    "agent": {
+        "name": "nop"
+    },
+    "job_id": "d7e05a90-9f46-47af-bf4f-aeddfc82756e"
+}

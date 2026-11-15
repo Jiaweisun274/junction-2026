@@ -1,0 +1,14 @@
+{
+    "job_name": "2026-11-15__05-56-45",
+    "jobs_dir": "jobs/eval_1115_0549_nop/seed_3001",
+    "agents": [
+        {
+            "name": "nop"
+        }
+    ],
+    "tasks": [
+        {
+            "path": "harbor/tutor2"
+        }
+    ]
+}

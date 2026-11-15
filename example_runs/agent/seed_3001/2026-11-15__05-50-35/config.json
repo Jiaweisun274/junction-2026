@@ -1,0 +1,15 @@
+{
+    "job_name": "2026-11-15__05-50-35",
+    "jobs_dir": "jobs/eval_1115_0549_agent_3001/seed_3001",
+    "agents": [
+        {
+            "name": "opencode",
+            "model_name": "gemini/gemini-3.5-flash"
+        }
+    ],
+    "tasks": [
+        {
+            "path": "harbor/tutor2"
+        }
+    ]
+}

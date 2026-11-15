@@ -1,0 +1,25 @@
+Agent 'nop' exposes no native web search or fetch tools for Harbor to disable; continuing. Sandbox network policy still applies.
+  1/1 Completed: 0.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:00:26 0:00:00
+adhoc • nop
+┏━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Trials ┃ Exceptions ┃ Completed ┃ Reward ┃ Turns_Used ┃
+┡━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━┩
+│      1 │          0 │     0.000 │  0.000 │      0.000 │
+└────────┴────────────┴───────────┴────────┴────────────┘
+
+┏━━━━━━━━┳━━━━━━━┓
+┃ Reward ┃ Count ┃
+┡━━━━━━━━╇━━━━━━━┩
+│ 0.0    │     1 │
+│ 0.0    │     1 │
+│ 0.0    │     1 │
+└────────┴───────┘
+
+Job Info
+Total runtime: 26s
+Results written to 
+jobs/eval_1115_0549_nop/seed_3001/2026-11-15__05-56-45/result.json
+Inspect results by running `harbor view jobs/eval_1115_0549_nop/seed_3001`
+Share results by running `harbor upload 
+jobs/eval_1115_0549_nop/seed_3001/2026-11-15__05-56-45`
+

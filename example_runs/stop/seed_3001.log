@@ -1,0 +1,31 @@
+Agent 'baseline' exposes no native web search or fetch tools for Harbor to disable; continuing. Sandbox network policy still applies.
+  1/1 Completed: 1.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:00:28 0:00:00
+adhoc • baseline
+┏━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━┳━━━━━━━┓
+┃ Tri… ┃ Exc… ┃ Com… ┃ Exa… ┃ Ful… ┃ Lit… ┃ No_… ┃ Ref… ┃ Refe… ┃ Rew… ┃ Turn… ┃
+┡━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━╇━━━━━━━┩
+│    1 │    0 │ 1.0… │ 0.3… │ 0.8… │ 0.5… │ 0.3… │ 0.6… │ 0.675 │ 0.0… │ 0.000 │
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴───────┴──────┴───────┘
+
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Reward              ┃ Count ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ 0.0                 │     1 │
+│ 1.0                 │     1 │
+│ 0.32122309675167293 │     1 │
+│ 0.32122309675167293 │     1 │
+│ 0.6908562480331114  │     1 │
+│ 0.67482485220815    │     1 │
+│ 0.5932967638015584  │     1 │
+│ 0.868969893675247   │     1 │
+│ 0.0                 │     1 │
+└─────────────────────┴───────┘
+
+Job Info
+Total runtime: 28s
+Results written to 
+jobs/eval_1115_0549_stop/seed_3001/2026-11-15__05-57-17/result.json
+Inspect results by running `harbor view jobs/eval_1115_0549_stop/seed_3001`
+Share results by running `harbor upload 
+jobs/eval_1115_0549_stop/seed_3001/2026-11-15__05-57-17`
+

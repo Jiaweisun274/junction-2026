@@ -1,0 +1,122 @@
+{
+    "id": "340afd12-88df-4690-acb8-22205b2be5ff",
+    "task_name": "sauna-renaissance/afterquery-tutor2",
+    "trial_name": "tutor2__Zj63mbX",
+    "trial_uri": "file:///Users/sunjiawwwei/Desktop/junction-test/jobs/eval_1115_0549_nop/seed_3001/2026-11-15__05-56-45/tutor2__Zj63mbX",
+    "task_id": {
+        "path": "harbor/tutor2"
+    },
+    "source": null,
+    "task_checksum": "e0e30fe038d3ae829c175dbfa60fc926e4f1438895585f0c8eb8957bd22447c7",
+    "config": {
+        "task": {
+            "path": "harbor/tutor2",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": null
+        },
+        "trial_name": "tutor2__Zj63mbX",
+        "trials_dir": "jobs/eval_1115_0549_nop/seed_3001/2026-11-15__05-56-45",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "nop",
+            "import_path": null,
+            "model_name": null,
+            "base_url": null,
+            "model_api_key_name": null,
+            "model_api_format": null,
+            "skip_model_parsing": false,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "d7e05a90-9f46-47af-bf4f-aeddfc82756e",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "nop",
+        "version": "1.0.0",
+        "model_info": null
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0,
+            "completed": 0.0,
+            "turns_used": 0.0
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": null,
+    "started_at": "2026-11-15T03:56:46.609956Z",
+    "finished_at": "2026-11-15T03:57:13.131519Z",
+    "environment_setup": {
+        "started_at": "2026-11-15T03:56:46.791629Z",
+        "finished_at": "2026-11-15T03:56:58.744599Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-11-15T03:56:58.744879Z",
+        "finished_at": "2026-11-15T03:56:58.745028Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-11-15T03:56:58.745398Z",
+        "finished_at": "2026-11-15T03:56:58.747785Z"
+    },
+    "verifier": {
+        "started_at": "2026-11-15T03:57:03.047634Z",
+        "finished_at": "2026-11-15T03:57:13.131467Z"
+    },
+    "step_results": null
+}

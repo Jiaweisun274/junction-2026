@@ -1,0 +1,11 @@
+{
+    "task": {
+        "path": "harbor/tutor2"
+    },
+    "trial_name": "tutor2__QThWeKt",
+    "trials_dir": "jobs/eval_1115_0549_stop/seed_3001/2026-11-15__05-57-17",
+    "agent": {
+        "name": "baseline_agents:StopEarlyAgent"
+    },
+    "job_id": "a16c9754-68f9-4243-a79f-ad8fe97cd7a9"
+}

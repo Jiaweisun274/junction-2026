@@ -1,0 +1,12 @@
+{
+    "task": {
+        "path": "harbor/tutor2"
+    },
+    "trial_name": "tutor2__A8pU3U6",
+    "trials_dir": "jobs/eval_1115_0549_agent_3001/seed_3001/2026-11-15__05-50-35",
+    "agent": {
+        "name": "opencode",
+        "model_name": "gemini/gemini-3.5-flash"
+    },
+    "job_id": "24072911-0076-49b3-b8c6-5d5dd4eb7941"
+}

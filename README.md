@@ -62,10 +62,11 @@ Where every number comes from, and how to reproduce it: `EXPERIMENTS.md`.
 
 ## For judges: how to rerun
 
-Requirements: Docker, Python 3.12+, and a model provider key. Tested from a clean copy of the repository.
+Requirements: Docker (start Docker Desktop first), Python 3.12 or newer, and a model provider key. Tested from a fresh clone on a
+Linux server (x86) and on a MacBook (Apple Silicon).
 
 ```sh
-python3 -m venv .venv && .venv/bin/pip install "harbor==0.25.0" numpy
+python3.13 -m venv .venv && .venv/bin/pip install "harbor==0.25.0" numpy   # any Python 3.12+
 cp .env.example .env            # put your provider key in .env (never commit it)
 ./eval.sh gemini/gemini-pro-latest 3001 3002 3003
 ```
@@ -74,6 +75,9 @@ cp .env.example .env            # put your provider key in .env (never commit it
 `harbor/tutor2/solution/solve.sh`: the PPO policy playing through the same MCP tools), the OpenCode agent with the given
 model, the do-nothing baseline (`-a nop`) and the stop-early baseline (`harbor/baseline_agents.py:StopEarlyAgent`), then
 prints a table. Model names use Harbor's provider prefixes (`gemini/...`, `openai/...`, `anthropic/...`).
+Models we suggest for judging: `gemini/gemini-3.1-pro-preview` or `anthropic/claude-opus-5-5` (any OpenCode model works).
+The verifier writes the score, clipped to [0, 1], to `/logs/verifier/reward.txt` and the details to `reward.json`.
+A complete example of all four runs, with the agent's full playthrough, is in `example_runs/`.
 
 Our numbers to compare with (salt `eval1`, the default in `harbor/run_seeds.sh`):
 
@@ -101,6 +105,7 @@ Other variants: `TASK=tutor2_disclosed`, `TASK=tutor2_hint`, `TASK=tutor2_abstra
 | `probe/planned_ref.py`, `probe/checkback_ref.py`, `probe/compare_refs.py` | the five-rule teacher, the check-back variant, the comparison with PPO and the ablation |
 | `probe/failure_analysis.py`, `probe/find_quotes.py`, `probe/sensitivity.py` | failure analysis, quote finder, sensitivity analysis |
 | `viz/` | demo page and the JavaScript port of the simulator (checked against Python on 228 replays) |
+| `example_runs/` | complete Harbor logs of the reference, an agent and both baselines on one seed |
 | `EXPERIMENTS.md` | every experiment: script, raw results file, result |
 | `REFERENCES.md` | the sources for every mechanism, and which numbers are our own settings |
 

@@ -1,0 +1,13 @@
+{
+    "jobs_dir": "jobs/eval_1115_0549_stop/seed_3001",
+    "agents": [
+        {
+            "name": "baseline_agents:StopEarlyAgent"
+        }
+    ],
+    "tasks": [
+        {
+            "path": "harbor/tutor2"
+        }
+    ]
+}

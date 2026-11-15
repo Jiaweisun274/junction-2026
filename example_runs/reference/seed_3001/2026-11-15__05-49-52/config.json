@@ -1,0 +1,8 @@
+{
+    "jobs_dir": "jobs/eval_1115_0549_reference_3001/seed_3001",
+    "tasks": [
+        {
+            "path": "harbor/tutor2"
+        }
+    ]
+}

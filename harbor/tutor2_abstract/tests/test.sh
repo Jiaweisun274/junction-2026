@@ -26,6 +26,13 @@ else:
         "turns_used": float(result["turns_used"]),
     }
 
+# One score in [0, 1] (the AfterQuery convention). The pooled reward can exceed 1 on rare batches, because the
+# full-information teacher used for normalisation is strong but not a proven optimum; it is clipped here and the
+# raw value is kept as reward_unclipped.
+output["reward_unclipped"] = output["reward"]
+output["reward"] = min(1.0, max(0.0, output["reward"]))
 with open("/logs/verifier/reward.json", "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2)
+with open("/logs/verifier/reward.txt", "w", encoding="utf-8") as f:
+    f.write(f"{output['reward']}\n")
 PY

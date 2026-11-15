@@ -1,0 +1,87 @@
+{
+    "id": "24072911-0076-49b3-b8c6-5d5dd4eb7941",
+    "started_at": "2026-11-15T05:50:38.092751",
+    "updated_at": "2026-11-15T05:56:43.851313",
+    "finished_at": "2026-11-15T05:56:43.851313",
+    "n_total_trials": 1,
+    "stats": {
+        "n_completed_trials": 1,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "opencode__gemini-3.5-flash__adhoc": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "completed": 1.0,
+                        "exam_score": 0.5171314773607634,
+                        "full_info_score": 0.868969893675247,
+                        "literature_reward": 0.5932967638015584,
+                        "no_teaching_score": 0.32122309675167293,
+                        "reference_exam_score": 0.6908562480331114,
+                        "reference_reward": 0.67482485220815,
+                        "reward": 0.3576623025628119,
+                        "turns_used": 180.0
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.3576623025628119": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "completed": {
+                        "1.0": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "exam_score": {
+                        "0.5171314773607634": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "no_teaching_score": {
+                        "0.32122309675167293": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "reference_exam_score": {
+                        "0.6908562480331114": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "reference_reward": {
+                        "0.67482485220815": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "literature_reward": {
+                        "0.5932967638015584": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "full_info_score": {
+                        "0.868969893675247": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    },
+                    "turns_used": {
+                        "180.0": [
+                            "tutor2__A8pU3U6"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 13491682,
+        "n_cache_tokens": 12993892,
+        "n_output_tokens": 4528,
+        "cost_usd": 2.8707557999999995
+    }
+}

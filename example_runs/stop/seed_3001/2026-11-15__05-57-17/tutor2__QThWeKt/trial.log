@@ -1,0 +1,4 @@
+Skipping image OS validation for hb__1d2b515503e92a28390356d809412c64: docker inspect returned 1
+Agent 'baseline' exposes no native web search or fetch tools for Harbor to disable; continuing. Sandbox network policy still applies.
+Collecting main service artifacts
+Skipping image OS validation for hb__fd13b01c4239ff9b8c1959028faa3951: docker inspect returned 1
