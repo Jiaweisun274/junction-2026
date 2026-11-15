@@ -406,3 +406,20 @@ objection 1 now says "a little help at most", objection 3 "no model does better 
 `pip install "harbor==0.25.0" numpy`, `cp .env.example .env` (Gemini key filled in), `./eval.sh gemini/gemini-3.5-flash 3001`.
 Python 3.14. All four runs completed: reference 0.675 (identical to every earlier reference run on 3001), agent 0.388,
 do-nothing 0.000, stop-early 0.000. The README command works from a clean copy of the repository.
+
+# Why does PPO quiz less (37%) than the five rules (67%)? (Sun 15 Nov, night)
+Behaviour on the 30 evaluation children (viz/game_data.json):
+| teacher | quiz share | moves to the next idea: after a right answer / after a wrong answer / straight after an explanation | quizzes that check an earlier idea |
+|---|---|---|---|
+| PPO | 37% | 59% / 0% / 41% | 50% |
+| five rules | 67% | 100% / 0% / 0% | 8% |
+| gemini-3.1-pro-preview | 68% | 86% / 14% / 0% | 44% |
+| claude-opus-5-5 | 63% | 89% / 11% / 0% | 44% |
+PPO often teaches ahead without confirming and checks earlier ideas later; a delayed check both verifies and gets a
+larger testing-effect boost. The five rules confirm before moving on (two right in a row), which costs quizzes.
+Test (probe/checkback_ref.py): "move on after one right answer, then quiz the idea you left after the first
+explanation of the next one; go back if wrong", knobs tuned on 1001-1400, held-out 5001-5400 raw exam gain:
+five rules 0.3233 (quiz share 65%); check-back variant 0.3225 (60%); one right answer without the check 0.2584 (57%).
+=> Checking back later fixes the lucky-guess problem as well as "two in a row" does, with somewhat fewer quizzes.
+It does not by itself reproduce PPO's 37% quiz share or its higher score (PPO also moves on straight after an
+explanation 41% of the time). Partial explanation; the common factor is not building on an unverified idea.
