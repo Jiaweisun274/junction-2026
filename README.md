@@ -137,4 +137,15 @@ Full list: `REFERENCES.md`. This is a stylised model of tutoring, not a model of
 fair, hard sequential decision problem under hidden state. Calibrating it on real student logs (ASSISTments, Eedi) is
 the natural next step.
 
+## Bonus: a small model trained on the environment
+
+Gemma 4 E4B, trained only on its own games, filtered by the exam reward (expert iteration with LoRA, `gemma/`), and
+evaluated on the same 90 children as the frontier agents:
+
+| | untrained | after round 1 | after round 2 |
+|---|---|---|---|
+| reward | 0.37 | 0.39 | 0.41 |
+
+A consistent trend (paired +0.04 over 15 batches, standard error 0.04), not yet significant.
+
 MIT licensed. All code was written during the event.

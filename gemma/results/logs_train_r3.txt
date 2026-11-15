@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/root/g/train.py", line 56, in <module>
+    main()
+  File "/root/g/train.py", line 40, in main
+    rows = select(a.samples, a.top)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/g/train.py", line 13, in select
+    eps = json.load(open(p))["episodes"]
+                    ^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'runs/r2.json'
